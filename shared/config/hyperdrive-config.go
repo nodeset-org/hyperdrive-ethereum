@@ -29,12 +29,32 @@ const (
 
 // The base configuration for Hyperdrive
 type HyperdriveEthereumConfig struct {
-	ProjectName config.StringParameter
-	// ApiPort                  config.UintParameter
-	// EnableIPv6               config.BoolParameter
-	// UserDataPath             config.StringParameter
-	// AdditionalDockerNetworks config.StringParameter
-	// ClientTimeout            config.UintParameter
+	EnableIPv6               config.BoolParameter
+	ProjectName              config.StringParameter
+	ApiPort                  config.UintParameter
+	UserDataPath             config.StringParameter
+	AutoTxMaxFee             config.FloatParameter
+	MaxPriorityFee           config.FloatParameter
+	AutoTxGasThreshold       config.FloatParameter
+	AdditionalDockerNetworks config.StringParameter
+	ClientTimeout            config.UintParameter
+
+	// Network                  config.Parameter[config.Network]
+	// ClientMode               config.Parameter[config.ClientMode]
+
+	// Execution client settings
+	LocalExecutionClient *LocalExecutionConfig
+	// ExternalExecutionClient *config.ExternalExecutionConfig
+
+	// Beacon node settings
+	// LocalBeaconClient    *config.LocalBeaconConfig
+	// ExternalBeaconClient *config.ExternalBeaconConfig
+	// Fallback clients
+	// Fallback *config.FallbackConfig
+	// Metrics
+	// Metrics *config.MetricsConfig
+	// MEV-Boost
+	// MevBoost *MevBoostConfig
 
 	// The Docker Hub tag for the daemon container
 	ContainerTag config.StringParameter
