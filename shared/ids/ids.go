@@ -108,4 +108,16 @@ const (
 	TekuJvmHeapSizeID           string = "jvmHeapSize"
 	TekuArchiveModeID           string = "archiveMode"
 	TekuUseSlashingProtectionID string = "useSlashingProtection"
+
+	// Configuration
+	ProjectNameID              string = "projectName"
+	ApiPortID                  string = "apiPort"
+	EnableIPv6ID               string = "enableIPv6"
+	UserDataPathID             string = "hdUserDataDir"
+	AdditionalDockerNetworksID string = "additionalDockerNetworks"
+	ClientTimeoutID            string = "clientTimeout"
+	LoggingSectionID           string = "logging"
+	AutoTxMaxFeeID             string = "autoTxMaxFee"
+	MaxPriorityFeeID           string = "maxPriorityFee"
+	AutoTxGasThresholdID       string = "autoTxGasThreshold"
 )

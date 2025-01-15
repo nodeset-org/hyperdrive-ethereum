@@ -36,6 +36,9 @@ const (
 	// Unknown
 	ContainerID_Unknown ContainerID = ""
 
+	// All containers
+	ContainerID_All ContainerID = "all"
+
 	// The daemon
 	ContainerID_Daemon ContainerID = "daemon"
 
