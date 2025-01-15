@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/rocket-pool/node-manager-core/config/ids"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 )
 
 const (

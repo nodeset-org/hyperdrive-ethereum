@@ -1,8 +1,6 @@
 package config
 
-import (
-	"github.com/rocket-pool/node-manager-core/config/ids"
-)
+import "github.com/rocket-pool/node-manager-core/config/ids"
 
 const (
 	lodestarBnTag string = "chainsafe/lodestar:v1.22.0"

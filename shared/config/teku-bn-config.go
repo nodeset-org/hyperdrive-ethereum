@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/pbnjay/memory"
-	"github.com/rocket-pool/node-manager-core/config/ids"
 )
 
 const (
