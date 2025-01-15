@@ -43,12 +43,12 @@ type HyperdriveEthereumConfig struct {
 	// ClientMode               config.Parameter[config.ClientMode]
 
 	// Execution client settings
-	LocalExecutionClient *LocalExecutionConfig
-	// ExternalExecutionClient *config.ExternalExecutionConfig
+	LocalExecutionClient    *LocalExecutionConfig
+	ExternalExecutionClient *ExternalExecutionConfig
 
 	// Beacon node settings
-	// LocalBeaconClient    *config.LocalBeaconConfig
-	// ExternalBeaconClient *config.ExternalBeaconConfig
+	LocalBeaconClient    *LocalBeaconConfig
+	ExternalBeaconClient *ExternalBeaconConfig
 	// Fallback clients
 	// Fallback *config.FallbackConfig
 	// Metrics
