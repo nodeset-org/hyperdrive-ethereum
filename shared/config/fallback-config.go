@@ -1,81 +1,52 @@
 package config
 
-import "github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+import (
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
+)
 
 // Fallback configuration
 type FallbackConfig struct {
 	// Flag for enabling fallback clients
-	UseFallbackClients Parameter[bool]
+	UseFallbackClients config.BoolParameter
 
 	// The URL of the Execution Client HTTP endpoint
-	EcHttpUrl Parameter[string]
+	EcHttpUrl config.StringParameter
 
 	// The URL of the Beacon Node HTTP endpoint
-	BnHttpUrl Parameter[string]
+	BnHttpUrl config.StringParameter
 
 	// The URL of the Prysm gRPC endpoint (only needed if using Prysm VCs)
-	PrysmRpcUrl Parameter[string]
+	PrysmRpcUrl config.StringParameter
 }
 
 // Generates a new FallbackConfig configuration
 func NewFallbackConfig() *FallbackConfig {
-	return &FallbackConfig{
-		UseFallbackClients: Parameter[bool]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.FallbackUseFallbackClientsID,
-				Name:               "Use Fallback Clients",
-				Description:        "Enable this if you would like to specify a fallback Execution and Beacon Node, which will temporarily be used by your node and Validator Client(s) if your primary Execution / Beacon Node pair ever go offline (e.g. if you switch, prune, or resync your clients).",
-				AffectsContainers:  []ContainerID{ContainerID_Daemon, ContainerID_ValidatorClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]bool{
-				Network_All: false,
-			},
-		},
+	cfg := &FallbackConfig{}
 
-		EcHttpUrl: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.FallbackEcHttpUrlID,
-				Name:               "Execution Client URL",
-				Description:        "The URL of the HTTP API endpoint for your fallback Execution client.\n\nNOTE: If you are running it on the same machine as your node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
-				AffectsContainers:  []ContainerID{ContainerID_Daemon},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
+	// TODO: Get these reviewed
+	// Use Fallback Clients
+	cfg.UseFallbackClients.ID = config.Identifier(ids.FallbackUseFallbackClientsID)
+	cfg.UseFallbackClients.Name = "Use Fallback Clients"
+	cfg.UseFallbackClients.Description.Default = "Enable this if you would like to specify a fallback Execution and Beacon Node, which will temporarily be used by your node and Validator Client(s) if your primary Execution / Beacon Node pair ever go offline (e.g. if you switch, prune, or resync your clients)."
+	cfg.UseFallbackClients.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		BnHttpUrl: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.FallbackBnHttpUrlID,
-				Name:               "Beacon Node URL",
-				Description:        "The URL of the HTTP Beacon API endpoint for your fallback Beacon Node.\n\nNOTE: If you are running it on the same machine as your node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
-				AffectsContainers:  []ContainerID{ContainerID_Daemon, ContainerID_ValidatorClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
+	cfg.EcHttpUrl.ID = config.Identifier(ids.FallbackEcHttpUrlID)
+	cfg.EcHttpUrl.Name = "Execution Client URL"
+	cfg.EcHttpUrl.Description.Default = "The URL of the HTTP API endpoint for your fallback Execution client.\n\nNOTE: If you are running it on the same machine as your node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead."
+	cfg.EcHttpUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		PrysmRpcUrl: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.PrysmRpcUrlID,
-				Name:               "RPC URL (Prysm Only)",
-				Description:        "**Only used if you have a Prysm Validator Client.**\n\nThe URL of Prysm's gRPC API endpoint for your fallback Beacon Node. Prysm's Validator Client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as your node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
-				AffectsContainers:  []ContainerID{ContainerID_ValidatorClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.BnHttpUrl.ID = config.Identifier(ids.FallbackBnHttpUrlID)
+	cfg.BnHttpUrl.Name = "Beacon Node URL"
+	cfg.BnHttpUrl.Description.Default = "The URL of the HTTP Beacon API endpoint for your fallback Beacon Node.\n\nNOTE: If you are running it on the same machine as your node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead."
+	cfg.BnHttpUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	cfg.PrysmRpcUrl.ID = config.Identifier(ids.FallbackPrysmRpcUrlID)
+	cfg.PrysmRpcUrl.Name = "Prysm RPC URL"
+	cfg.PrysmRpcUrl.Description.Default = "**Only used if you have a Prysm Validator Client.**\n\nThe URL of Prysm's gRPC API endpoint for your fallback Beacon Node. Prysm's Validator Client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as your node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead."
+	cfg.PrysmRpcUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	return cfg
 }
 
 // The title for the config
@@ -84,8 +55,8 @@ func (cfg *FallbackConfig) GetTitle() string {
 }
 
 // Get the Parameters for this config
-func (cfg *FallbackConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *FallbackConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.UseFallbackClients,
 		&cfg.EcHttpUrl,
 		&cfg.BnHttpUrl,

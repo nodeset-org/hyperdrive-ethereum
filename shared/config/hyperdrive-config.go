@@ -7,9 +7,9 @@ import (
 
 	"al.essio.dev/pkg/shellescape"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
-	"github.com/nodeset-org/hyperdrive/modules/config"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 	sharedconfig "github.com/nodeset-org/hyperdrive/shared/config"
 	"gopkg.in/yaml.v2"
 )

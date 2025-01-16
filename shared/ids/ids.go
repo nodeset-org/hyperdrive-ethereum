@@ -48,6 +48,7 @@ const (
 	FallbackUseFallbackClientsID string = "useFallbackClients"
 	FallbackEcHttpUrlID          string = "ecHttpUrl"
 	FallbackBnHttpUrlID          string = "bnHttpUrl"
+	FallbackPrysmRpcUrlID        string = "prysmRpcUrl"
 
 	// Geth
 	GethEvmTimeoutID  string = "evmTimeout"
