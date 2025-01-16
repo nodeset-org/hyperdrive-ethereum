@@ -1,6 +1,9 @@
 package config
 
-import "github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+import (
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
+)
 
 const (
 	// Tags
@@ -10,19 +13,19 @@ const (
 // Configuration for the Prysm BN
 type PrysmBnConfig struct {
 	// The max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// The RPC port for BN / VC connections
-	RpcPort Parameter[uint16]
+	RpcPort config.UintParameter
 
 	// Toggle for forwarding the RPC API outside of Docker
 	OpenRpcPort Parameter[RpcPortMode]
 
 	// The Docker Hub tag for the Prysm BN
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags for the BN
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Prysm BN configuration
@@ -107,8 +110,8 @@ func (cfg *PrysmBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *PrysmBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *PrysmBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.RpcPort,
 		&cfg.OpenRpcPort,

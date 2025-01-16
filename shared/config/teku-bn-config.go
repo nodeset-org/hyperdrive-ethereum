@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
 )
 
@@ -13,19 +14,19 @@ const (
 // Configuration for Teku
 type TekuBnConfig struct {
 	// Max number of P2P peers to connect to
-	JvmHeapSize Parameter[uint64]
+	JvmHeapSize config.UintParameter
 
 	// The max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// The archive mode flag
-	ArchiveMode Parameter[bool]
+	ArchiveMode config.BoolParameter
 
 	// The Docker Hub tag for the Teku BN
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags for the BN
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Teku BN configuration
@@ -109,8 +110,8 @@ func (cfg *TekuBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *TekuBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *TekuBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.JvmHeapSize,
 		&cfg.MaxPeers,
 		&cfg.ArchiveMode,

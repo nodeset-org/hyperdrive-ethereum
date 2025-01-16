@@ -1,6 +1,9 @@
 package config
 
-import "github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+import (
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
+)
 
 const (
 	// Tags
@@ -10,16 +13,16 @@ const (
 // Configuration for the Lighthouse BN
 type LighthouseBnConfig struct {
 	// The port to use for gossip traffic using the QUIC protocol
-	P2pQuicPort Parameter[uint16]
+	P2pQuicPort config.UintParameter
 
 	// The max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// The Docker Hub tag for Lighthouse BN
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags for the BN
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Lighthouse BN configuration
@@ -89,8 +92,8 @@ func (cfg *LighthouseBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LighthouseBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LighthouseBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.P2pQuicPort,
 		&cfg.ContainerTag,

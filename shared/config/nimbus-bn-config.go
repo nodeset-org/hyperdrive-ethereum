@@ -5,6 +5,7 @@ import (
 	"runtime"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 const (
@@ -23,16 +24,16 @@ const (
 // Configuration for Nimbus
 type NimbusBnConfig struct {
 	// The max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// The Docker Hub tag for the BN
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// The pruning mode to use in the BN
 	PruningMode Parameter[Nimbus_PruningMode]
 
 	// Custom command line flags for the BN
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Nimbus configuration
@@ -117,8 +118,8 @@ func (cfg *NimbusBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *NimbusBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *NimbusBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.ContainerTag,
 		&cfg.PruningMode,

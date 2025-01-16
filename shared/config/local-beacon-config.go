@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 // Common parameters shared by all of the Beacon Clients
@@ -12,13 +13,13 @@ type LocalBeaconConfig struct {
 	BeaconNode Parameter[BeaconNode]
 
 	// The checkpoint sync URL if used
-	CheckpointSyncProvider Parameter[string]
+	CheckpointSyncProvider config.StringParameter
 
 	// The port to use for gossip traffic
-	P2pPort Parameter[uint16]
+	P2pPort config.UintParameter
 
 	// The port to expose the HTTP API on
-	HttpPort Parameter[uint16]
+	HttpPort config.UintParameter
 
 	// Toggle for forwarding the HTTP API port outside of Docker
 	OpenHttpPort Parameter[RpcPortMode]
@@ -155,8 +156,8 @@ func (cfg *LocalBeaconConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LocalBeaconConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LocalBeaconConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.BeaconNode,
 		&cfg.CheckpointSyncProvider,
 		&cfg.P2pPort,

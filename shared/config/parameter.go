@@ -61,39 +61,6 @@ type Parameter[Type comparable] struct {
 	Options []*ParameterOption[Type]
 }
 
-// An interface for typed Parameter structs, to get common fields from them
-type IParameter interface {
-	// Get the parameter's common fields
-	GetCommon() *ParameterCommon
-
-	// Get the common fields from each ParameterOption (returns nil if this isn't a choice parameter)
-	GetOptions() []IParameterOption
-
-	// Set the parameter to the default value
-	SetToDefault(network Network)
-
-	// Get the parameter's value
-	GetValueAsAny() any
-
-	// Get the parameter's value as a string
-	String() string
-
-	// Get the parameter's default value for the supplied network as a string
-	GetDefaultAsAny(network Network) any
-
-	// Deserializes a string into this parameter's value
-	Deserialize(serializedParam string, network Network) error
-
-	// Set the parameter's value explicitly; panics if it's the wrong type
-	SetValue(value any)
-
-	// Sets the default value for the provided network
-	SetDefaultValueForNetwork(serializedDefault string, network Network) error
-
-	// Change the current network
-	ChangeNetwork(oldNetwork Network, newNetwork Network)
-}
-
 // Get the parameter's common fields
 func (p *Parameter[_]) GetCommon() *ParameterCommon {
 	return p.ParameterCommon

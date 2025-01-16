@@ -3,6 +3,7 @@ package config
 import (
 	"runtime"
 
+	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
 	"github.com/rocket-pool/node-manager-core/config/ids"
 )
@@ -15,19 +16,19 @@ const (
 // Configuration for Reth
 type RethConfig struct {
 	// Size of Reth's Cache
-	CacheSize Parameter[uint64]
+	CacheSize config.UintParameter
 
 	// Max number of P2P peers that can connect to this node
-	MaxInboundPeers Parameter[uint16]
+	MaxInboundPeers config.UintParameter
 
 	// Max number of P2P peers to this node can connect to
-	MaxOutboundPeers Parameter[uint16]
+	MaxOutboundPeers config.UintParameter
 
 	// The Docker Hub tag for Reth
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Reth configuration
@@ -107,8 +108,8 @@ func (cfg *RethConfig) GetTitle() string {
 }
 
 // Get the config.Parameters for this config
-func (cfg *RethConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *RethConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.CacheSize,
 		&cfg.MaxInboundPeers,
 		&cfg.MaxOutboundPeers,

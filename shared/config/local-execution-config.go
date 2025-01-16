@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 // Configuration for the Execution client
@@ -12,19 +13,19 @@ type LocalExecutionConfig struct {
 	ExecutionClient Parameter[ExecutionClient]
 
 	// The HTTP API port
-	HttpPort Parameter[uint16]
+	HttpPort config.UintParameter
 
 	// The Websocket API port
-	WebsocketPort Parameter[uint16]
+	WebsocketPort config.UintParameter
 
 	// The Engine API port
-	EnginePort Parameter[uint16]
+	EnginePort config.UintParameter
 
 	// Toggle for forwarding the HTTP API port outside of Docker
 	OpenApiPorts Parameter[RpcPortMode]
 
 	// P2P traffic port
-	P2pPort Parameter[uint16]
+	P2pPort config.UintParameter
 
 	// Subconfigs
 	Geth       *GethConfig
@@ -163,8 +164,8 @@ func (cfg *LocalExecutionConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LocalExecutionConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LocalExecutionConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.ExecutionClient,
 		&cfg.HttpPort,
 		&cfg.WebsocketPort,

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
 	"github.com/rocket-pool/node-manager-core/config/ids"
 )
@@ -17,31 +18,31 @@ const (
 // Configuration for Nethermind
 type NethermindConfig struct {
 	// Nethermind's cache memory hint
-	CacheSize Parameter[uint64]
+	CacheSize config.UintParameter
 
 	// Max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// Nethermind's memory for in-memory pruning
-	PruneMemSize Parameter[uint64]
+	PruneMemSize config.UintParameter
 
 	// Nethermind's memory budget for full pruning
-	FullPruneMemoryBudget Parameter[uint64]
+	FullPruneMemoryBudget config.UintParameter
 
 	// Nethermind's remaining disk space to trigger a pruning
-	FullPruningThresholdMb Parameter[uint64]
+	FullPruningThresholdMb config.UintParameter
 
 	// Additional modules to enable on the primary JSON RPC endpoint
-	AdditionalModules Parameter[string]
+	AdditionalModules config.StringParameter
 
 	// Additional JSON RPC URLs
-	AdditionalUrls Parameter[string]
+	AdditionalUrls config.StringParameter
 
 	// The Docker Hub tag for Nethermind
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Nethermind configuration
@@ -182,8 +183,8 @@ func (cfg *NethermindConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *NethermindConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *NethermindConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.CacheSize,
 		&cfg.MaxPeers,
 		&cfg.PruneMemSize,

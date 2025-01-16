@@ -1,7 +1,8 @@
 package config
 
 import (
-	"github.com/rocket-pool/node-manager-core/config/ids"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 // Constants
@@ -13,111 +14,60 @@ const (
 // Configuration for Besu
 type BesuConfig struct {
 	// Max number of P2P peers to connect to
-	JvmHeapSize Parameter[uint64]
+	JvmHeapSize config.UintParameter
 
 	// Max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// Historical state block regeneration limit
-	MaxBackLayers Parameter[uint64]
+	MaxBackLayers config.UintParameter
 
 	// The archive mode flag
-	ArchiveMode Parameter[bool]
+	ArchiveMode config.BoolParameter
 
 	// The Docker Hub tag for Besu
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Besu configuration
 func NewBesuConfig() *BesuConfig {
-	return &BesuConfig{
-		JvmHeapSize: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.BesuJvmHeapSizeID,
-				Name:               "JVM Heap Size",
-				Description:        "The max amount of RAM, in MB, that Besu's JVM should limit itself to. Setting this lower will cause Besu to use less RAM, though it will always use more than this limit.\n\nUse 0 for automatic allocation.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: uint64(0),
-			},
-		},
+	cfg := &BesuConfig{}
 
-		MaxPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.MaxPeersID,
-				Name:               "Max Peers",
-				Description:        "The maximum number of peers Besu should connect to. This can be lowered to improve performance on low-power systems or constrained networks. We recommend keeping it at 12 or higher.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 25,
-			},
-		},
+	// TODO: Get these reviewed
+	cfg.JvmHeapSize.ID = config.Identifier(ids.BesuJvmHeapSizeID)
+	cfg.JvmHeapSize.Name = "JVM Heap Size"
+	cfg.JvmHeapSize.Description.Default = "The max amount of RAM, in MB, that Besu's JVM should limit itself to. Setting this lower will cause Besu to use less RAM, though it will always use more than this limit.\n\nUse 0 for automatic allocation."
+	cfg.JvmHeapSize.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		MaxBackLayers: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.BesuMaxBackLayersID,
-				Name:               "Historical Block Replay Limit",
-				Description:        "Besu has the ability to revisit the state of any historical block on the chain by \"replaying\" all of the previous blocks to get back to the target. This limit controls how many blocks you can replay - in other words, how far back Besu can go in time. Normal Execution client processing will be paused while a replay is in progress.\n\n[orange]NOTE: If you try to replay a state from a long time ago, it may take Besu several minutes to rebuild the state!",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: uint64(512),
-			},
-		},
+	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers Besu should connect to. This can be lowered to improve performance on low-power systems or constrained networks. We recommend keeping it at 12 or higher."
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		ArchiveMode: Parameter[bool]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.BesuArchiveModeID,
-				Name:               "Enable Archive Mode",
-				Description:        "When enabled, Besu will run in \"archive\" mode which means it can recreate the state of the chain for a previous block. This is required for accessing the state of blocks that are more than about half-an-hour old, which may be a part of things like reward systems.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]bool{
-				Network_All: false,
-			},
-		},
+	cfg.MaxBackLayers.ID = config.Identifier(ids.BesuMaxBackLayersID)
+	cfg.MaxBackLayers.Name = "Historical Block Replay Limit"
+	cfg.MaxBackLayers.Description.Default = "Besu has the ability to revisit the state of any historical block on the chain by \"replaying\" all of the previous blocks to get back to the target. This limit controls how many blocks you can replay - in other words, how far back Besu can go in time. Normal Execution client processing will be paused while a replay is in progress.\n\n[orange]NOTE: If you try to replay a state from a long time ago, it may take Besu several minutes to rebuild the state!"
+	cfg.MaxBackLayers.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Besu container you want to use on Docker Hub.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: besuTag,
-			},
-		},
+	cfg.ArchiveMode.ID = config.Identifier(ids.BesuArchiveModeID)
+	cfg.ArchiveMode.Name = "Enable Archive Mode"
+	cfg.ArchiveMode.Description.Default = "When enabled, Besu will run in \"archive\" mode which means it can recreate the state of the chain for a previous block. This is required for accessing the state of blocks that are more than about half-an-hour old, which may be a part of things like reward systems."
+	cfg.ArchiveMode.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass to Besu, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Besu container you want to use on Docker Hub."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass to Besu, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	return cfg
 }
 
 // The title for the config
@@ -126,8 +76,8 @@ func (cfg *BesuConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *BesuConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *BesuConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.JvmHeapSize,
 		&cfg.MaxPeers,
 		&cfg.MaxBackLayers,

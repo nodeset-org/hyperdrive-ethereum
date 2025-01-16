@@ -1,6 +1,9 @@
 package config
 
-import "github.com/rocket-pool/node-manager-core/config/ids"
+import (
+	"github.com/nodeset-org/hyperdrive/modules/config"
+	"github.com/rocket-pool/node-manager-core/config/ids"
+)
 
 const (
 	lodestarBnTag string = "chainsafe/lodestar:v1.22.0"
@@ -9,13 +12,13 @@ const (
 // Configuration for the Lodestar BN
 type LodestarBnConfig struct {
 	// The max number of P2P peers to connect to
-	MaxPeers Parameter[uint16]
+	MaxPeers config.UintParameter
 
 	// The Docker Hub tag for Lodestar BN
-	ContainerTag Parameter[string]
+	ContainerTag config.StringParameter
 
 	// Custom command line flags for the BN
-	AdditionalFlags Parameter[string]
+	AdditionalFlags config.StringParameter
 }
 
 // Generates a new Lodestar BN configuration
@@ -71,8 +74,8 @@ func (cfg *LodestarBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LodestarBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LodestarBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.ContainerTag,
 		&cfg.AdditionalFlags,
