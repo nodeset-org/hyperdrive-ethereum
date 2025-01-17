@@ -10,7 +10,7 @@ import (
 // Configuration for the Execution client
 type LocalExecutionConfig struct {
 	// The selected EC
-	ExecutionClient Parameter[ExecutionClient]
+	ExecutionClient config.StringParameter //Parameter[ExecutionClient]
 
 	// The HTTP API port
 	HttpPort config.UintParameter
@@ -22,7 +22,7 @@ type LocalExecutionConfig struct {
 	EnginePort config.UintParameter
 
 	// Toggle for forwarding the HTTP API port outside of Docker
-	OpenApiPorts Parameter[RpcPortMode]
+	OpenApiPorts config.StringParameter //Parameter[RpcPortMode]
 
 	// P2P traffic port
 	P2pPort config.UintParameter
@@ -36,118 +36,38 @@ type LocalExecutionConfig struct {
 
 // Create a new LocalExecutionConfig struct
 func NewLocalExecutionConfig() *LocalExecutionConfig {
-	cfg := &LocalExecutionConfig{
-		ExecutionClient: Parameter[ExecutionClient]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.EcID,
-				Name:               "Execution Client",
-				Description:        "Select which Execution client you would like to run.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient, ContainerID_ValidatorClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Options: []*ParameterOption[ExecutionClient]{
-				{
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "*Geth",
-						Description: "Geth is one of the three original implementations of the Ethereum protocol. It is written in Go, fully open source and licensed under the GNU LGPL v3.\n\n[orange]NOTE: Geth is currently overrepresented on the Ethereum network (a \"supermajority\" clients). We recommend choosing a different client for the health of the network. Please see https://clientdiversity.org/ to learn more.",
-					},
-					Value: ExecutionClient_Geth,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Nethermind",
-						Description: "Nethermind is a high-performance full Ethereum protocol client with very fast sync speeds. Nethermind is built with proven industrial technologies such as .NET 6 and the Kestrel web server. It is fully open source.",
-					},
-					Value: ExecutionClient_Nethermind,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Besu",
-						Description: "Hyperledger Besu is a robust full Ethereum protocol client. It uses a novel system called \"Bonsai Trees\" to store its chain data efficiently, which allows it to access block states from the past and does not require pruning. Besu is fully open source and written in Java.",
-					},
-					Value: ExecutionClient_Besu,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Reth",
-						Description: "Reth is a new Ethereum full node implementation that is focused on being user-friendly, highly modular, as well as being fast and efficient. Reth is fully open source and written in Rust.",
-					},
-					Value: ExecutionClient_Reth,
-				}},
-			Default: map[Network]ExecutionClient{
-				Network_All: ExecutionClient_Geth,
-			},
-		},
+	cfg := &LocalExecutionConfig{}
 
-		HttpPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.HttpPortID,
-				Name:               "HTTP API Port",
-				Description:        "The port your Execution client should use for its HTTP API endpoint (also known as HTTP RPC API endpoint).",
-				AffectsContainers:  []ContainerID{ContainerID_Daemon, ContainerID_ExecutionClient, ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 8545,
-			},
-		},
+	//TODO: Confirm these
+	cfg.ExecutionClient.ID = config.Identifier(ids.EcID)
+	cfg.ExecutionClient.Name = "Execution Client"
+	cfg.ExecutionClient.Description.Default = "Select which Execution client you would like to run."
+	cfg.ExecutionClient.AffectedContainers = []string{string(ContainerID_ExecutionClient), string(ContainerID_ValidatorClient)}
 
-		WebsocketPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.LocalEcWebsocketPortID,
-				Name:               "Websocket API Port",
-				Description:        "The port your Execution client should use for its Websocket API endpoint (also known as Websocket RPC API endpoint).",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 8546,
-			},
-		},
+	cfg.HttpPort.ID = config.Identifier(ids.HttpPortID)
+	cfg.HttpPort.Name = "HTTP API Port"
+	cfg.HttpPort.Description.Default = "The port your Execution client should use for its HTTP API endpoint (also known as HTTP RPC API endpoint)."
+	cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_ExecutionClient), string(ContainerID_BeaconNode)}
 
-		EnginePort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.LocalEcEnginePortID,
-				Name:               "Engine API Port",
-				Description:        "The port your Execution client should use for its Engine API endpoint (the endpoint the Beacon Node will connect to post-merge).",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient, ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 8551,
-			},
-		},
+	cfg.WebsocketPort.ID = config.Identifier(ids.LocalEcWebsocketPortID)
+	cfg.WebsocketPort.Name = "Websocket API Port"
+	cfg.WebsocketPort.Description.Default = "The port your Execution client should use for its Websocket API endpoint (also known as Websocket RPC API endpoint)."
+	cfg.WebsocketPort.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		OpenApiPorts: Parameter[RpcPortMode]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.LocalEcOpenApiPortsID,
-				Name:               "Expose API Ports",
-				Description:        "Expose the HTTP and Websocket API ports to other processes on your machine, or to your local network so other machines can access your Execution Client's API endpoints.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Options: GetPortModes(""),
-			Default: map[Network]RpcPortMode{
-				Network_All: RpcPortMode_Closed,
-			},
-		},
+	cfg.EnginePort.ID = config.Identifier(ids.LocalEcEnginePortID)
+	cfg.EnginePort.Name = "Engine API Port"
+	cfg.EnginePort.Description.Default = "The port your Execution client should use for its Engine API endpoint (the endpoint the Beacon Node will connect to post-merge)."
+	cfg.EnginePort.AffectedContainers = []string{string(ContainerID_ExecutionClient), string(ContainerID_BeaconNode)}
 
-		P2pPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.P2pPortID,
-				Name:               "P2P Port",
-				Description:        "The port the Execution Client should use for P2P (blockchain) traffic to communicate with other nodes.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 30303,
-			},
-		},
-	}
+	cfg.OpenApiPorts.ID = config.Identifier(ids.LocalEcOpenApiPortsID)
+	cfg.OpenApiPorts.Name = "Expose API Ports"
+	cfg.OpenApiPorts.Description.Default = "Expose the HTTP and Websocket API ports to other processes on your machine, or to your local network so other machines can access your Execution Client's API endpoints."
+	cfg.OpenApiPorts.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+
+	cfg.P2pPort.ID = config.Identifier(ids.P2pPortID)
+	cfg.P2pPort.Name = "P2P Port"
+	cfg.P2pPort.Description.Default = "The port the Execution Client should use for P2P (blockchain) traffic to communicate with other nodes."
+	cfg.P2pPort.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
 	// Create the subconfigs
 	cfg.Geth = NewGethConfig()
