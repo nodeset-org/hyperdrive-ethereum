@@ -30,7 +30,7 @@ type NimbusBnConfig struct {
 	ContainerTag config.StringParameter
 
 	// The pruning mode to use in the BN
-	PruningMode Parameter[Nimbus_PruningMode]
+	PruningMode config.StringParameter //Parameter[Nimbus_PruningMode]
 
 	// Custom command line flags for the BN
 	AdditionalFlags config.StringParameter
@@ -38,78 +38,34 @@ type NimbusBnConfig struct {
 
 // Generates a new Nimbus configuration
 func NewNimbusBnConfig() *NimbusBnConfig {
-	return &NimbusBnConfig{
-		MaxPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.MaxPeersID,
-				Name:               "Max Peers",
-				Description:        "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: getNimbusDefaultPeers(),
-			},
-		},
+	cfg := &NimbusBnConfig{}
 
-		PruningMode: Parameter[Nimbus_PruningMode]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.NimbusPruningModeID,
-				Name:               "Pruning Mode",
-				Description:        "Choose how Nimbus will prune its database. Highlight each option to learn more about it.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Options: []*ParameterOption[Nimbus_PruningMode]{
-				{
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Pruned",
-						Description: "Nimbus will only keep the last 5 months of data available, and will delete everything older than that. This will make Nimbus use less disk space overall, but you won't be able to access state older than 5 months (such as regenerating old rewards trees).\n\n[orange]WARNING: Pruning an *existing* database will take a VERY long time when Nimbus first starts. If you change from Archive to Pruned, you should delete your old chain data and do a checkpoint sync. Make sure you have a checkpoint sync provider specified first!",
-					},
-					Value: Nimbus_PruningMode_Pruned,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Archive",
-						Description: "Nimbus will download the entire Beacon Chain history and store it forever. This is healthier for the overall network, since people will be able to sync the entire chain from scratch using your node.",
-					},
-					Value: Nimbus_PruningMode_Archive,
-				},
-			},
-			Default: map[Network]Nimbus_PruningMode{
-				Network_All: Nimbus_PruningMode_Pruned,
-			},
-		},
+	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Nimbus Beacon Node container you want to use on Docker Hub.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: nimbusBnTag,
-			},
-		},
+	cfg.PruningMode.ID = config.Identifier(ids.NimbusPruningModeID)
+	cfg.PruningMode.Name = "Pruning Mode"
+	cfg.PruningMode.Description.Default = "Choose how Nimbus will prune its database. Highlight each option to learn more about it."
+	cfg.PruningMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.PruningMode.ID = config.Identifier(ids.NimbusPruningModeID)
+	cfg.PruningMode.Name = "Pruning Mode"
+	cfg.PruningMode.Description.Default = "Choose how Nimbus will prune its database. Highlight each option to learn more about it."
+	cfg.PruningMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Nimbus Beacon Node container you want to use on Docker Hub."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	return cfg
 }
 
 // Get the title for the config

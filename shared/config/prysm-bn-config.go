@@ -19,7 +19,7 @@ type PrysmBnConfig struct {
 	RpcPort config.UintParameter
 
 	// Toggle for forwarding the RPC API outside of Docker
-	OpenRpcPort Parameter[RpcPortMode]
+	OpenRpcPort config.UintParameter //Parameter[RpcPortMode]
 
 	// The Docker Hub tag for the Prysm BN
 	ContainerTag config.StringParameter
@@ -30,78 +30,34 @@ type PrysmBnConfig struct {
 
 // Generates a new Prysm BN configuration
 func NewPrysmBnConfig() *PrysmBnConfig {
-	return &PrysmBnConfig{
-		MaxPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.MaxPeersID,
-				Name:               "Max Peers",
-				Description:        "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 70,
-			},
-		},
+	cfg := &PrysmBnConfig{}
 
-		RpcPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.PrysmRpcPortID,
-				Name:               "RPC Port",
-				Description:        "The port Prysm should run its JSON-RPC API on.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode, ContainerID_ValidatorClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 5053,
-			},
-		},
+	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		OpenRpcPort: Parameter[RpcPortMode]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.PrysmOpenRpcPortID,
-				Name:               "Expose RPC Port",
-				Description:        "Expose Prysm's JSON-RPC port to other processes on your machine, or to your local network so other machines can access it too.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Options: GetPortModes("Allow connections from external hosts. This is safe if you're running your node on your local network. If you're a VPS user, this would expose your node to the internet and could make it vulnerable to MEV/tips theft"),
-			Default: map[Network]RpcPortMode{
-				Network_All: RpcPortMode_Closed,
-			},
-		},
+	cfg.RpcPort.ID = config.Identifier(ids.PrysmRpcPortID)
+	cfg.RpcPort.Name = "RPC Port"
+	cfg.RpcPort.Description.Default = "The port Prysm should run its JSON-RPC API on."
+	cfg.RpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Prysm Beacon Node container on Docker Hub you want to use for the Beacon Node.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: prysmBnTag,
-			},
-		},
+	cfg.OpenRpcPort.ID = config.Identifier(ids.PrysmOpenRpcPortID)
+	cfg.OpenRpcPort.Name = "Expose RPC Port"
+	cfg.OpenRpcPort.Description.Default = "Expose Prysm's JSON-RPC port to other processes on your machine, or to your local network so other machines can access it too."
+	cfg.OpenRpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass Prysm's Beacon Node, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Prysm Beacon Node container on Docker Hub you want to use for the Beacon Node."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Prysm's Beacon Node, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	return cfg
 }
 
 // The title for the config

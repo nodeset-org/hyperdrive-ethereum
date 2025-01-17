@@ -31,77 +31,34 @@ type TekuBnConfig struct {
 
 // Generates a new Teku BN configuration
 func NewTekuBnConfig() *TekuBnConfig {
-	return &TekuBnConfig{
-		JvmHeapSize: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.TekuJvmHeapSizeID,
-				Name:               "JVM Heap Size",
-				Description:        "The max amount of RAM, in MB, that Teku's JVM should limit itself to. Setting this lower will cause Teku to use less RAM, though it will always use more than this limit.\n\nUse 0 for automatic allocation.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: getTekuHeapSize(),
-			},
-		},
+	cfg := &TekuBnConfig{}
 
-		MaxPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.MaxPeersID,
-				Name:               "Max Peers",
-				Description:        "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 100,
-			},
-		},
+	cfg.JvmHeapSize.ID = config.Identifier(ids.TekuJvmHeapSizeID)
+	cfg.JvmHeapSize.Name = "JVM Heap Size"
+	cfg.JvmHeapSize.Description.Default = "The max amount of RAM, in MB, that Teku's JVM should limit itself to. Setting this lower will cause Teku to use less RAM, though it will always use more than this limit.\n\nUse 0 for automatic allocation."
+	cfg.JvmHeapSize.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		ArchiveMode: Parameter[bool]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.TekuArchiveModeID,
-				Name:               "Enable Archive Mode",
-				Description:        "When enabled, Teku will run in \"archive\" mode which means it can recreate the state of the Beacon chain for a previous block. This is required for manually generating the Merkle rewards tree.\n\nIf you are sure you will never be manually generating a tree, you can disable archive mode.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]bool{
-				Network_All: false,
-			},
-		},
+	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Teku container on Docker Hub you want to use for the Beacon Node.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: tekuBnTag,
-			},
-		},
+	cfg.ArchiveMode.ID = config.Identifier(ids.TekuArchiveModeID)
+	cfg.ArchiveMode.Name = "Enable Archive Mode"
+	cfg.ArchiveMode.Description.Default = "When enabled, Teku will run in \"archive\" mode which means it can recreate the state of the Beacon chain for a previous block. This is required for manually generating the Merkle rewards tree.\n\nIf you are sure you will never be manually generating a tree, you can disable archive mode."
+	cfg.ArchiveMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass Teku's Beacon Node, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Teku container on Docker Hub you want to use for the Beacon Node."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Teku's Beacon Node, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+
+	return cfg
 }
 
 // Get the title for the config

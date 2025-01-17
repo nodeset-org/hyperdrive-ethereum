@@ -3,9 +3,9 @@ package config
 import (
 	"runtime"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
-	"github.com/rocket-pool/node-manager-core/config/ids"
 )
 
 // Constants
@@ -33,73 +33,34 @@ type RethConfig struct {
 
 // Generates a new Reth configuration
 func NewRethConfig() *RethConfig {
-	return &RethConfig{
-		CacheSize: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.CacheSizeID,
-				Name:               "Cache Size",
-				Description:        "The amount of RAM (in MB) you want Reth's cache to use. Larger values mean your disk space usage will increase slower, and you will have to prune less frequently. The default is based on how much total RAM your system has but you can adjust it manually.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: calculateRethCache(),
-			},
-		},
+	cfg := &RethConfig{}
 
-		MaxInboundPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.RethMaxInboundPeersID,
-				Name:               "Max Inbound Peers",
-				Description:        "The maximum number of inbound peers that should be allowed to connect to Reth (peers that request to connect to your node). This can be lowered to improve performance on low-power systems or constrained networks. Inbound peers requires you to have properly forwarded ports. We recommend keeping the sum of this and max outbound peers at 12 or higher.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{Network_All: calculateRethPeers()},
-		},
+	cfg.CacheSize.ID = config.Identifier(ids.CacheSizeID)
+	cfg.CacheSize.Name = "Cache Size"
+	cfg.CacheSize.Description.Default = "The amount of RAM (in MB) you want Reth's cache to use. Larger values mean your disk space usage will increase slower, and you will have to prune less frequently. The default is based on how much total RAM your system has but you can adjust it manually."
+	cfg.CacheSize.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		MaxOutboundPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.RethMaxOutboundPeersID,
-				Name:               "Max Outbound Peers",
-				Description:        "The maximum number of outbound peers that Reth can connect to (peers that your node requests to connect to). This can be lowered to improve performance on low-power systems or constrained networks. Outbound peers do not require proper port forwarding, but are slower to accumulate than inbound peers. We recommend keeping the sum of this and max outbound peers at 12 or higher.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{Network_All: calculateRethPeers()},
-		},
+	cfg.MaxInboundPeers.ID = config.Identifier(ids.RethMaxInboundPeersID)
+	cfg.MaxInboundPeers.Name = "Max Inbound Peers"
+	cfg.MaxInboundPeers.Description.Default = "The maximum number of inbound peers that should be allowed to connect to Reth (peers that request to connect to your node). This can be lowered to improve performance on low-power systems or constrained networks. Inbound peers requires you to have properly forwarded ports. We recommend keeping the sum of this and max outbound peers at 12 or higher."
+	cfg.MaxInboundPeers.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Reth container you want to use.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: rethTag,
-			},
-		},
+	cfg.MaxOutboundPeers.ID = config.Identifier(ids.RethMaxOutboundPeersID)
+	cfg.MaxOutboundPeers.Name = "Max Outbound Peers"
+	cfg.MaxOutboundPeers.Description.Default = "The maximum number of outbound peers that Reth can connect to (peers that your node requests to connect to). This can be lowered to improve performance on low-power systems or constrained networks. Outbound peers do not require proper port forwarding, but are slower to accumulate than inbound peers. We recommend keeping the sum of this and max outbound peers at 12 or higher."
+	cfg.MaxOutboundPeers.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass to Reth, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Reth container you want to use."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass to Reth, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+
+	return cfg
 }
 
 // Get the title for the config

@@ -47,134 +47,54 @@ type NethermindConfig struct {
 
 // Generates a new Nethermind configuration
 func NewNethermindConfig() *NethermindConfig {
-	return &NethermindConfig{
-		CacheSize: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.CacheSizeID,
-				Name:               "Cache (Memory Hint) Size",
-				Description:        "The amount of RAM (in MB) you want to suggest for Nethermind's cache. While there is no guarantee that Nethermind will stay under this limit, lower values are preferred for machines with less RAM.\n\nThe default value for this will be calculated dynamically based on your system's available RAM, but you can adjust it manually.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: calculateNethermindCache(),
-			},
-		},
+	cfg := &NethermindConfig{}
 
-		MaxPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.MaxPeersID,
-				Name:               "Max Peers",
-				Description:        "The maximum number of peers Nethermind should connect to. This can be lowered to improve performance on low-power systems or constrained Networks. We recommend keeping it at 12 or higher.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: calculateNethermindPeers(),
-			},
-		},
+	cfg.CacheSize.ID = config.Identifier(ids.CacheSizeID)
+	cfg.CacheSize.Name = "Cache (Memory Hint) Size"
+	cfg.CacheSize.Description.Default = "The amount of RAM (in MB) you want to suggest for Nethermind's cache. While there is no guarantee that Nethermind will stay under this limit, lower values are preferred for machines with less RAM.\n\nThe default value for this will be calculated dynamically based on your system's available RAM, but you can adjust it manually."
+	cfg.CacheSize.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		PruneMemSize: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.NethermindPruneMemSizeID,
-				Name:               "In-Memory Pruning Cache Size",
-				Description:        "The amount of RAM (in MB) you want to dedicate to Nethermind for its in-memory pruning system. Higher values mean less writes to your SSD and slower overall database growth.\n\nThe default value for this will be calculated dynamically based on your system's available RAM, but you can adjust it manually.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: calculateNethermindPruneMemSize(),
-			},
-		},
+	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers Nethermind should connect to. This can be lowered to improve performance on low-power systems or constrained Networks. We recommend keeping it at 12 or higher."
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		FullPruneMemoryBudget: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.NethermindFullPruneMemoryBudgetID,
-				Name:               "Full Prune Memory Budget Size",
-				Description:        "The amount of RAM (in MB) you want to dedicate to Nethermind for its full pruning system. Higher values mean less writes to your SSD and faster pruning times.\n\nThe default value for this will be calculated dynamically based on your system's available RAM, but you can adjust it manually.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: calculateNethermindFullPruneMemBudget(),
-			},
-		},
+	cfg.PruneMemSize.ID = config.Identifier(ids.NethermindPruneMemSizeID)
+	cfg.PruneMemSize.Name = "In-Memory Pruning Cache Size"
+	cfg.PruneMemSize.Description.Default = "The amount of RAM (in MB) you want to dedicate to Nethermind for its in-memory pruning system. Higher values mean less writes to your SSD and slower overall database growth.\n\nThe default value for this will be calculated dynamically based on your system's available RAM, but you can adjust it manually."
+	cfg.PruneMemSize.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		FullPruningThresholdMb: Parameter[uint64]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.NethermindFullPruningThresholdMbID,
-				Name:               "Prune Threshold (MB)",
-				Description:        "When the volume free space (in MB) hits this level, Nethermind will automatically start full pruning to reclaim disk space.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint64{
-				Network_All: uint64(307200),
-				//Network_Holesky: uint64(51200), TODO: Port
-			},
-		},
+	cfg.FullPruneMemoryBudget.ID = config.Identifier(ids.NethermindFullPruneMemoryBudgetID)
+	cfg.FullPruneMemoryBudget.Name = "Full Prune Memory Budget Size"
+	cfg.FullPruneMemoryBudget.Description.Default = "The amount of RAM (in MB) you want to dedicate to Nethermind for its full pruning system. Higher values mean less writes to your SSD and faster pruning times.\n\nThe default value for this will be calculated dynamically based on your system's available RAM, but you can adjust it manually."
+	cfg.FullPruneMemoryBudget.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		AdditionalModules: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.NethermindAdditionalModulesID,
-				Name:               "Additional Modules",
-				Description:        "Additional modules you want to add to the primary JSON-RPC route. The defaults are Eth,Net,Personal,Web3. You can add any additional ones you need here; separate multiple modules with commas, and do not use spaces.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
+	cfg.FullPruningThresholdMb.ID = config.Identifier(ids.NethermindFullPruningThresholdMbID)
+	cfg.FullPruningThresholdMb.Name = "Prune Threshold (MB)"
+	cfg.FullPruningThresholdMb.Description.Default = "When the volume free space (in MB) hits this level, Nethermind will automatically start full pruning to reclaim disk space."
+	cfg.FullPruningThresholdMb.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		AdditionalUrls: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.NethermindAdditionalUrlsID,
-				Name:               "Additional URLs",
-				Description:        "Additional JSON-RPC URLs you want to run alongside the primary URL. These will be added to the \"--JsonRpc.AdditionalRpcUrls\" argument. Wrap each additional URL in quotes, and separate multiple URLs with commas (no spaces). Please consult the Nethermind documentation for more information on this flag, its intended usage, and its expected formatting.\n\nFor advanced users only.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
+	cfg.AdditionalModules.ID = config.Identifier(ids.NethermindAdditionalModulesID)
+	cfg.AdditionalModules.Name = "Additional Modules"
+	cfg.AdditionalModules.Description.Default = "Additional modules you want to add to the primary JSON-RPC route. The defaults are Eth,Net,Personal,Web3. You can add any additional ones you need here; separate multiple modules with commas, and do not use spaces."
+	cfg.AdditionalModules.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Nethermind container you want to use on Docker Hub.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: nethermindTag,
-			},
-		},
+	cfg.AdditionalUrls.ID = config.Identifier(ids.NethermindAdditionalUrlsID)
+	cfg.AdditionalUrls.Name = "Additional URLs"
+	cfg.AdditionalUrls.Description.Default = "Additional JSON-RPC URLs you want to run alongside the primary URL. These will be added to the \"--JsonRpc.AdditionalRpcUrls\" argument. Wrap each additional URL in quotes, and separate multiple URLs with commas (no spaces). Please consult the Nethermind documentation for more information on this flag, its intended usage, and its expected formatting.\n\nFor advanced users only."
+	cfg.AdditionalUrls.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass to Nethermind, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_ExecutionClient},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Nethermind container you want to use on Docker Hub."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass to Nethermind, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+
+	return cfg
 }
 
 // Get the title for the config
