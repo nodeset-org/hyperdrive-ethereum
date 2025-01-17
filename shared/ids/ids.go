@@ -17,6 +17,7 @@ const (
 	DoppelgangerDetectionID string = "doppelgangerDetection"
 	MetricsPortID           string = "metricsPort"
 	CacheSizeID             string = "cacheSize"
+	P2pQuicPortID           string = "P2pQuicPort"
 
 	// Logger
 	LoggerLevelID      string = "level"

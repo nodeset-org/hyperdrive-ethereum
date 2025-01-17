@@ -27,63 +27,29 @@ type LighthouseBnConfig struct {
 
 // Generates a new Lighthouse BN configuration
 func NewLighthouseBnConfig() *LighthouseBnConfig {
-	return &LighthouseBnConfig{
-		P2pQuicPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.LighthouseQuicPortID,
-				Name:               "P2P QUIC Port",
-				Description:        "The port to use for P2P (blockchain) traffic using the QUIC protocol.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 8001,
-			},
-		},
+	cfg := &LighthouseBnConfig{}
 
-		MaxPeers: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.MaxPeersID,
-				Name:               "Max Peers",
-				Description:        "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 100,
-			},
-		},
+	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		ContainerTag: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.ContainerTagID,
-				Name:               "Container Tag",
-				Description:        "The tag name of the Lighthouse container from Docker Hub you want to use for the Beacon Node.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: true,
-			},
-			Default: map[Network]string{
-				Network_All: lighthouseBnTag,
-			},
-		},
+	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Lighthouse container from Docker Hub you want to use for the Beacon Node."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-		AdditionalFlags: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.AdditionalFlagsID,
-				Name:               "Additional Flags",
-				Description:        "Additional custom command line flags you want to pass Lighthouse's Beacon Node, to take advantage of other settings that aren't covered here.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-	}
+	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.Name = "Additional Flags"
+	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Lighthouse's Beacon Node, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	cfg.P2pQuicPort.ID = config.Identifier(ids.P2pQuicPortID)
+	cfg.P2pQuicPort.Name = "P2pQuicPort"
+	cfg.P2pQuicPort.Description.Default = "TODO"
+	cfg.P2pQuicPort.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	return cfg
 }
 
 // The title for the config

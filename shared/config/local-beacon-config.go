@@ -34,118 +34,92 @@ type LocalBeaconConfig struct {
 
 // Create a new LocalBeaconConfig struct
 func NewLocalBeaconConfig() *LocalBeaconConfig {
-	cfg := &LocalBeaconConfig{
-		BeaconNode: Parameter[BeaconNode]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.BnID,
-				Name:               "Beacon Node",
-				Description:        "Select which Beacon Node client you would like to use.",
-				AffectsContainers:  []ContainerID{ContainerID_Daemon, ContainerID_BeaconNode, ContainerID_ValidatorClient},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Options: []*ParameterOption[BeaconNode]{
-				{
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Lighthouse",
-						Description: "Lighthouse is a Beacon Node with a heavy focus on speed and security. The team behind it, Sigma Prime, is an information security and software engineering firm who have funded Lighthouse along with the Ethereum Foundation, Consensys, and private individuals. Lighthouse is built in Rust and offered under an Apache 2.0 License.",
-					},
-					Value: BeaconNode_Lighthouse,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Lodestar",
-						Description: "Lodestar is the fifth open-source Ethereum Beacon Node. It is written in Typescript maintained by ChainSafe Systems. Lodestar, their flagship product, is a production-capable Beacon Chain and Validator Client uniquely situated as the go-to for researchers and developers for rapid prototyping and browser usage.",
-					},
-					Value: BeaconNode_Lodestar,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Nimbus",
-						Description: "Nimbus is a Beacon Node implementation that strives to be as lightweight as possible in terms of resources used. This allows it to perform well on embedded systems, resource-restricted devices -- including Raspberry Pis and mobile devices -- and multi-purpose servers.",
-					},
-					Value: BeaconNode_Nimbus,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Prysm",
-						Description: "Prysm is a Go implementation of Ethereum Consensus protocol with a focus on usability, security, and reliability. Prysm is developed by Prysmatic Labs, a company with the sole focus on the development of their client. Prysm is written in Go and released under a GPL-3.0 license.",
-					},
-					Value: BeaconNode_Prysm,
-				}, {
-					ParameterOptionCommon: &ParameterOptionCommon{
-						Name:        "Teku",
-						Description: "PegaSys Teku (formerly known as Artemis) is a Java-based Ethereum 2.0 client designed & built to meet institutional needs and security requirements. PegaSys is an arm of ConsenSys dedicated to building enterprise-ready clients and tools for interacting with the core Ethereum platform. Teku is Apache 2 licensed and written in Java, a language notable for its maturity & ubiquity.",
-					},
-					Value: BeaconNode_Teku,
-				}},
-			Default: map[Network]BeaconNode{
-				Network_All: BeaconNode_Nimbus,
-			},
-		},
-
-		CheckpointSyncProvider: Parameter[string]{
-			ParameterCommon: &ParameterCommon{
-				ID:   ids.LocalBnCheckpointSyncUrlID,
-				Name: "Checkpoint Sync URL",
-				Description: "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
-					"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
-					"Leave this blank if you want to sync normally from the start of the chain.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         true,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]string{
-				Network_All: "",
-			},
-		},
-
-		P2pPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.P2pPortID,
-				Name:               "P2P Port",
-				Description:        "The port to use for P2P (blockchain) traffic.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 9001,
-			},
-		},
-
-		HttpPort: Parameter[uint16]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.HttpPortID,
-				Name:               "HTTP API Port",
-				Description:        "The port your Beacon Node should run its HTTP API on.",
-				AffectsContainers:  []ContainerID{ContainerID_Daemon, ContainerID_BeaconNode, ContainerID_ValidatorClient, ContainerID_Prometheus},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Default: map[Network]uint16{
-				Network_All: 5052,
-			},
-		},
-
-		OpenHttpPort: Parameter[RpcPortMode]{
-			ParameterCommon: &ParameterCommon{
-				ID:                 ids.OpenHttpPortsID,
-				Name:               "Expose API Port",
-				Description:        "Select an option to expose your Beacon Node's API port to your localhost or external hosts on the network, so other machines can access it too.",
-				AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
-				CanBeBlank:         false,
-				OverwriteOnUpgrade: false,
-			},
-			Options: GetPortModes("Allow connections from external hosts. This is safe if you're running your node on your local network. If you're a VPS user, this would expose your node to the internet and could make it vulnerable to MEV/tips theft"),
-			Default: map[Network]RpcPortMode{
-				Network_All: RpcPortMode_Closed,
-			},
-		},
-	}
+	cfg := &LocalBeaconConfig{}
 
 	cfg.Lighthouse = NewLighthouseBnConfig()
 	cfg.Lodestar = NewLodestarBnConfig()
 	cfg.Nimbus = NewNimbusBnConfig()
 	cfg.Prysm = NewPrysmBnConfig()
 	cfg.Teku = NewTekuBnConfig()
+
+	cfg.CheckpointSyncProvider.ID = config.Identifier(ids.LocalBnCheckpointSyncUrlID)
+	cfg.CheckpointSyncProvider.Name = "Checkpoint Sync URL"
+	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
+		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
+		"Leave this blank if you want to sync normally from the start of the chain."
+	cfg.CheckpointSyncProvider.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	cfg.P2pPort.ID = config.Identifier(ids.P2pPortID)
+	cfg.P2pPort.Name = "P2P Port"
+	cfg.P2pPort.Description.Default = "The port to use for P2P (blockchain) traffic."
+	cfg.P2pPort.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	cfg.HttpPort.ID = config.Identifier(ids.HttpPortID)
+	cfg.HttpPort.Name = "HTTP API Port"
+	cfg.HttpPort.Description.Default = "The port your Beacon Node should run its HTTP API on."
+	cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// cfg := &LocalBeaconConfig{
+	// 	BeaconNode: Parameter[BeaconNode]{
+	// 		ParameterCommon: &ParameterCommon{
+	// 			ID:                 ids.BnID,
+	// 			Name:               "Beacon Node",
+	// 			Description:        "Select which Beacon Node client you would like to use.",
+	// 			AffectsContainers:  []ContainerID{ContainerID_Daemon, ContainerID_BeaconNode, ContainerID_ValidatorClient},
+	// 			CanBeBlank:         false,
+	// 			OverwriteOnUpgrade: false,
+	// 		},
+	// 		Options: []*ParameterOption[BeaconNode]{
+	// 			{
+	// 				ParameterOptionCommon: &ParameterOptionCommon{
+	// 					Name:        "Lighthouse",
+	// 					Description: "Lighthouse is a Beacon Node with a heavy focus on speed and security. The team behind it, Sigma Prime, is an information security and software engineering firm who have funded Lighthouse along with the Ethereum Foundation, Consensys, and private individuals. Lighthouse is built in Rust and offered under an Apache 2.0 License.",
+	// 				},
+	// 				Value: BeaconNode_Lighthouse,
+	// 			}, {
+	// 				ParameterOptionCommon: &ParameterOptionCommon{
+	// 					Name:        "Lodestar",
+	// 					Description: "Lodestar is the fifth open-source Ethereum Beacon Node. It is written in Typescript maintained by ChainSafe Systems. Lodestar, their flagship product, is a production-capable Beacon Chain and Validator Client uniquely situated as the go-to for researchers and developers for rapid prototyping and browser usage.",
+	// 				},
+	// 				Value: BeaconNode_Lodestar,
+	// 			}, {
+	// 				ParameterOptionCommon: &ParameterOptionCommon{
+	// 					Name:        "Nimbus",
+	// 					Description: "Nimbus is a Beacon Node implementation that strives to be as lightweight as possible in terms of resources used. This allows it to perform well on embedded systems, resource-restricted devices -- including Raspberry Pis and mobile devices -- and multi-purpose servers.",
+	// 				},
+	// 				Value: BeaconNode_Nimbus,
+	// 			}, {
+	// 				ParameterOptionCommon: &ParameterOptionCommon{
+	// 					Name:        "Prysm",
+	// 					Description: "Prysm is a Go implementation of Ethereum Consensus protocol with a focus on usability, security, and reliability. Prysm is developed by Prysmatic Labs, a company with the sole focus on the development of their client. Prysm is written in Go and released under a GPL-3.0 license.",
+	// 				},
+	// 				Value: BeaconNode_Prysm,
+	// 			}, {
+	// 				ParameterOptionCommon: &ParameterOptionCommon{
+	// 					Name:        "Teku",
+	// 					Description: "PegaSys Teku (formerly known as Artemis) is a Java-based Ethereum 2.0 client designed & built to meet institutional needs and security requirements. PegaSys is an arm of ConsenSys dedicated to building enterprise-ready clients and tools for interacting with the core Ethereum platform. Teku is Apache 2 licensed and written in Java, a language notable for its maturity & ubiquity.",
+	// 				},
+	// 				Value: BeaconNode_Teku,
+	// 			}},
+	// 		Default: map[Network]BeaconNode{
+	// 			Network_All: BeaconNode_Nimbus,
+	// 		},
+	// 	},
+	// 	OpenHttpPort: Parameter[RpcPortMode]{
+	// 		ParameterCommon: &ParameterCommon{
+	// 			ID:                 ids.OpenHttpPortsID,
+	// 			Name:               "Expose API Port",
+	// 			Description:        "Select an option to expose your Beacon Node's API port to your localhost or external hosts on the network, so other machines can access it too.",
+	// 			AffectsContainers:  []ContainerID{ContainerID_BeaconNode},
+	// 			CanBeBlank:         false,
+	// 			OverwriteOnUpgrade: false,
+	// 		},
+	// 		Options: GetPortModes("Allow connections from external hosts. This is safe if you're running your node on your local network. If you're a VPS user, this would expose your node to the internet and could make it vulnerable to MEV/tips theft"),
+	// 		Default: map[Network]RpcPortMode{
+	// 			Network_All: RpcPortMode_Closed,
+	// 		},
+	// 	},
+	// }
 
 	return cfg
 }
