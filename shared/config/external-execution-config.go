@@ -29,7 +29,7 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg.WebsocketUrl.ID = config.Identifier(ids.ExternalEcWebsocketUrlID)
 	cfg.WebsocketUrl.Name = "Websocket URL"
 	cfg.WebsocketUrl.Description.Default = "The URL of the Websocket RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:8546'."
-	cfg.WebsocketUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.WebsocketUrl.AffectedContainers = []string{}
 
 	return cfg
 

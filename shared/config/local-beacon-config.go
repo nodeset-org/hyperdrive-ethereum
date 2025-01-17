@@ -47,17 +47,17 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
 		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
 		"Leave this blank if you want to sync normally from the start of the chain."
-	cfg.CheckpointSyncProvider.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.CheckpointSyncProvider.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.P2pPort.ID = config.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
 	cfg.P2pPort.Description.Default = "The port to use for P2P (blockchain) traffic."
-	cfg.P2pPort.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.P2pPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.HttpPort.ID = config.Identifier(ids.HttpPortID)
 	cfg.HttpPort.Name = "HTTP API Port"
 	cfg.HttpPort.Description.Default = "The port your Beacon Node should run its HTTP API on."
-	cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient), string(ContainerID_Prometheus)}
 
 	// cfg := &LocalBeaconConfig{
 	// 	BeaconNode: Parameter[BeaconNode]{

@@ -39,17 +39,17 @@ func NewGethConfig() *GethConfig {
 	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers Geth should connect to. This can be lowered to improve performance on low-power systems or constrained Networks. We recommend keeping it at 12 or higher."
-	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
 	cfg.EvmTimeout.ID = config.Identifier(ids.GethEvmTimeoutID)
 	cfg.EvmTimeout.Name = "EVM Timeout"
 	cfg.EvmTimeout.Description.Default = "The number of seconds an Execution Client API call is allowed to run before Geth times out and aborts it. Increase this if you see a lot of timeout errors in your logs."
-	cfg.EvmTimeout.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.EvmTimeout.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
 	cfg.ArchiveMode.ID = config.Identifier(ids.GethArchiveModeID)
 	cfg.ArchiveMode.Name = "Enable Archive Mode"
 	cfg.ArchiveMode.Description.Default = "When enabled, Geth will run in \"archive\" mode which means it can recreate the state of the chain for a previous block. This is required for manually generating the Merkle rewards tree.\n\nArchive mode takes several TB of disk space, so only enable it if you need it and can support it."
-	cfg.ArchiveMode.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.ArchiveMode.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 
 	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"

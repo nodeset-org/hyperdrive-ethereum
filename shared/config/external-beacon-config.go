@@ -24,12 +24,12 @@ func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	cfg.HttpUrl.ID = config.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
 	cfg.HttpUrl.Description.Default = "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:5052'."
-	cfg.HttpUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.HttpUrl.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_ValidatorClient)}
 
 	cfg.PrysmRpcUrl.ID = config.Identifier(ids.PrysmRpcUrlID)
 	cfg.PrysmRpcUrl.Name = "Prysm RPC URL"
 	cfg.PrysmRpcUrl.Description.Default = "The URL of Prysm's gRPC API endpoint for your external Beacon Node. Prysm's Validator Client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:5053'."
-	cfg.PrysmRpcUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.PrysmRpcUrl.AffectedContainers = []string{string(ContainerID_ValidatorClient)}
 
 	return cfg
 	// return &ExternalBeaconConfig{
