@@ -2,44 +2,39 @@ package config
 
 import (
 	"github.com/urfave/cli/v2"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/service"
 )
 
 func RegisterCommands(app *cli.App) {
 	app.Commands = append(app.Commands, &cli.Command{
-		Name:    "config",
-		Aliases: []string{"c"},
-		Usage:   "Commands for interacting with the module's configuration",
+		Name:    "services",
+		Aliases: []string{"s"},
+		Usage:   "Commands for manager Node manager services",
 		Subcommands: []*cli.Command{
-			// {
-			// 	Name:      "get-param",
-			// 	Aliases:   []string{"g"},
-			// 	Flags:     []cli.Flag{},
-			// 	ArgsUsage: "parameter-id",
-			// 	Usage:     "Get the value of a parameter.",
-			// 	Action: func(c *cli.Context) error {
-			// 		// Validate args
-			// 		utils.ValidateArgCount(c, 1)
-			// 		param := c.Args().Get(0)
+			{
+				Name:    "resync-ec",
+				Aliases: []string{"resync-eth1"},
+				Usage:   fmt.Sprintf("%sDeletes the main Execution client's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
+				Action: func(c *cli.Context) error {
+					// Validate args
+					utils.ValidateArgCount(c, 0)
 
-			// 		// Run
-			// 		return getParam(c, param)
-			// 	},
-			// },
-			// {
-			// 	Name:    "set-param",
-			// 	Aliases: []string{"s"},
-			// 	Flags:   []cli.Flag{},
-			// 	Usage:   "Sets the value for a parameter.",
-			// 	Action: func(c *cli.Context) error {
-			// 		// Validate args
-			// 		utils.ValidateArgCount(c, 2)
-			// 		param := c.Args().Get(0)
-			// 		value := c.Args().Get(1)
+					// Run command
+					return service.ResyncExecutionClient(c)
+				},
+			},
+			{
+				Name:    "resync-bn",
+				Aliases: []string{"resync-eth2"},
+				Usage:   fmt.Sprintf("%sDeletes the Beacon Node's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
+				Action: func(c *cli.Context) error {
+					// Validate args
+					utils.ValidateArgCount(c, 0)
 
-			// 		// Run
-			// 		return setParam(c, param, value)
-			// 	},
-			// },
+					// Run command
+					return service.ResyncBeaconNode(c)
+				},
+			},
 		},
 	}
 }

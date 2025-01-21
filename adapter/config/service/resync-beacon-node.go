@@ -10,8 +10,10 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+const clientDataVolumeName string = "/ethclient"
+
 // Destroy and resync the Beacon Node from scratch
-func resyncBeaconNode(c *cli.Context) error {
+func ResyncBeaconNode(c *cli.Context) error {
 	// Get Hyperdrive client
 	hd, err := client.NewHyperdriveClientFromCtx(c)
 	if err != nil {
