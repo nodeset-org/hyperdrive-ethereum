@@ -11,12 +11,14 @@ require (
 	github.com/nodeset-org/hyperdrive v1.1.2-0.20250114155501-77047e366904
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/rocket-pool/node-manager-core v0.5.2-0.20241029172412-6cb22253be3f
+	github.com/urfave/cli/v2 v2.27.5
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/docker v27.3.1+incompatible // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
@@ -32,6 +34,8 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect
 	go.opentelemetry.io/otel v1.33.0 // indirect
