@@ -149,8 +149,8 @@ func (cfg *LoggingConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LoggingConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *LoggingConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.Level,
 		&cfg.Format,
 		&cfg.AddSource,

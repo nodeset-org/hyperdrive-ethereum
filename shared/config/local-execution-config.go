@@ -10,7 +10,7 @@ import (
 // Configuration for the Execution client
 type LocalExecutionConfig struct {
 	// The selected EC
-	ExecutionClient config.StringParameter //Parameter[ExecutionClient]
+	ExecutionClient config.ChoiceParameter[ExecutionClient] //Parameter[ExecutionClient]
 
 	// The HTTP API port
 	HttpPort config.UintParameter
@@ -22,7 +22,7 @@ type LocalExecutionConfig struct {
 	EnginePort config.UintParameter
 
 	// Toggle for forwarding the HTTP API port outside of Docker
-	OpenApiPorts config.StringParameter //Parameter[RpcPortMode]
+	OpenApiPorts config.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
 
 	// P2P traffic port
 	P2pPort config.UintParameter
@@ -39,10 +39,30 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg := &LocalExecutionConfig{}
 
 	//TODO: Confirm these
+
+	// Options for ExecutionClient
+	optionsEc := make([]config.ParameterOption[ExecutionClient], 4)
+	optionsEc[0].Name = string(ExecutionClient_Geth)
+	optionsEc[0].Description.Default = "Select if your external client is Geth."
+	optionsEc[0].Value = ExecutionClient_Geth
+
+	optionsEc[1].Name = string(ExecutionClient_Nethermind)
+	optionsEc[1].Description.Default = "Select if your external client is Nethermind."
+	optionsEc[1].Value = ExecutionClient_Nethermind
+
+	optionsEc[2].Name = string(ExecutionClient_Besu)
+	optionsEc[2].Description.Default = "Select if your external client is Besu."
+	optionsEc[2].Value = ExecutionClient_Besu
+
+	optionsEc[3].Name = string(ExecutionClient_Reth)
+	optionsEc[3].Description.Default = "Select if your external client is Reth."
+	optionsEc[3].Value = ExecutionClient_Reth
+
 	cfg.ExecutionClient.ID = config.Identifier(ids.EcID)
 	cfg.ExecutionClient.Name = "Execution Client"
 	cfg.ExecutionClient.Description.Default = "Select which Execution client you would like to run."
 	cfg.ExecutionClient.AffectedContainers = []string{string(ContainerID_ExecutionClient), string(ContainerID_ValidatorClient)}
+	cfg.ExecutionClient.Options = optionsEc
 
 	cfg.HttpPort.ID = config.Identifier(ids.HttpPortID)
 	cfg.HttpPort.Name = "HTTP API Port"
@@ -59,10 +79,25 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.EnginePort.Description.Default = "The port your Execution client should use for its Engine API endpoint (the endpoint the Beacon Node will connect to post-merge)."
 	cfg.EnginePort.AffectedContainers = []string{string(ContainerID_ExecutionClient), string(ContainerID_BeaconNode)}
 
+	// Options for OpenApiPorts
+	options := make([]config.ParameterOption[RpcPortMode], 3)
+	options[0].Name = string(RpcPortMode_Closed)
+	options[0].Description.Default = "Do not expose the RPC port outside of the Docker container."
+	options[0].Value = RpcPortMode_Closed
+
+	options[1].Name = string(RpcPortMode_OpenLocalhost)
+	options[1].Description.Default = "Expose the RPC port to other processes on your machine."
+	options[1].Value = RpcPortMode_OpenLocalhost
+
+	options[2].Name = string(RpcPortMode_OpenExternal)
+	options[2].Description.Default = "Expose the RPC port to other machines on your local network."
+	options[2].Value = RpcPortMode_OpenExternal
+
 	cfg.OpenApiPorts.ID = config.Identifier(ids.LocalEcOpenApiPortsID)
 	cfg.OpenApiPorts.Name = "Expose API Ports"
 	cfg.OpenApiPorts.Description.Default = "Expose the HTTP and Websocket API ports to other processes on your machine, or to your local network so other machines can access your Execution Client's API endpoints."
 	cfg.OpenApiPorts.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+	cfg.OpenApiPorts.Options = options
 
 	cfg.P2pPort.ID = config.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
@@ -84,8 +119,8 @@ func (cfg *LocalExecutionConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LocalExecutionConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *LocalExecutionConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.ExecutionClient,
 		&cfg.HttpPort,
 		&cfg.WebsocketPort,
@@ -122,7 +157,7 @@ func (cfg *LocalExecutionConfig) GetOpenApiPortMapping() string {
 
 // Gets the max peers of the selected EC
 // Note that Reth treats the max peer count specially
-func (cfg *LocalExecutionConfig) GetMaxPeers() uint16 {
+func (cfg *LocalExecutionConfig) GetMaxPeers() uint64 {
 	switch cfg.ExecutionClient.Value {
 	case ExecutionClient_Geth:
 		return cfg.Geth.MaxPeers.Value

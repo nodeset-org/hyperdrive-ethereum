@@ -19,7 +19,7 @@ type PrysmBnConfig struct {
 	RpcPort config.UintParameter
 
 	// Toggle for forwarding the RPC API outside of Docker
-	OpenRpcPort config.UintParameter //Parameter[RpcPortMode]
+	OpenRpcPort config.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
 
 	// The Docker Hub tag for the Prysm BN
 	ContainerTag config.StringParameter
@@ -42,10 +42,25 @@ func NewPrysmBnConfig() *PrysmBnConfig {
 	cfg.RpcPort.Description.Default = "The port Prysm should run its JSON-RPC API on."
 	cfg.RpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient)}
 
+	// Options for OpenRpcPort
+	options := make([]config.ParameterOption[RpcPortMode], 3)
+	options[0].Name = string(RpcPortMode_Closed)
+	options[0].Description.Default = "Do not expose the RPC port outside of the Docker container."
+	options[0].Value = RpcPortMode_Closed
+
+	options[1].Name = string(RpcPortMode_OpenLocalhost)
+	options[1].Description.Default = "Expose the RPC port to other processes on your machine."
+	options[1].Value = RpcPortMode_OpenLocalhost
+
+	options[2].Name = string(RpcPortMode_OpenExternal)
+	options[2].Description.Default = "Expose the RPC port to other machines on your local network."
+	options[2].Value = RpcPortMode_OpenExternal
+
 	cfg.OpenRpcPort.ID = config.Identifier(ids.PrysmOpenRpcPortID)
 	cfg.OpenRpcPort.Name = "Expose RPC Port"
 	cfg.OpenRpcPort.Description.Default = "Expose Prysm's JSON-RPC port to other processes on your machine, or to your local network so other machines can access it too."
 	cfg.OpenRpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	cfg.OpenRpcPort.Options = options
 
 	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
@@ -66,8 +81,8 @@ func (cfg *PrysmBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *PrysmBnConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *PrysmBnConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.MaxPeers,
 		&cfg.RpcPort,
 		&cfg.OpenRpcPort,

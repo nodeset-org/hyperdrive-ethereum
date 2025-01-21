@@ -58,8 +58,8 @@ func (cfg *LighthouseBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LighthouseBnConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *LighthouseBnConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.MaxPeers,
 		&cfg.P2pQuicPort,
 		&cfg.ContainerTag,

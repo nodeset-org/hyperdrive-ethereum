@@ -46,8 +46,8 @@ type HyperdriveEthereumConfig struct {
 	AdditionalDockerNetworks config.StringParameter
 	ClientTimeout            config.UintParameter
 
-	Network    config.StringParameter // config.Parameter[config.Network]
-	ClientMode config.StringParameter // config.Parameter[config.ClientMode]
+	Network    config.ChoiceParameter[Network]    // config.Parameter[config.Network]
+	ClientMode config.ChoiceParameter[ClientMode] // config.Parameter[config.ClientMode]
 
 	// Execution client settings
 	LocalExecutionClient    *LocalExecutionConfig
@@ -269,8 +269,8 @@ func (cfg *HyperdriveEthereumConfig) LoadModuleConfigs() error {
 }
 
 // Get the config.Parameters for this config
-func (cfg *HyperdriveEthereumConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *HyperdriveEthereumConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.ProjectName,
 		&cfg.ApiPort,
 		&cfg.EnableIPv6,

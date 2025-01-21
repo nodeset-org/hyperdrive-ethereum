@@ -145,7 +145,7 @@ func (m RpcPortMode) IsOpen() bool {
 }
 
 // Creates the appropriate Docker config string for the provided port, based on the port mode
-func (m RpcPortMode) DockerPortMapping(port uint16) string {
+func (m RpcPortMode) DockerPortMapping(port uint64) string {
 	ports := fmt.Sprintf("%d:%d/tcp", port, port)
 
 	switch m {

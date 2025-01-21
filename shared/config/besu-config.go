@@ -75,17 +75,17 @@ func (cfg *BesuConfig) GetTitle() string {
 	return "Besu"
 }
 
-// Get the parameters for this config
-func (cfg *BesuConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
-		&cfg.JvmHeapSize,
-		&cfg.MaxPeers,
-		&cfg.MaxBackLayers,
-		&cfg.ArchiveMode,
-		&cfg.ContainerTag,
-		&cfg.AdditionalFlags,
-	}
-}
+// // Get the parameters for this config
+// func (cfg *BesuConfig) GetParameters() []IParameter {
+// 	return []IParameter{
+// 		&cfg.JvmHeapSize,
+// 		&cfg.MaxPeers,
+// 		&cfg.MaxBackLayers,
+// 		&cfg.ArchiveMode,
+// 		&cfg.ContainerTag,
+// 		&cfg.AdditionalFlags,
+// 	}
+// }
 
 // Get the sections underneath this one
 func (cfg *BesuConfig) GetSubconfigs() map[string]IConfigSection {

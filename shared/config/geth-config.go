@@ -70,8 +70,8 @@ func (cfg *GethConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *GethConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *GethConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.MaxPeers,
 		&cfg.EvmTimeout,
 		&cfg.ArchiveMode,

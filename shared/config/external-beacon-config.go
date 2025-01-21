@@ -8,7 +8,7 @@ import (
 // Configuration for external Beacon Nodes
 type ExternalBeaconConfig struct {
 	// The selected BN
-	BeaconNode Parameter[BeaconNode]
+	BeaconNode config.ChoiceParameter[BeaconNode] //Parameter[BeaconNode]
 
 	// The URL of the HTTP endpoint
 	HttpUrl config.StringParameter
@@ -31,53 +31,35 @@ func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	cfg.PrysmRpcUrl.Description.Default = "The URL of Prysm's gRPC API endpoint for your external Beacon Node. Prysm's Validator Client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:5053'."
 	cfg.PrysmRpcUrl.AffectedContainers = []string{string(ContainerID_ValidatorClient)}
 
+	// Options for BeaconNode
+	options := make([]config.ParameterOption[BeaconNode], 5)
+	options[0].Name = string(BeaconNode_Lighthouse)
+	options[0].Description.Default = "Select if your external client is Lighthouse."
+	options[0].Value = BeaconNode_Lighthouse
+
+	options[1].Name = string(BeaconNode_Lodestar)
+	options[1].Description.Default = "Select if your external client is Lodestar."
+	options[1].Value = BeaconNode_Lodestar
+
+	options[2].Name = string(BeaconNode_Nimbus)
+	options[2].Description.Default = "Select if your external client is Nimbus."
+	options[2].Value = BeaconNode_Nimbus
+
+	options[3].Name = string(BeaconNode_Prysm)
+	options[3].Description.Default = "Select if your external client is Prysm."
+	options[3].Value = BeaconNode_Prysm
+
+	options[4].Name = string(BeaconNode_Teku)
+	options[4].Description.Default = "Select if your external client is Teku."
+	options[4].Value = BeaconNode_Teku
+
+	cfg.BeaconNode.ID = config.Identifier(ids.BnID)
+	cfg.BeaconNode.Name = "Beacon Node"
+	cfg.BeaconNode.Description.Default = "Select which Beacon Node your external client is."
+	cfg.BeaconNode.AffectedContainers = []string{string(ContainerID_ValidatorClient)}
+	cfg.BeaconNode.Options = options
+
 	return cfg
-	// return &ExternalBeaconConfig{
-	// 	BeaconNode: Parameter[BeaconNode]{
-	// 		ParameterCommon: &ParameterCommon{
-	// 			ID:                 ids.BnID,
-	// 			Name:               "Beacon Node",
-	// 			Description:        "Select which Beacon Node your external client is.",
-	// 			AffectsContainers:  []ContainerID{ContainerID_ValidatorClient},
-	// 			CanBeBlank:         false,
-	// 			OverwriteOnUpgrade: false,
-	// 		},
-	// 		Options: []*ParameterOption[BeaconNode]{
-	// 			{
-	// 				ParameterOptionCommon: &ParameterOptionCommon{
-	// 					Name:        "Lighthouse",
-	// 					Description: "Select if your external client is Lighthouse.",
-	// 				},
-	// 				Value: BeaconNode_Lighthouse,
-	// 			}, {
-	// 				ParameterOptionCommon: &ParameterOptionCommon{
-	// 					Name:        "Lodestar",
-	// 					Description: "Select if your external client is Lodestar.",
-	// 				},
-	// 				Value: BeaconNode_Lodestar,
-	// 			}, {
-	// 				ParameterOptionCommon: &ParameterOptionCommon{
-	// 					Name:        "Nimbus",
-	// 					Description: "Select if your external client is Nimbus.",
-	// 				},
-	// 				Value: BeaconNode_Nimbus,
-	// 			}, {
-	// 				ParameterOptionCommon: &ParameterOptionCommon{
-	// 					Name:        "Prysm",
-	// 					Description: "Select if your external client is Prysm.",
-	// 				},
-	// 				Value: BeaconNode_Prysm,
-	// 			}, {
-	// 				ParameterOptionCommon: &ParameterOptionCommon{
-	// 					Name:        "Teku",
-	// 					Description: "Select if your external client is Teku.",
-	// 				},
-	// 				Value: BeaconNode_Teku,
-	// 			}},
-	// 		Default: map[Network]BeaconNode{
-	// 			Network_All: BeaconNode_Nimbus,
-	// 		},
-	// 	},
 }
 
 // The title for the config
@@ -86,8 +68,8 @@ func (cfg *ExternalBeaconConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *ExternalBeaconConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *ExternalBeaconConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.BeaconNode,
 		&cfg.HttpUrl,
 		&cfg.PrysmRpcUrl,

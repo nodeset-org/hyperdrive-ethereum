@@ -3,8 +3,6 @@ package config
 import (
 	"fmt"
 	"reflect"
-
-	"github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 // Interface for describing config sections
@@ -13,7 +11,7 @@ type IConfigSection interface {
 	GetTitle() string
 
 	// Get the list of parameters directly belonging to this section
-	GetParameters() []config.IParameter
+	GetParameters() []IParameter
 
 	// Get the sections underneath this one
 	GetSubconfigs() map[string]IConfigSection

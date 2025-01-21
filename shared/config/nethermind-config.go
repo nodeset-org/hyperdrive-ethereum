@@ -103,8 +103,8 @@ func (cfg *NethermindConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *NethermindConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *NethermindConfig) GetParameters() []IParameter {
+	return []IParameter{
 		&cfg.CacheSize,
 		&cfg.MaxPeers,
 		&cfg.PruneMemSize,
