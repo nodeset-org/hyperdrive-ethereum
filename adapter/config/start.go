@@ -172,11 +172,6 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	// 	}
 	// }
 
-	// // Check if StakeWise or Constellation is enabled
-	// if !cfg.StakeWise.Enabled.Value && !cfg.Constellation.Enabled.Value {
-	// 	return nil
-	// }
-
 	// // Get NodeSet registration status if this isn't a new wallet
 	// isExistingWallet := status.Wallet.IsLoaded || status.Wallet.IsOnDisk
 	// if !isExistingWallet {

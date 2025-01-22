@@ -10,7 +10,7 @@ type versionResponse struct {
 func version() error {
 	// Create the response
 	// version := versionResponse{
-	// 	Version: shared.StakewiseVersion,
+	// 	Version: shared.HyperdriveEthereumVersion,
 	// }
 
 	// // Marshal it

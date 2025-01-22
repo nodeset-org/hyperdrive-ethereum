@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 	"github.com/urfave/cli/v2"
 )
