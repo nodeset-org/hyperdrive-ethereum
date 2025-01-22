@@ -1,8 +1,27 @@
 package config
 
 import (
-	"github.com/urfave/cli/v2"
+	"fmt"
+
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/service"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
+	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/commands/nodeset"
+	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/commands/wallet"
+	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/utils"
+	"github.com/urfave/cli/v2"
+)
+
+var (
+	ignoreSlashTimerFlag *cli.BoolFlag = &cli.BoolFlag{
+		Name:  "ignore-slash-timer",
+		Usage: fmt.Sprintf("Bypass the safety timer that forces a delay when switching to a new Beacon Node.\n%sUsing this flag to bypass the slashing timer could result in a *major* loss of ETH! Only use this is if you absolutely understand the risks!%s", terminal.ColorRed, terminal.ColorReset),
+	}
+	// tailFlag *cli.StringFlag = &cli.StringFlag{
+	// 	Name:    "tail",
+	// 	Aliases: []string{"t"},
+	// 	Usage:   "The number of lines to show from the end of the logs (number or \"all\")",
+	// 	Value:   "100",
+	// }
 )
 
 func RegisterCommands(app *cli.App) {
@@ -35,6 +54,25 @@ func RegisterCommands(app *cli.App) {
 					return service.ResyncBeaconNode(c)
 				},
 			},
+			{
+				Name:    "start",
+				Aliases: []string{"s"},
+				Usage:   "Start the Hyperdrive service",
+				Flags: []cli.Flag{
+					ignoreSlashTimerFlag,
+					nodeset.RegisterEmailFlag,
+					wallet.PasswordFlag,
+					wallet.SavePasswordFlag,
+					utils.YesFlag,
+				},
+				Action: func(c *cli.Context) error {
+					// Validate args
+					utils.ValidateArgCount(c, 0)
+
+					// Run command
+					return startService(c, false)
+				},
+			},
 		},
-	}
+	})
 }

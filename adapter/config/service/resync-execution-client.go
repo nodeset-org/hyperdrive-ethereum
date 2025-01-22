@@ -1,16 +1,13 @@
-package service
+package services
 
 import (
 	"fmt"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
 	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/client"
-	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/utils"
-	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/utils/terminal"
-	"github.com/rocket-pool/node-manager-core/config"
 	"github.com/urfave/cli/v2"
 )
-
-const clientDataVolumeName string = "/ethclient"
 
 // Destroy and resync the Execution client from scratch
 func ResyncExecutionClient(c *cli.Context) error {
@@ -45,7 +42,7 @@ func ResyncExecutionClient(c *cli.Context) error {
 	}
 
 	// Stop Execution
-	executionContainerName := cfg.Hyperdrive.GetDockerArtifactName(string(config.ContainerID_ExecutionClient))
+	executionContainerName := cfg.Hyperdrive.GetDockerArtifactName(string(ContainerID_ExecutionClient))
 	fmt.Printf("Stopping %s...\n", executionContainerName)
 	err = hd.StopContainer(executionContainerName)
 	if err != nil {
