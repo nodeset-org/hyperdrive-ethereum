@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/kballard/go-shellquote"
-	"github.com/nodeset-org/hyperdrive-stakewise/adapter/app"
-	"github.com/nodeset-org/hyperdrive-stakewise/adapter/utils"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/app"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
 	"github.com/urfave/cli/v2"
 )
 

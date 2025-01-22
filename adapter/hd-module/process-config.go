@@ -1,7 +1,7 @@
 package hdmodule
 
 import (
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
 	"github.com/urfave/cli/v2"
 )
 
