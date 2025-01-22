@@ -3,11 +3,8 @@ package config
 import (
 	"fmt"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/service"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
-	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/commands/nodeset"
-	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/commands/wallet"
-	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/utils"
+
 	"github.com/urfave/cli/v2"
 )
 
@@ -36,10 +33,10 @@ func RegisterCommands(app *cli.App) {
 				Usage:   fmt.Sprintf("%sDeletes the main Execution client's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
 				Action: func(c *cli.Context) error {
 					// Validate args
-					utils.ValidateArgCount(c, 0)
+					// utils.ValidateArgCount(c, 0)
 
 					// Run command
-					return service.ResyncExecutionClient(c)
+					return resyncExecutionClient(c)
 				},
 			},
 			{
@@ -48,10 +45,10 @@ func RegisterCommands(app *cli.App) {
 				Usage:   fmt.Sprintf("%sDeletes the Beacon Node's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
 				Action: func(c *cli.Context) error {
 					// Validate args
-					utils.ValidateArgCount(c, 0)
+					// utils.ValidateArgCount(c, 0)
 
 					// Run command
-					return service.ResyncBeaconNode(c)
+					return resyncBeaconNode(c)
 				},
 			},
 			{
@@ -60,14 +57,14 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Start the Hyperdrive service",
 				Flags: []cli.Flag{
 					ignoreSlashTimerFlag,
-					nodeset.RegisterEmailFlag,
-					wallet.PasswordFlag,
-					wallet.SavePasswordFlag,
-					utils.YesFlag,
+					// nodeset.RegisterEmailFlag,
+					// wallet.PasswordFlag,
+					// wallet.SavePasswordFlag,
+					// utils.YesFlag,
 				},
 				Action: func(c *cli.Context) error {
 					// Validate args
-					utils.ValidateArgCount(c, 0)
+					// utils.ValidateArgCount(c, 0)
 
 					// Run command
 					return startService(c, false)

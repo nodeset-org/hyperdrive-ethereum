@@ -1,4 +1,4 @@
-package services
+package config
 
 const clientDataVolumeName string = "/ethclient"
 

@@ -1,4 +1,4 @@
-package services
+package config
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 // Destroy and resync the Beacon Node from scratch
-func ResyncBeaconNode(c *cli.Context) error {
+func resyncBeaconNode(c *cli.Context) error {
 	// Get Hyperdrive client
 	hd, err := client.NewHyperdriveClientFromCtx(c)
 	if err != nil {

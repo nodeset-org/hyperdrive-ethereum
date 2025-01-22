@@ -1,4 +1,4 @@
-package services
+package config
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 // Destroy and resync the Execution client from scratch
-func ResyncExecutionClient(c *cli.Context) error {
+func resyncExecutionClient(c *cli.Context) error {
 	// Get Hyperdrive client
 	hd, err := client.NewHyperdriveClientFromCtx(c)
 	if err != nil {
