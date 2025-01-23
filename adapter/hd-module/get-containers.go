@@ -1,6 +1,11 @@
 package hdmodule
 
 import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 	"github.com/urfave/cli/v2"
 )
 
@@ -12,26 +17,26 @@ type getContainersResponse struct {
 
 // Handle the `get-containers` command
 func getContainers(c *cli.Context) error {
-	// // Get the request
-	// _, err := utils.HandleKeyedRequest[*utils.KeyedRequest](c)
-	// if err != nil {
-	// 	return err
-	// }
+	// Get the request
+	_, err := utils.HandleKeyedRequest[*utils.KeyedRequest](c)
+	if err != nil {
+		return err
+	}
 
-	// // Create the response
-	// response := getContainersResponse{
-	// 	Containers: []string{
-	// 		shared.ServiceContainerName,
-	// 	},
-	// }
+	// Create the response
+	response := getContainersResponse{
+		Containers: []string{
+			shared.ServiceContainerName,
+		},
+	}
 
-	// // Marshal it
-	// bytes, err := json.Marshal(response)
-	// if err != nil {
-	// 	return fmt.Errorf("error marshalling get-containers response: %w", err)
-	// }
+	// Marshal it
+	bytes, err := json.Marshal(response)
+	if err != nil {
+		return fmt.Errorf("error marshalling get-containers response: %w", err)
+	}
 
-	// // Print it
-	// fmt.Println(string(bytes))
+	// Print it
+	fmt.Println(string(bytes))
 	return nil
 }

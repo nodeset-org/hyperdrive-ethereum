@@ -1,7 +1,12 @@
 package hdmodule
 
 import (
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
+	"encoding/json"
+	"fmt"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,32 +27,32 @@ type getLogFileResponse struct {
 // Handle the `get-log-file` command
 func getLogFile(c *cli.Context) error {
 	// Get the request
-	// request, err := utils.HandleKeyedRequest[*getLogFileRequest](c)
-	// if err != nil {
-	// 	return err
-	// }
+	request, err := utils.HandleKeyedRequest[*getLogFileRequest](c)
+	if err != nil {
+		return err
+	}
 
-	// // Get the path
-	// path := ""
-	// switch request.Source {
-	// case "adapter":
-	// 	path = utils.AdapterLogFile
-	// case shared.ServiceContainerName:
-	// 	path = shared.ServiceLogFile
-	// }
+	// Get the path
+	path := ""
+	switch request.Source {
+	case "adapter":
+		path = utils.AdapterLogFile
+	case shared.ServiceContainerName:
+		path = shared.ServiceLogFile
+	}
 
-	// // Create the response
-	// response := getLogFileResponse{
-	// 	Path: path,
-	// }
+	// Create the response
+	response := getLogFileResponse{
+		Path: path,
+	}
 
-	// // Marshal it
-	// bytes, err := json.Marshal(response)
-	// if err != nil {
-	// 	return fmt.Errorf("error marshalling get-log-file response: %w", err)
-	// }
+	// Marshal it
+	bytes, err := json.Marshal(response)
+	if err != nil {
+		return fmt.Errorf("error marshalling get-log-file response: %w", err)
+	}
 
-	// // Print it
-	// fmt.Println(string(bytes))
+	// Print it
+	fmt.Println(string(bytes))
 	return nil
 }

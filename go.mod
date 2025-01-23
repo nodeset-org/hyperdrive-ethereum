@@ -9,7 +9,7 @@ require (
 	github.com/ethereum/go-ethereum v1.14.12
 	github.com/glendc/go-external-ip v0.1.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/nodeset-org/hyperdrive v1.1.2-0.20250114155501-77047e366904
+	github.com/nodeset-org/hyperdrive v1.1.2-0.20250106215109-78519b2bef69
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/rocket-pool/node-manager-core v0.5.2-0.20241029172412-6cb22253be3f
 	github.com/urfave/cli/v2 v2.27.2

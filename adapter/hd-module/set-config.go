@@ -1,7 +1,11 @@
 package hdmodule
 
 import (
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
+	"fmt"
+
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,29 +20,29 @@ type setConfigRequest struct {
 // Handle the `set-config` command
 func setConfig(c *cli.Context) error {
 	// Get the request
-	// request, err := utils.HandleKeyedRequest[*setConfigRequest](c)
-	// if err != nil {
-	// 	return err
-	// }
+	request, err := utils.HandleKeyedRequest[*setConfigRequest](c)
+	if err != nil {
+		return err
+	}
 
-	// // Get the config
-	// cfg := config.NewExampleConfig()
-	// err = hdconfig.UnmarshalConfigurationInstanceIntoMetadata(request.Config, cfg)
-	// if err != nil {
-	// 	return err
-	// }
+	// Get the config
+	cfg := config.NewExampleConfig()
+	err = hdconfig.UnmarshalConfigurationInstanceIntoMetadata(request.Config, cfg)
+	if err != nil {
+		return err
+	}
 
-	// // Make a config manager
-	// cfgMgr, err := config.NewAdapterConfigManager(c)
-	// if err != nil {
-	// 	return fmt.Errorf("error creating config manager: %w", err)
-	// }
-	// cfgMgr.AdapterConfig = cfg
+	// Make a config manager
+	cfgMgr, err := config.NewAdapterConfigManager(c)
+	if err != nil {
+		return fmt.Errorf("error creating config manager: %w", err)
+	}
+	cfgMgr.AdapterConfig = cfg
 
-	// // Save it
-	// err = cfgMgr.SaveConfigToDisk()
-	// if err != nil {
-	// 	return fmt.Errorf("error saving config: %w", err)
-	// }
+	// Save it
+	err = cfgMgr.SaveConfigToDisk()
+	if err != nil {
+		return fmt.Errorf("error saving config: %w", err)
+	}
 	return nil
 }
