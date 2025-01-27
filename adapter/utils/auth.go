@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 
 	"github.com/urfave/cli/v2"
@@ -34,32 +35,32 @@ type Authenticator struct {
 	key string
 }
 
-// // Creates a new Authenticator instance
-// func NewAuthenticator(c *cli.Context) (*Authenticator, error) {
-// 	keyFile := c.String(KeyFileFlag.Name)
-// 	if keyFile == "" {
-// 		return nil, fmt.Errorf("secret key file is required")
-// 	}
+// Creates a new Authenticator instance
+func NewAuthenticator(c *cli.Context) (*Authenticator, error) {
+	keyFile := c.String(KeyFileFlag.Name)
+	if keyFile == "" {
+		return nil, fmt.Errorf("secret key file is required")
+	}
 
-// 	// Make sure the file exists
-// 	_, err := os.Stat(keyFile)
-// 	if err != nil {
-// 		if errors.Is(err, fs.ErrNotExist) {
-// 			return nil, fmt.Errorf("key file [%s] does not exist", keyFile)
-// 		}
-// 		return nil, fmt.Errorf("error checking key file [%s]: %w", keyFile, err)
-// 	}
+	// Make sure the file exists
+	_, err := os.Stat(keyFile)
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			return nil, fmt.Errorf("key file [%s] does not exist", keyFile)
+		}
+		return nil, fmt.Errorf("error checking key file [%s]: %w", keyFile, err)
+	}
 
-// 	// Read the key file
-// 	key, err := os.ReadFile(keyFile)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error reading key file [%s]: %w", keyFile, err)
-// 	}
+	// Read the key file
+	key, err := os.ReadFile(keyFile)
+	if err != nil {
+		return nil, fmt.Errorf("error reading key file [%s]: %w", keyFile, err)
+	}
 
-// 	return &Authenticator{
-// 		key: string(key),
-// 	}, nil
-// }
+	return &Authenticator{
+		key: string(key),
+	}, nil
+}
 
 // Authenticate checks if the provided key matches the stored key
 func (a *Authenticator) Authenticate(key string) error {

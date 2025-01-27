@@ -300,3 +300,17 @@ func (cfg *HyperdriveEthereumConfig) GetModuleSystemDir() string {
 func (cfg *HyperdriveEthereumConfig) GetAdapterKeyPath() string {
 	return filepath.Join(cfg.hyperdriveUserDirectory, "secrets", "adapter.key")
 }
+
+func (cfg *HyperdriveEthereumConfig) ConvertToNative() *NativeHyperdriveEthereumConfig {
+	native := &NativeHyperdriveEthereumConfig{}
+
+	// native.ExampleBool = cfg.ExampleBool.Value
+	// native.ExampleInt = cfg.ExampleInt.Value
+	// native.ExampleUint = cfg.ExampleUint.Value
+	// native.ExampleFloat = cfg.ExampleFloat.Value
+	// native.ExampleString = cfg.ExampleString.Value
+	// native.ExampleChoice = cfg.ExampleChoice.Value
+	// native.SubConfig.SubExampleBool = cfg.SubConfig.SubExampleBool.Value
+	// native.SubConfig.SubExampleChoice = cfg.SubConfig.SubExampleChoice.Value
+	return native
+}
