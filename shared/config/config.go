@@ -15,7 +15,7 @@ const (
 
 // Example of a configuration for a service
 type NativeHyperdriveEthereumConfig struct {
-	// TODO
+	// TODO (HN)
 	ExampleBool bool `json:"exampleBool" yaml:"exampleBool"`
 
 	ExampleInt int64 `json:"exampleInt" yaml:"exampleInt"`
