@@ -1,6 +1,7 @@
 package hdmodule
 
 import (
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -18,7 +19,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Print the module version.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return version()
@@ -31,7 +32,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Get the path to a log file.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return getLogFile(c)
@@ -44,7 +45,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Get the metadata for the module's configuration, representing how to present the parameters to the user.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return getConfigMetadata(c)
@@ -57,7 +58,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Get the instance of the module's configuration, with the values all set.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return getConfigInstance(c)
@@ -70,7 +71,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Process the module's configuration, validating it without saving.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return processConfig(c)
@@ -83,7 +84,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Sets the module's configuration, saving it to disk.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return setConfig(c)
@@ -96,7 +97,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Get the list of containers owned by this module.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return getContainers(c)
@@ -109,7 +110,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   "Run a command.",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run
 					return run(c)

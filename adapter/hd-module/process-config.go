@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
@@ -36,7 +38,7 @@ func processConfig(c *cli.Context) error {
 	}
 
 	// Get the config
-	cfg := config.NewExampleConfig()
+	cfg := config.NewHyperdriveEthereumConfig("TODO", "TODO")
 	err = hdconfig.UnmarshalConfigurationInstanceIntoMetadata(request.Config, cfg)
 	if err != nil {
 		return err

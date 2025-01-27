@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 
 	"github.com/urfave/cli/v2"
 )
@@ -33,7 +34,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   fmt.Sprintf("%sDeletes the main Execution client's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run command
 					return resyncExecutionClient(c)
@@ -45,7 +46,7 @@ func RegisterCommands(app *cli.App) {
 				Usage:   fmt.Sprintf("%sDeletes the Beacon Node's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run command
 					return resyncBeaconNode(c)
@@ -64,7 +65,7 @@ func RegisterCommands(app *cli.App) {
 				},
 				Action: func(c *cli.Context) error {
 					// Validate args
-					// utils.ValidateArgCount(c, 0)
+					utils.ValidateArgCount(c, 0)
 
 					// Run command
 					return startService(c, false)

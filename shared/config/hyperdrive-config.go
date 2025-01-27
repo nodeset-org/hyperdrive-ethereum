@@ -77,6 +77,8 @@ type HyperdriveEthereumConfig struct {
 	hyperdriveUserDirectory string
 	systemPath              string
 	moduleEnableStatus      map[string]bool
+
+	ServerConfig *ServerConfig
 }
 
 // Creates a new Hyperdrive configuration

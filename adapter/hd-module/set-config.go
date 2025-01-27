@@ -3,9 +3,11 @@ package hdmodule
 import (
 	"fmt"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -26,7 +28,7 @@ func setConfig(c *cli.Context) error {
 	}
 
 	// Get the config
-	cfg := config.NewExampleConfig()
+	cfg := sharedconfig.NewHyperdriveEthereumConfig("TODO", "TODO")
 	err = hdconfig.UnmarshalConfigurationInstanceIntoMetadata(request.Config, cfg)
 	if err != nil {
 		return err

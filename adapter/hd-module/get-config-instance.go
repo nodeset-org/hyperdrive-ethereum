@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
