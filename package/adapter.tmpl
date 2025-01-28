@@ -1,10 +1,10 @@
 # TODO: (HN)
-# This is the Docker Compose file for the example module's adapter.
+# This is the Docker Compose file for the ethereum module's adapter.
 # You can make yours as simple or as complex as you need, as long as you follow the adapter specification.
 
 services:
   {{.GetContainerName em_adapter}}:
-    image: nodeset/hyperdrive-example:v1.0.0
+    image: nodeset/hyperdrive-ethereum:v1.0.0
     restart: unless-stopped
     entrypoint: /usr/bin/hd-adapter -s {{.ModuleSecretFile}} # This is the path to the adapter binary
     environment:

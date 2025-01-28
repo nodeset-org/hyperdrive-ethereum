@@ -5,9 +5,9 @@ import (
 
 	"github.com/blang/semver/v4"
 	"github.com/goccy/go-json"
-	"github.com/nodeset-org/hyperdrive-example/adapter/config"
-	"github.com/nodeset-org/hyperdrive-example/adapter/utils"
-	"github.com/nodeset-org/hyperdrive-example/shared"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/urfave/cli/v2"
 )
@@ -51,7 +51,7 @@ func upgradeInstance(c *cli.Context) error {
 	// Create the response
 	response := modconfig.ModuleInstance{
 		Enabled: modInstance.Enabled,
-		Version: shared.Version,
+		Version: shared.HyperdriveEthereumVersion,
 	}
 	response.SetSettingsFromKnownType(settings)
 

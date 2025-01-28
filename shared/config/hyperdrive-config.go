@@ -9,7 +9,7 @@ import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
-	"github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	sharedconfig "github.com/nodeset-org/hyperdrive/shared/config"
 	"gopkg.in/yaml.v2"
 )
@@ -36,18 +36,18 @@ const (
 
 // The base configuration for Hyperdrive
 type HyperdriveEthereumConfig struct {
-	EnableIPv6               config.BoolParameter
-	ProjectName              config.StringParameter
-	ApiPort                  config.UintParameter
-	UserDataPath             config.StringParameter
-	AutoTxMaxFee             config.FloatParameter
-	MaxPriorityFee           config.FloatParameter
-	AutoTxGasThreshold       config.FloatParameter
-	AdditionalDockerNetworks config.StringParameter
-	ClientTimeout            config.UintParameter
+	EnableIPv6               hdconfig.BoolParameter
+	ProjectName              hdconfig.StringParameter
+	ApiPort                  hdconfig.UintParameter
+	UserDataPath             hdconfig.StringParameter
+	AutoTxMaxFee             hdconfig.FloatParameter
+	MaxPriorityFee           hdconfig.FloatParameter
+	AutoTxGasThreshold       hdconfig.FloatParameter
+	AdditionalDockerNetworks hdconfig.StringParameter
+	ClientTimeout            hdconfig.UintParameter
 
-	Network    config.ChoiceParameter[Network]    // config.Parameter[config.Network]
-	ClientMode config.ChoiceParameter[ClientMode] // config.Parameter[config.ClientMode]
+	Network    hdconfig.ChoiceParameter[Network]    // hdconfig.Parameter[config.Network]
+	ClientMode hdconfig.ChoiceParameter[ClientMode] // hdconfig.Parameter[config.ClientMode]
 
 	// Execution client settings
 	LocalExecutionClient    *LocalExecutionConfig
@@ -64,7 +64,7 @@ type HyperdriveEthereumConfig struct {
 	// MevBoost *MevBoostConfig
 
 	// The Docker Hub tag for the daemon container
-	ContainerTag config.StringParameter
+	ContainerTag hdconfig.StringParameter
 
 	// Logging
 	Logging *LoggingConfig
@@ -90,48 +90,48 @@ func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEth
 	}
 
 	// Project Name
-	cfg.ProjectName.ID = config.Identifier(ids.ProjectNameID)
+	cfg.ProjectName.ID = hdconfig.Identifier(ids.ProjectNameID)
 	cfg.ProjectName.Name = "Project Name"
 	cfg.ProjectName.Description.Default = "This is the prefix that will be attached to all of the Docker containers managed by Hyperdrive."
 	cfg.ProjectName.Default = DefaultProjectName
 	cfg.ProjectName.AffectedContainers = []string{string(ContainerID_All)}
 
 	// API Port
-	cfg.ApiPort.ID = config.Identifier(ids.ApiPortID)
+	cfg.ApiPort.ID = hdconfig.Identifier(ids.ApiPortID)
 	cfg.ApiPort.Name = "Service API Port"
 	cfg.ApiPort.Description.Default = "The port that Hyperdrive's API server should run on within the internal Docker network. Note this is bound to the local machine only; it cannot be accessed by other machines."
 	cfg.ApiPort.Default = uint64(DefaultApiPort)
 	cfg.ApiPort.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Enable IPv6
-	cfg.EnableIPv6.ID = config.Identifier(ids.EnableIPv6ID)
+	cfg.EnableIPv6.ID = hdconfig.Identifier(ids.EnableIPv6ID)
 	cfg.EnableIPv6.Name = "Enable IPv6"
 	cfg.EnableIPv6.Description.Default = "Enable IPv6 networking for Hyperdrive services. This is useful if you have an IPv6 network and want to use it for Hyperdrive.\n\nIf this isn't the first time you're starting Hyperdrive, you'll have to recreate the network after changing this box with `hyperdrive service down` and `hyperdrive service start` for it to take effect.\n\n[orange]NOTE: For IPv6 support to work, you must manually set up your Docker daemon to support it. Please follow the instructions at https://docs.docker.com/config/daemon/ipv6/#dynamic-ipv6-subnet-allocation before checking this box."
 	cfg.EnableIPv6.Default = DefaultEnableIPv6
 	cfg.EnableIPv6.AffectedContainers = []string{string(ContainerID_All)}
 
 	// User Data Path
-	cfg.UserDataPath.ID = config.Identifier(ids.UserDataPathID)
+	cfg.UserDataPath.ID = hdconfig.Identifier(ids.UserDataPathID)
 	cfg.UserDataPath.Name = "User Data Path"
 	cfg.UserDataPath.Description.Default = "The absolute path of your personal `data` folder that contains secrets such as your node wallet's encrypted file, the password for your node wallet, and all of the validator keys for any Hyperdrive modules."
 	cfg.UserDataPath.Default = filepath.Join(hdDir, "data")
 	cfg.UserDataPath.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Additional Docker Networks
-	cfg.AdditionalDockerNetworks.ID = config.Identifier(ids.AdditionalDockerNetworksID)
+	cfg.AdditionalDockerNetworks.ID = hdconfig.Identifier(ids.AdditionalDockerNetworksID)
 	cfg.AdditionalDockerNetworks.Name = "Additional Docker Networks"
 	cfg.AdditionalDockerNetworks.Description.Default = "List any other externally-managed Docker networks running on this machine that you'd like to give the Hyperdrive services access to here. Use a comma-separated list of network names.\n\nTo get a list of local Docker networks, run `docker network ls`."
 	cfg.AdditionalDockerNetworks.AffectedContainers = []string{string(ContainerID_All)}
 
 	// Client Timeout
-	cfg.ClientTimeout.ID = config.Identifier(ids.ClientTimeoutID)
+	cfg.ClientTimeout.ID = hdconfig.Identifier(ids.ClientTimeoutID)
 	cfg.ClientTimeout.Name = "Client Timeout"
 	cfg.ClientTimeout.Description.Default = "The maximum time (in seconds) that Hyperdrive will wait for a response during HTTP requests (such as Execution Client, Beacon Node, or nodeset.io requests) before timing out."
 	cfg.ClientTimeout.Default = uint64(DefaultClientTimeout)
 	cfg.ClientTimeout.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Container Tag
-	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Service Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Hyperdrive Daemon image to use."
 	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_Daemon)}
@@ -139,21 +139,21 @@ func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEth
 	cfg.ContainerTag.Default = hyperdriveTag
 
 	// AutoTxMaxFee
-	cfg.AutoTxMaxFee.ID = config.Identifier(ids.AutoTxMaxFeeID)
+	cfg.AutoTxMaxFee.ID = hdconfig.Identifier(ids.AutoTxMaxFeeID)
 	cfg.AutoTxMaxFee.Name = "Auto TX Max Fee"
 	cfg.AutoTxMaxFee.Description.Default = "Set this if you want all of Hyperdrive's automatic transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will use the suggested max fee based on the current network conditions.\n\nAny other value will ignore the network suggestion and use this value instead."
 	cfg.AutoTxMaxFee.Default = DefaultAutoTxMaxFee
 	cfg.AutoTxMaxFee.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// MaxPriorityFee
-	cfg.MaxPriorityFee.ID = config.Identifier(ids.MaxPriorityFeeID)
+	cfg.MaxPriorityFee.ID = hdconfig.Identifier(ids.MaxPriorityFeeID)
 	cfg.MaxPriorityFee.Name = "Max Priority Fee"
 	cfg.MaxPriorityFee.Description.Default = "The default value for the priority fee (in gwei) for all of your transactions, including automatic ones. This describes how much you're willing to pay *above the network's current base fee* - the higher this is, the more ETH you give to the validators for including your transaction, which generally means it will be included in a block faster (as long as your max fee is sufficiently high to cover the current network conditions).\n\nMust be larger than 0."
 	cfg.MaxPriorityFee.Default = DefaultMaxPriorityFee
 	cfg.MaxPriorityFee.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// AutoTxGasThreshold
-	cfg.AutoTxGasThreshold.ID = config.Identifier(ids.AutoTxGasThresholdID)
+	cfg.AutoTxGasThreshold.ID = hdconfig.Identifier(ids.AutoTxGasThresholdID)
 	cfg.AutoTxGasThreshold.Name = "Auto TX Gas Threshold"
 	cfg.AutoTxGasThreshold.Description.Default = "The threshold (in gwei) that the recommended network gas price must be under in order for automated transactions to be submitted when due. A value of 0 will disable non-essential automatic transactions.\n\nNOTE: If Auto TX Max Fee is set, this setting will be ignored."
 	cfg.AutoTxGasThreshold.Default = DefaultAutoTxGasThreshold
@@ -287,8 +287,8 @@ func (cfg *HyperdriveEthereumConfig) GetParameters() []IParameter {
 }
 
 // Get the subconfigurations for this config
-func (cfg *HyperdriveEthereumConfig) GetSections() []config.ISection {
-	return []config.ISection{
+func (cfg *HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{
 		cfg.Logging,
 	}
 }
