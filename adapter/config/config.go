@@ -81,16 +81,23 @@ type HyperdriveEthereumConfig struct {
 	moduleEnableStatus      map[string]bool
 }
 
-// TODO (HN) Has to match up top
 type HyperdriveEthereumConfigSettings struct {
-	ExampleBool   bool                    `json:"exampleBool"`
-	ExampleInt    int64                   `json:"exampleInt"`
-	ExampleFloat  float64                 `json:"exampleFloat"`
-	ExampleString string                  `json:"exampleString"`
-	ExampleChoice nativecfg.ExampleOption `json:"exampleChoice"`
+	EnableIPv6               bool    `json:"enableIPv6"`
+	ProjectName              string  `json:"projectName"`
+	ApiPort                  uint    `json:"apiPort"`
+	UserDataPath             string  `json:"userDataPath"`
+	AutoTxMaxFee             float64 `json:"autoTxMaxFee"`
+	MaxPriorityFee           float64 `json:"maxPriorityFee"`
+	AutoTxGasThreshold       float64 `json:"autoTxGasThreshold"`
+	AdditionalDockerNetworks string  `json:"additionalDockerNetworks"`
+	ClientTimeout            uint    `json:"clientTimeout"`
 
-	SubConfig    *SubConfigSettings    `json:"subConfig"`
-	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
+	Network    sharedconfig.Network `json:"network"`
+	ClientMode ClientMode           `json:"clientMode"`
+
+	// TODO: Ask Joe if it needs clients, logging etc (i.e. exact 1:1 match up top)
+
+	ContainerTag string `json:"containerTag"`
 }
 
 func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEthereumConfig {
@@ -204,28 +211,38 @@ func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 	}
 }
 
-// func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumConfig) *ExampleConfigSettings {
-// 	instance := &HyperdriveEthereumConfig{
-// 		// ExampleBool:   native.ExampleBool,
-// 		// ExampleInt:    native.ExampleInt,
-// 		// ExampleFloat:  native.ExampleFloat,
-// 		// ExampleString: native.ExampleString,
-// 		// ExampleChoice: native.ExampleChoice,
-// 		// SubConfig: &SubConfigSettings{
-// 		// 	SubExampleBool:   native.SubConfig.SubExampleBool,
-// 		// 	SubExampleChoice: native.SubConfig.SubExampleChoice,
-// 		// },
-// 		// ServerConfig: &ServerConfigSettings{},
-// 	}
-// 	return instance
-// }
+func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumConfig) *HyperdriveEthereumConfigSettings {
+	instance := &HyperdriveEthereumConfigSettings{
+		EnableIPv6:               native.EnableIPv6,
+		ProjectName:              native.ProjectName,
+		ApiPort:                  native.ApiPort,
+		UserDataPath:             native.UserDataPath,
+		AutoTxMaxFee:             native.AutoTxMaxFee,
+		MaxPriorityFee:           native.MaxPriorityFee,
+		AutoTxGasThreshold:       native.AutoTxGasThreshold,
+		AdditionalDockerNetworks: native.AdditionalDockerNetworks,
+		ClientTimeout:            native.ClientTimeout,
+		Network:                  native.Network,
+		ClientMode:               native.ClientMode,
+		ContainerTag:             native.ContainerTag,
+	}
+	return instance
+}
 
-// func ConvertInstanceToNativeConfig(instance *ExampleConfigSettings) *sharedconfig.NativeHyperdriveEthereumConfig {
-// 	native := &sharedconfig.NativeHyperdriveEthereumConfig{
-// 		// ExampleBool:   instance.ExampleBool,
-// 		// ExampleInt:    instance.ExampleInt,
-// 		// ExampleFloat:  instance.ExampleFloat,
-// 		// ExampleString: instance.ExampleString,
-// 	}
-// 	return native
-// }
+func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *sharedconfig.NativeHyperdriveEthereumConfig {
+	native := &sharedconfig.NativeHyperdriveEthereumConfig{
+		EnableIPv6:               instance.EnableIPv6,
+		ProjectName:              instance.ProjectName,
+		ApiPort:                  instance.ApiPort,
+		UserDataPath:             instance.UserDataPath,
+		AutoTxMaxFee:             instance.AutoTxMaxFee,
+		MaxPriorityFee:           instance.MaxPriorityFee,
+		AutoTxGasThreshold:       instance.AutoTxGasThreshold,
+		AdditionalDockerNetworks: instance.AdditionalDockerNetworks,
+		ClientTimeout:            instance.ClientTimeout,
+		Network:                  instance.Network,
+		ClientMode:               instance.ClientMode,
+		ContainerTag:             instance.ContainerTag,
+	}
+	return native
+}

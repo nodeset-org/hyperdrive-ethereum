@@ -13,24 +13,29 @@ const (
 	ConfigFileMode os.FileMode = 0644
 )
 
-// Example of a configuration for a service
-type NativeHyperdriveEthereumConfig struct {
-	// TODO (HN)
-	ExampleBool bool `json:"exampleBool" yaml:"exampleBool"`
+type NativeHyperdriveEthereumSettings struct {
+	EnableIPv6               bool    `json:"enableIPv6"`
+	ProjectName              string  `json:"projectName"`
+	ApiPort                  uint    `json:"apiPort"`
+	UserDataPath             string  `json:"userDataPath"`
+	AutoTxMaxFee             float64 `json:"autoTxMaxFee"`
+	MaxPriorityFee           float64 `json:"maxPriorityFee"`
+	AutoTxGasThreshold       float64 `json:"autoTxGasThreshold"`
+	AdditionalDockerNetworks string  `json:"additionalDockerNetworks"`
+	ClientTimeout            uint    `json:"clientTimeout"`
 
-	ExampleInt int64 `json:"exampleInt" yaml:"exampleInt"`
+	Network    Network    `json:"network"`
+	ClientMode ClientMode `json:"clientMode"`
 
-	ExampleUint uint64 `json:"exampleUint" yaml:"exampleUint"`
+	// TODO: Ask Joe if it needs clients, logging etc (i.e. exact 1:1 match up top)
 
-	ExampleFloat float64 `json:"exampleFloat" yaml:"exampleFloat"`
-
-	ExampleString string `json:"exampleString" yaml:"exampleString"`
+	ContainerTag string `json:"containerTag"`
 }
 
 // Configuration manager
 type ConfigManager struct {
 	// The configuration
-	Config *NativeHyperdriveEthereumConfig
+	Config *NativeHyperdriveEthereumSettings
 
 	// The path to the configuration file
 	ConfigPath string
@@ -44,7 +49,7 @@ func NewConfigManager(path string) *ConfigManager {
 }
 
 // Load the configuration from a file
-func (m *ConfigManager) LoadConfigFromFile() (*NativeHyperdriveEthereumConfig, error) {
+func (m *ConfigManager) LoadConfigFromFile() (*NativeHyperdriveEthereumSettings, error) {
 	// Check if the file exists
 	_, err := os.Stat(m.ConfigPath)
 	if errors.Is(err, fs.ErrNotExist) {
@@ -58,7 +63,7 @@ func (m *ConfigManager) LoadConfigFromFile() (*NativeHyperdriveEthereumConfig, e
 	}
 
 	// Deserialize it
-	cfg := NativeHyperdriveEthereumConfig{}
+	cfg := NativeHyperdriveEthereumSettings{}
 	err = yaml.Unmarshal(bytes, &cfg)
 	if err != nil {
 		return nil, fmt.Errorf("error deserializing config file [%s]: %w", m.ConfigPath, err)

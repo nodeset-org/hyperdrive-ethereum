@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"gopkg.in/yaml.v2"
 
@@ -17,8 +16,8 @@ import (
 
 // Configuration manager
 type AdapterConfigManager struct {
-	// The adapter configuration
-	AdapterConfig *config.HyperdriveEthereumConfig
+	// The adapter configuration instance
+	AdapterConfig *HyperdriveEthereumConfigSettings
 
 	// The native configuration manager
 	nativeConfigManager *sharedconfig.ConfigManager
@@ -40,7 +39,7 @@ func NewAdapterConfigManager(c *cli.Context) (*AdapterConfigManager, error) {
 }
 
 // Load the configuration from disk
-func (m *AdapterConfigManager) LoadConfigFromDisk() (*config.HyperdriveEthereumConfig, error) {
+func (m *AdapterConfigManager) LoadConfigFromDisk() (*HyperdriveEthereumConfigSettings, error) {
 	// Load the native config
 	nativeCfg, err := m.nativeConfigManager.LoadConfigFromFile()
 	if err != nil {
@@ -84,7 +83,7 @@ func (m *AdapterConfigManager) SaveConfigToDisk() error {
 	}
 
 	// Serialize the adapter config
-	bytes, err := yaml.Marshal(m.AdapterConfig.ServerConfig)
+	bytes, err := yaml.Marshal(m.AdapterConfig)
 	if err != nil {
 		return fmt.Errorf("error serializing adapter config: %w", err)
 	}
