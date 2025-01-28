@@ -4,6 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// TODO (HN)
 // Destroy and resync the Execution client from scratch
 func resyncExecutionClient(c *cli.Context) error {
 	// Get Hyperdrive client

@@ -68,8 +68,8 @@ func (cfg *ExternalBeaconConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *ExternalBeaconConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *ExternalBeaconConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.BeaconNode,
 		&cfg.HttpUrl,
 		&cfg.PrysmRpcUrl,

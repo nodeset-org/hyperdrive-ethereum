@@ -48,8 +48,8 @@ func (cfg *LodestarBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LodestarBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LodestarBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.ContainerTag,
 		&cfg.AdditionalFlags,

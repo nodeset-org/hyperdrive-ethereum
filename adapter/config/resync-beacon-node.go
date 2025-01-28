@@ -4,6 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// TODO (HN)
 // Destroy and resync the Beacon Node from scratch
 func resyncBeaconNode(c *cli.Context) error {
 	// Get Hyperdrive client

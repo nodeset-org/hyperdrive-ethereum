@@ -116,8 +116,8 @@ func (cfg *LocalBeaconConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LocalBeaconConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LocalBeaconConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.BeaconNode,
 		&cfg.CheckpointSyncProvider,
 		&cfg.P2pPort,

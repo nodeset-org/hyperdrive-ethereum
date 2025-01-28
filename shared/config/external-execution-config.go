@@ -64,8 +64,8 @@ func (cfg *ExternalExecutionConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *ExternalExecutionConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *ExternalExecutionConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.ExecutionClient,
 		&cfg.HttpUrl,
 		&cfg.WebsocketUrl,

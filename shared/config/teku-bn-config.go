@@ -67,8 +67,8 @@ func (cfg *TekuBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *TekuBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *TekuBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.JvmHeapSize,
 		&cfg.MaxPeers,
 		&cfg.ArchiveMode,

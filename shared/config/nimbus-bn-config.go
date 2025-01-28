@@ -74,8 +74,8 @@ func (cfg *NimbusBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *NimbusBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *NimbusBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.ContainerTag,
 		&cfg.PruningMode,

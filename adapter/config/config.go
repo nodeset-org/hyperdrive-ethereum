@@ -1,127 +1,213 @@
 package config
 
 import (
+	"path/filepath"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
-func NewHyperdriveEthereumConfig() *sharedconfig.HyperdriveEthereumConfig {
-	cfg := &sharedconfig.HyperdriveEthereumConfig{}
+const (
+	// Tags
+	hyperdriveTag string = "nodeset/hyperdrive-ethereum:v" + shared.HyperdriveEthereumVersion
 
-	// TODO: HN
-	// // ExampleBool
-	// cfg.ExampleBool.ID = hdconfig.Identifier(ids.ExampleBoolID)
-	// cfg.ExampleBool.Name = "Example Boolean"
-	// cfg.ExampleBool.Description.Default = "This is an example of a boolean parameter. It doesn't directly affect the service, but it does control the behavior of some other config parameters."
-	// cfg.ExampleBool.AffectedContainers = []string{shared.ServiceContainerName}
-	// cfg.ExampleBool.Value = cfg.ExampleBool.Default
+	// Private parameter names
+	versionName          string = "version"
+	moduleEnabledMapName string = "modules"
 
-	// // ExampleInt
-	// cfg.ExampleInt.ID = hdconfig.Identifier(ids.ExampleIntID)
-	// cfg.ExampleInt.Name = "Example Integer"
-	// cfg.ExampleInt.Description.Default = "This is an example of an integer parameter."
-	// cfg.ExampleInt.AffectedContainers = []string{shared.ServiceContainerName}
-	// cfg.ExampleInt.Value = cfg.ExampleInt.Default
+	// Defaults
+	DefaultProjectName   string = "hyperdrive-ethereum"
+	DefaultApiPort       uint16 = 8080
+	DefaultEnableIPv6    bool   = false
+	DefaultClientTimeout uint16 = 30
 
-	// // ExampleUint
-	// cfg.ExampleUint.ID = hdconfig.Identifier(ids.ExampleUintID)
-	// cfg.ExampleUint.Name = "Example Unsigned Integer"
-	// cfg.ExampleUint.Description.Default = "This is an example of an unsigned integer parameter."
-	// cfg.ExampleUint.AffectedContainers = []string{shared.ServiceContainerName}
-	// cfg.ExampleUint.Value = cfg.ExampleUint.Default
+	// TODO: Discuss these values
+	DefaultAutoTxMaxFee       float64 = 1000.0
+	DefaultMaxPriorityFee     float64 = 1000.0
+	DefaultAutoTxGasThreshold float64 = 100000
+)
 
-	// // ExampleFloat
-	// cfg.ExampleFloat.ID = hdconfig.Identifier(ids.ExampleFloatID)
-	// cfg.ExampleFloat.Name = "Example Float"
-	// cfg.ExampleFloat.Description.Default = "This is an example of a float parameter with a minimum and maximum set."
-	// cfg.ExampleFloat.Default = 50
-	// cfg.ExampleFloat.MinValue = 0.0
-	// cfg.ExampleFloat.MaxValue = 100.0
-	// cfg.ExampleFloat.Value = cfg.ExampleFloat.Default
-	// cfg.ExampleFloat.AffectedContainers = []string{shared.ServiceContainerName}
+type HyperdriveEthereumConfig struct {
+	EnableIPv6               hdconfig.BoolParameter
+	ProjectName              hdconfig.StringParameter
+	ApiPort                  hdconfig.UintParameter
+	UserDataPath             hdconfig.StringParameter
+	AutoTxMaxFee             hdconfig.FloatParameter
+	MaxPriorityFee           hdconfig.FloatParameter
+	AutoTxGasThreshold       hdconfig.FloatParameter
+	AdditionalDockerNetworks hdconfig.StringParameter
+	ClientTimeout            hdconfig.UintParameter
 
-	// // ExampleString
-	// cfg.ExampleString.ID = hdconfig.Identifier(ids.ExampleStringID)
-	// cfg.ExampleString.Name = "Example String"
-	// cfg.ExampleString.Description.Default = "This is an example of a string parameter. It has a max length and regex pattern set."
-	// cfg.ExampleString.MaxLength = 10
-	// cfg.ExampleString.Regex = "^[a-zA-Z]*$"
-	// cfg.ExampleString.Value = cfg.ExampleString.Default
-	// cfg.ExampleString.AffectedContainers = []string{shared.ServiceContainerName}
+	Network    hdconfig.ChoiceParameter[sharedconfig.Network] // hdconfig.Parameter[config.Network]
+	ClientMode hdconfig.ChoiceParameter[ClientMode]           // hdconfig.Parameter[config.ClientMode]
 
-	// // Options for ExampleChoice
-	// options := make([]hdconfig.ParameterMetadataOption[nativecfg.ExampleOption], 3)
-	// options[0].Name = "One"
-	// options[0].Description.Default = "This is the first option."
-	// options[0].Value = nativecfg.ExampleOption_One
+	// Execution client settings
+	LocalExecutionClient    *sharedconfig.LocalExecutionConfig
+	ExternalExecutionClient *sharedconfig.ExternalExecutionConfig
 
-	// thresholdString := strconv.FormatFloat(FloatThreshold, 'f', -1, 64)
-	// options[1].Name = "Two"
-	// options[1].Description.Default = "This is the second option. It is hidden when ExampleFloat is less than " + thresholdString + "."
-	// options[1].Description.Template = fmt.Sprintf("{{if lt .GetValue %s %s}}This option is hidden because the float is less than %s.{{else}}This option is visible because the float is greater than or equal to %s.{{end}}", ids.ExampleFloatID, thresholdString, thresholdString, thresholdString)
-	// options[1].Value = nativecfg.ExampleOption_Two
-	// options[1].Disabled.Default = true
-	// options[1].Disabled.Template = "{{if eq .GetValue " + ids.ExampleBoolID + " true}}false{{else}}{{.UseDefault}}{{end}}"
+	// Beacon node settings
+	LocalBeaconClient    *sharedconfig.LocalBeaconConfig
+	ExternalBeaconClient *sharedconfig.ExternalBeaconConfig
+	// Fallback clients
+	Fallback *sharedconfig.FallbackConfig
+	// Metrics
+	// Metrics *config.MetricsConfig
+	// MEV-Boost
+	// MevBoost *MevBoostConfig
 
-	// options[2].Name = "Three"
-	// options[2].Description.Default = "This is the third option."
-	// options[2].Value = nativecfg.ExampleOption_Three
+	// The Docker Hub tag for the daemon container
+	ContainerTag hdconfig.StringParameter
 
-	// // ExampleChoice
-	// cfg.ExampleChoice.ID = hdconfig.Identifier(ids.ExampleChoiceID)
-	// cfg.ExampleChoice.Name = "Example Choice"
-	// cfg.ExampleChoice.Description.Default = "This is an example of a choice parameter between multiple options."
-	// cfg.ExampleChoice.Options = options
-	// cfg.ExampleChoice.Default = options[0].Value
-	// cfg.ExampleChoice.Value = cfg.ExampleChoice.Default
-	// cfg.ExampleChoice.AffectedContainers = []string{}
+	// Logging
+	Logging *sharedconfig.LoggingConfig
 
-	// // Subconfigs
-	// cfg.SubConfig = NewSubConfig()
-	// cfg.ServerConfig = NewServerConfig()
+	// Modules
+	ModuleConfigs []*sharedconfig.ModuleConfig
+
+	// Internal fields
+	Version                 string
+	hyperdriveUserDirectory string
+	systemPath              string
+	moduleEnableStatus      map[string]bool
+
+	ServerConfig *sharedconfig.ServerConfig
+}
+
+func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEthereumConfig {
+	cfg := &HyperdriveEthereumConfig{
+		hyperdriveUserDirectory: hdDir,
+		systemPath:              systemPath,
+		moduleEnableStatus:      make(map[string]bool),
+	}
+
+	// Project Name
+	cfg.ProjectName.ID = hdconfig.Identifier(ids.ProjectNameID)
+	cfg.ProjectName.Name = "Project Name"
+	cfg.ProjectName.Description.Default = "This is the prefix that will be attached to all of the Docker containers managed by Hyperdrive."
+	cfg.ProjectName.Default = DefaultProjectName
+	cfg.ProjectName.AffectedContainers = []string{string(sharedconfig.ContainerID_All)}
+
+	// API Port
+	cfg.ApiPort.ID = hdconfig.Identifier(ids.ApiPortID)
+	cfg.ApiPort.Name = "Service API Port"
+	cfg.ApiPort.Description.Default = "The port that Hyperdrive's API server should run on within the internal Docker network. Note this is bound to the local machine only; it cannot be accessed by other machines."
+	cfg.ApiPort.Default = uint64(DefaultApiPort)
+	cfg.ApiPort.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// Enable IPv6
+	cfg.EnableIPv6.ID = hdconfig.Identifier(ids.EnableIPv6ID)
+	cfg.EnableIPv6.Name = "Enable IPv6"
+	cfg.EnableIPv6.Description.Default = "Enable IPv6 networking for Hyperdrive services. This is useful if you have an IPv6 network and want to use it for Hyperdrive.\n\nIf this isn't the first time you're starting Hyperdrive, you'll have to recreate the network after changing this box with `hyperdrive service down` and `hyperdrive service start` for it to take effect.\n\n[orange]NOTE: For IPv6 support to work, you must manually set up your Docker daemon to support it. Please follow the instructions at https://docs.docker.com/config/daemon/ipv6/#dynamic-ipv6-subnet-allocation before checking this box."
+	cfg.EnableIPv6.Default = DefaultEnableIPv6
+	cfg.EnableIPv6.AffectedContainers = []string{string(sharedconfig.ContainerID_All)}
+
+	// User Data Path
+	cfg.UserDataPath.ID = hdconfig.Identifier(ids.UserDataPathID)
+	cfg.UserDataPath.Name = "User Data Path"
+	cfg.UserDataPath.Description.Default = "The absolute path of your personal `data` folder that contains secrets such as your node wallet's encrypted file, the password for your node wallet, and all of the validator keys for any Hyperdrive modules."
+	cfg.UserDataPath.Default = filepath.Join(hdDir, "data")
+	cfg.UserDataPath.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// Additional Docker Networks
+	cfg.AdditionalDockerNetworks.ID = hdconfig.Identifier(ids.AdditionalDockerNetworksID)
+	cfg.AdditionalDockerNetworks.Name = "Additional Docker Networks"
+	cfg.AdditionalDockerNetworks.Description.Default = "List any other externally-managed Docker networks running on this machine that you'd like to give the Hyperdrive services access to here. Use a comma-separated list of network names.\n\nTo get a list of local Docker networks, run `docker network ls`."
+	cfg.AdditionalDockerNetworks.AffectedContainers = []string{string(sharedconfig.ContainerID_All)}
+
+	// Client Timeout
+	cfg.ClientTimeout.ID = hdconfig.Identifier(ids.ClientTimeoutID)
+	cfg.ClientTimeout.Name = "Client Timeout"
+	cfg.ClientTimeout.Description.Default = "The maximum time (in seconds) that Hyperdrive will wait for a response during HTTP requests (such as Execution Client, Beacon Node, or nodeset.io requests) before timing out."
+	cfg.ClientTimeout.Default = uint64(DefaultClientTimeout)
+	cfg.ClientTimeout.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// Container Tag
+	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.Name = "Service Container Tag"
+	cfg.ContainerTag.Description.Default = "The tag name of the Hyperdrive Daemon image to use."
+	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.ContainerTag.OverwriteOnUpgrade = true
+	cfg.ContainerTag.Default = hyperdriveTag
+
+	// AutoTxMaxFee
+	cfg.AutoTxMaxFee.ID = hdconfig.Identifier(ids.AutoTxMaxFeeID)
+	cfg.AutoTxMaxFee.Name = "Auto TX Max Fee"
+	cfg.AutoTxMaxFee.Description.Default = "Set this if you want all of Hyperdrive's automatic transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will use the suggested max fee based on the current network conditions.\n\nAny other value will ignore the network suggestion and use this value instead."
+	cfg.AutoTxMaxFee.Default = DefaultAutoTxMaxFee
+	cfg.AutoTxMaxFee.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// MaxPriorityFee
+	cfg.MaxPriorityFee.ID = hdconfig.Identifier(ids.MaxPriorityFeeID)
+	cfg.MaxPriorityFee.Name = "Max Priority Fee"
+	cfg.MaxPriorityFee.Description.Default = "The default value for the priority fee (in gwei) for all of your transactions, including automatic ones. This describes how much you're willing to pay *above the network's current base fee* - the higher this is, the more ETH you give to the validators for including your transaction, which generally means it will be included in a block faster (as long as your max fee is sufficiently high to cover the current network conditions).\n\nMust be larger than 0."
+	cfg.MaxPriorityFee.Default = DefaultMaxPriorityFee
+	cfg.MaxPriorityFee.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// AutoTxGasThreshold
+	cfg.AutoTxGasThreshold.ID = hdconfig.Identifier(ids.AutoTxGasThresholdID)
+	cfg.AutoTxGasThreshold.Name = "Auto TX Gas Threshold"
+	cfg.AutoTxGasThreshold.Description.Default = "The threshold (in gwei) that the recommended network gas price must be under in order for automated transactions to be submitted when due. A value of 0 will disable non-essential automatic transactions.\n\nNOTE: If Auto TX Max Fee is set, this setting will be ignored."
+	cfg.AutoTxGasThreshold.Default = DefaultAutoTxGasThreshold
+	cfg.AutoTxGasThreshold.AffectedContainers = []string{string(ContainerID_Daemon)}
+
+	// Create the subconfigs
+	cfg.Logging = sharedconfig.NewLoggingConfig()
+	cfg.LocalBeaconClient = sharedconfig.NewLocalBeaconConfig()
+	cfg.LocalExecutionClient = sharedconfig.NewLocalExecutionConfig()
+	cfg.ExternalBeaconClient = sharedconfig.NewExternalBeaconConfig()
+	cfg.ExternalExecutionClient = sharedconfig.NewExternalExecutionConfig()
+	cfg.Fallback = sharedconfig.NewFallbackConfig()
+	// cfg.Metrics = NewMetricsConfig()
+	// cfg.MevBoost = NewMevBoostConfig(cfg)
 
 	return cfg
 }
 
-func (cfg *sharedconfig.HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
+func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
-		// &cfg.ExampleBool,
-		// &cfg.ExampleInt,
-		// &cfg.ExampleFloat,
-		// &cfg.ExampleString,
-		// &cfg.ExampleChoice,
+		&cfg.ProjectName,
+		&cfg.ApiPort,
+		&cfg.EnableIPv6,
+		&cfg.UserDataPath,
+		&cfg.AdditionalDockerNetworks,
+		&cfg.ClientTimeout,
+		&cfg.ContainerTag,
+		&cfg.AutoTxMaxFee,
+		&cfg.MaxPriorityFee,
+		&cfg.AutoTxGasThreshold,
 	}
 }
 
-func (cfg *sharedconfig.HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
+func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{
-		// cfg.SubConfig,
-		// cfg.ServerConfig,
+		cfg.Logging,
 	}
 }
 
-func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumConfig) *ExampleConfigSettings {
-	instance := &sharedconfig.HyperdriveEthereumConfig{
-		// ExampleBool:   native.ExampleBool,
-		// ExampleInt:    native.ExampleInt,
-		// ExampleFloat:  native.ExampleFloat,
-		// ExampleString: native.ExampleString,
-		// ExampleChoice: native.ExampleChoice,
-		// SubConfig: &SubConfigSettings{
-		// 	SubExampleBool:   native.SubConfig.SubExampleBool,
-		// 	SubExampleChoice: native.SubConfig.SubExampleChoice,
-		// },
-		// ServerConfig: &ServerConfigSettings{},
-	}
-	return instance
-}
+// func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumConfig) *ExampleConfigSettings {
+// 	instance := &HyperdriveEthereumConfig{
+// 		// ExampleBool:   native.ExampleBool,
+// 		// ExampleInt:    native.ExampleInt,
+// 		// ExampleFloat:  native.ExampleFloat,
+// 		// ExampleString: native.ExampleString,
+// 		// ExampleChoice: native.ExampleChoice,
+// 		// SubConfig: &SubConfigSettings{
+// 		// 	SubExampleBool:   native.SubConfig.SubExampleBool,
+// 		// 	SubExampleChoice: native.SubConfig.SubExampleChoice,
+// 		// },
+// 		// ServerConfig: &ServerConfigSettings{},
+// 	}
+// 	return instance
+// }
 
-func ConvertInstanceToNativeConfig(instance *ExampleConfigSettings) *sharedconfig.NativeHyperdriveEthereumConfig {
-	native := &sharedconfig.NativeHyperdriveEthereumConfig{
-		// ExampleBool:   instance.ExampleBool,
-		// ExampleInt:    instance.ExampleInt,
-		// ExampleFloat:  instance.ExampleFloat,
-		// ExampleString: instance.ExampleString,
-	}
-	return native
-}
+// func ConvertInstanceToNativeConfig(instance *ExampleConfigSettings) *sharedconfig.NativeHyperdriveEthereumConfig {
+// 	native := &sharedconfig.NativeHyperdriveEthereumConfig{
+// 		// ExampleBool:   instance.ExampleBool,
+// 		// ExampleInt:    instance.ExampleInt,
+// 		// ExampleFloat:  instance.ExampleFloat,
+// 		// ExampleString: instance.ExampleString,
+// 	}
+// 	return native
+// }

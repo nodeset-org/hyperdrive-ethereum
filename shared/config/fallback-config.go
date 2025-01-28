@@ -55,8 +55,8 @@ func (cfg *FallbackConfig) GetTitle() string {
 }
 
 // Get the Parameters for this config
-func (cfg *FallbackConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *FallbackConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.UseFallbackClients,
 		&cfg.EcHttpUrl,
 		&cfg.BnHttpUrl,

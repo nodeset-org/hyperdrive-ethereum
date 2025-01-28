@@ -81,8 +81,8 @@ func (cfg *PrysmBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *PrysmBnConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *PrysmBnConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.MaxPeers,
 		&cfg.RpcPort,
 		&cfg.OpenRpcPort,

@@ -69,8 +69,8 @@ func (cfg *RethConfig) GetTitle() string {
 }
 
 // Get the config.Parameters for this config
-func (cfg *RethConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *RethConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.CacheSize,
 		&cfg.MaxInboundPeers,
 		&cfg.MaxOutboundPeers,

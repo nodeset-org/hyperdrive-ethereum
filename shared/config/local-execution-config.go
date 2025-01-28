@@ -119,8 +119,8 @@ func (cfg *LocalExecutionConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LocalExecutionConfig) GetParameters() []IParameter {
-	return []IParameter{
+func (cfg *LocalExecutionConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
 		&cfg.ExecutionClient,
 		&cfg.HttpPort,
 		&cfg.WebsocketPort,
