@@ -87,7 +87,7 @@ func RegisterCommands(app *cli.App) {
 					utils.ValidateArgCount(c, 0)
 
 					// Run
-					return setConfig(c)
+					return setSettings(c)
 				},
 			},
 			{

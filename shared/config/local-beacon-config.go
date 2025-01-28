@@ -127,8 +127,8 @@ func (cfg *LocalBeaconConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *LocalBeaconConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{
+func (cfg *LocalBeaconConfig) GetSubconfigs() map[string]config.ISection {
+	return map[string]config.ISection{
 		ids.LocalBnLighthouseID: cfg.Lighthouse,
 		ids.LocalBnLodestarID:   cfg.Lodestar,
 		ids.LocalBnNimbusID:     cfg.Nimbus,

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"gopkg.in/yaml.v2"
 
@@ -17,7 +18,7 @@ import (
 // Configuration manager
 type AdapterConfigManager struct {
 	// The adapter configuration
-	AdapterConfig *sharedconfig.HyperdriveEthereumConfig
+	AdapterConfig *config.HyperdriveEthereumConfig
 
 	// The native configuration manager
 	nativeConfigManager *sharedconfig.ConfigManager
@@ -39,7 +40,7 @@ func NewAdapterConfigManager(c *cli.Context) (*AdapterConfigManager, error) {
 }
 
 // Load the configuration from disk
-func (m *AdapterConfigManager) LoadConfigFromDisk() (*sharedconfig.HyperdriveEthereumConfig, error) {
+func (m *AdapterConfigManager) LoadConfigFromDisk() (*config.HyperdriveEthereumConfig, error) {
 	// Load the native config
 	nativeCfg, err := m.nativeConfigManager.LoadConfigFromFile()
 	if err != nil {

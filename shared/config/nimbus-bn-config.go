@@ -6,6 +6,7 @@ import (
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 const (
@@ -84,8 +85,8 @@ func (cfg *NimbusBnConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *NimbusBnConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *NimbusBnConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }
 
 // Get the default number of peers
@@ -98,4 +99,34 @@ func getNimbusDefaultPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+// TODO (HN)
+func (cfg *NimbusBnConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *NimbusBnConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *NimbusBnConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *NimbusBnConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *NimbusBnConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *NimbusBnConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

@@ -9,6 +9,14 @@ import (
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
+type PortMode string
+
+const (
+	PortMode_Closed    PortMode = "closed"
+	PortMode_Localhost PortMode = "localhost"
+	PortMode_External  PortMode = "external"
+)
+
 const (
 	// Tags
 	hyperdriveTag string = "nodeset/hyperdrive-ethereum:v" + shared.HyperdriveEthereumVersion
@@ -71,6 +79,18 @@ type HyperdriveEthereumConfig struct {
 	hyperdriveUserDirectory string
 	systemPath              string
 	moduleEnableStatus      map[string]bool
+}
+
+// TODO (HN) Has to match up top
+type HyperdriveEthereumConfigSettings struct {
+	ExampleBool   bool                    `json:"exampleBool"`
+	ExampleInt    int64                   `json:"exampleInt"`
+	ExampleFloat  float64                 `json:"exampleFloat"`
+	ExampleString string                  `json:"exampleString"`
+	ExampleChoice nativecfg.ExampleOption `json:"exampleChoice"`
+
+	SubConfig    *SubConfigSettings    `json:"subConfig"`
+	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
 }
 
 func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEthereumConfig {

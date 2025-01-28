@@ -6,6 +6,7 @@ import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 // Constants
@@ -80,8 +81,8 @@ func (cfg *RethConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *RethConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *RethConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }
 
 // Calculate the recommended size for Reth's cache based on the amount of system RAM
@@ -111,4 +112,34 @@ func calculateRethPeers() uint16 {
 		return 12
 	}
 	return 25
+}
+
+// TODO (HN)
+func (cfg *RethConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *RethConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *RethConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *RethConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *RethConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *RethConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

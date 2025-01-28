@@ -131,8 +131,8 @@ func (cfg *LocalExecutionConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *LocalExecutionConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{
+func (cfg *LocalExecutionConfig) GetSubconfigs() map[string]config.ISection {
+	return map[string]config.ISection{
 		ids.LocalEcBesuID:       cfg.Besu,
 		ids.LocalEcGethID:       cfg.Geth,
 		ids.LocalEcNethermindID: cfg.Nethermind,

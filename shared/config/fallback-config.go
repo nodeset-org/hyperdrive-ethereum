@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 // Fallback configuration
@@ -65,6 +66,6 @@ func (cfg *FallbackConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *FallbackConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *FallbackConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }

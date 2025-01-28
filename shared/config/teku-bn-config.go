@@ -4,6 +4,7 @@ import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 const (
@@ -78,8 +79,8 @@ func (cfg *TekuBnConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *TekuBnConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *TekuBnConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }
 
 // Get the recommended heap size for Teku
@@ -89,4 +90,34 @@ func getTekuHeapSize() uint64 {
 		return 2048
 	}
 	return 0
+}
+
+// TODO (HN)
+func (cfg *TekuBnConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *TekuBnConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *TekuBnConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *TekuBnConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *TekuBnConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *TekuBnConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 const (
@@ -92,6 +93,36 @@ func (cfg *PrysmBnConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *PrysmBnConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *PrysmBnConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
+}
+
+// TODO (HN)
+func (cfg *PrysmBnConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *PrysmBnConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *PrysmBnConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *PrysmBnConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *PrysmBnConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *PrysmBnConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

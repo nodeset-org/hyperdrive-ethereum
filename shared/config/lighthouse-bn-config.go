@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 const (
@@ -68,6 +69,36 @@ func (cfg *LighthouseBnConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *LighthouseBnConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *LighthouseBnConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
+}
+
+// TODO (HN)
+func (cfg *LighthouseBnConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *LighthouseBnConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *LighthouseBnConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *LighthouseBnConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *LighthouseBnConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *LighthouseBnConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

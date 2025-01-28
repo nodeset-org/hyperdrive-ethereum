@@ -6,6 +6,7 @@ import (
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 // Constants
@@ -81,8 +82,8 @@ func (cfg *GethConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *GethConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *GethConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }
 
 // Calculate the default number of Geth peers
@@ -95,4 +96,34 @@ func calculateGethPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+// TODO (HN)
+func (cfg *GethConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *GethConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *GethConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *GethConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *GethConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *GethConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

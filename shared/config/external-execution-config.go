@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 // Configuration for external Execution clients
@@ -73,6 +74,6 @@ func (cfg *ExternalExecutionConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *ExternalExecutionConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *ExternalExecutionConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }

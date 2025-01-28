@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 // Constants
@@ -75,19 +76,49 @@ func (cfg *BesuConfig) GetTitle() string {
 	return "Besu"
 }
 
-// // Get the parameters for this config
-// func (cfg *BesuConfig) GetParameters() []IParameter {
-// 	return []IParameter{
-// 		&cfg.JvmHeapSize,
-// 		&cfg.MaxPeers,
-// 		&cfg.MaxBackLayers,
-// 		&cfg.ArchiveMode,
-// 		&cfg.ContainerTag,
-// 		&cfg.AdditionalFlags,
-// 	}
-// }
+// Get the parameters for this config
+func (cfg *BesuConfig) GetParameters() []config.IParameter {
+	return []config.IParameter{
+		&cfg.JvmHeapSize,
+		&cfg.MaxPeers,
+		&cfg.MaxBackLayers,
+		&cfg.ArchiveMode,
+		&cfg.ContainerTag,
+		&cfg.AdditionalFlags,
+	}
+}
 
 // Get the sections underneath this one
-func (cfg *BesuConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *BesuConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
+}
+
+// TODO (HN)
+func (cfg *BesuConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *BesuConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *BesuConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *BesuConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *BesuConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *BesuConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

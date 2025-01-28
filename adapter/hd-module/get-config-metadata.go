@@ -6,7 +6,6 @@ import (
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/urfave/cli/v2"
 )
@@ -30,7 +29,7 @@ func getConfigMetadata(c *cli.Context) error {
 
 	// Handle no config file by using the default
 	if cfg == nil {
-		cfg = sharedconfig.NewHyperdriveEthereumConfig("TODO", "TODO")
+		cfg = config.NewHyperdriveEthereumConfig("TODO", "TODO")
 	}
 
 	// Create the response

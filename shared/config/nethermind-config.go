@@ -6,6 +6,7 @@ import (
 
 	"github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
+	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 	"github.com/rocket-pool/node-manager-core/config/ids"
 )
 
@@ -118,8 +119,8 @@ func (cfg *NethermindConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *NethermindConfig) GetSubconfigs() map[string]IConfigSection {
-	return map[string]IConfigSection{}
+func (cfg *NethermindConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
+	return map[string]nmcconfig.IConfigSection{}
 }
 
 // Calculate the recommended size for Nethermind's cache based on the amount of system RAM
@@ -193,4 +194,34 @@ func calculateNethermindPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+// TODO (HN)
+func (cfg *NethermindConfig) GetDescription() config.DynamicProperty[string] {
+	return config.DynamicProperty[string]{}
+}
+
+// TODO (HN)
+func (cfg *NethermindConfig) GetDisabled() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *NethermindConfig) GetHidden() config.DynamicProperty[bool] {
+	return config.DynamicProperty[bool]{}
+}
+
+// TODO (HN)
+func (cfg *NethermindConfig) GetID() config.Identifier {
+	return config.Identifier("")
+}
+
+// TODO (HN)
+func (cfg *NethermindConfig) GetName() string {
+	return ""
+}
+
+// TODO (HN)
+func (cfg *NethermindConfig) GetSections() []config.ISection {
+	return []config.ISection{}
 }

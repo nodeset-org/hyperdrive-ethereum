@@ -5,33 +5,37 @@ import (
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
-	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 
 	"github.com/urfave/cli/v2"
 )
 
 // Request format for `set-config`
-type setConfigRequest struct {
+type setSettingsRequest struct {
 	utils.KeyedRequest
 
 	// The config instance to process
-	Config map[string]any `json:"config"`
+	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
 
 // Handle the `set-config` command
-func setConfig(c *cli.Context) error {
+func setSettings(c *cli.Context) error {
 	// Get the request
-	request, err := utils.HandleKeyedRequest[*setConfigRequest](c)
+	request, err := utils.HandleKeyedRequest[*setSettingsRequest](c)
 	if err != nil {
 		return err
 	}
 
-	// Get the config
-	cfg := sharedconfig.NewHyperdriveEthereumConfig("TODO", "TODO")
-	err = hdconfig.UnmarshalConfigurationInstanceIntoMetadata(request.Config, cfg)
+	// TODO(HN)
+	// Construct the module settings from the Hyperdrive config
+	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
+	if !exists {
+		return fmt.Errorf("could not find config for %s", utils.FullyQualifiedModuleName)
+	}
+	var settings config.HyperdriveEthereumConfigSettings
+	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
 	if err != nil {
-		return err
+		return fmt.Errorf("error loading settings: %w", err)
 	}
 
 	// Make a config manager
