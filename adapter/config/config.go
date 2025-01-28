@@ -64,15 +64,13 @@ type HyperdriveEthereumConfig struct {
 	Logging *sharedconfig.LoggingConfig
 
 	// Modules
-	ModuleConfigs []*sharedconfig.ModuleConfig
+	// ModuleConfigs []*hdconfig.ModuleConfig
 
 	// Internal fields
 	Version                 string
 	hyperdriveUserDirectory string
 	systemPath              string
 	moduleEnableStatus      map[string]bool
-
-	ServerConfig *sharedconfig.ServerConfig
 }
 
 func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEthereumConfig {
