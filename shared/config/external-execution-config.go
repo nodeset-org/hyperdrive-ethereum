@@ -17,6 +17,12 @@ type ExternalExecutionConfig struct {
 	WebsocketUrl hdconfig.StringParameter
 }
 
+type ExternalExecutionConfigSettings struct {
+	ExecutionClient ExecutionClient `json:"executionClient"`
+	HttpUrl         string          `json:"httpUrl"`
+	WebsocketUrl    string          `json:"wsUrl"`
+}
+
 // Generates a new ExternalExecutionConfig configuration
 func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg := &ExternalExecutionConfig{}

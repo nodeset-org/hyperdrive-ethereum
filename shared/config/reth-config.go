@@ -31,6 +31,14 @@ type RethConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type RethConfigSettings struct {
+	CacheSize        uint64 `json:"cacheSize"`
+	MaxInboundPeers  uint64 `json:"maxInboundPeers"`
+	MaxOutboundPeers uint64 `json:"maxOutboundPeers"`
+	ContainerTag     string `json:"containerTag"`
+	AdditionalFlags  string `json:"additionalFlags"`
+}
+
 // Generates a new Reth configuration
 func NewRethConfig() *RethConfig {
 	cfg := &RethConfig{}

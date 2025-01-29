@@ -45,6 +45,18 @@ type NethermindConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type NethermindConfigSettings struct {
+	CacheSize              uint64 `json:"cacheSize"`
+	MaxPeers               uint64 `json:"maxPeers"`
+	PruneMemSize           uint64 `json:"pruneMemSize"`
+	FullPruneMemoryBudget  uint64 `json:"fullPruneMemoryBudget"`
+	FullPruningThresholdMb uint64 `json:"fullPruningThresholdMb"`
+	AdditionalModules      string `json:"additionalModules"`
+	AdditionalUrls         string `json:"additionalUrls"`
+	ContainerTag           string `json:"containerTag"`
+	AdditionalFlags        string `json:"additionalFlags"`
+}
+
 // Generates a new Nethermind configuration
 func NewNethermindConfig() *NethermindConfig {
 	cfg := &NethermindConfig{}

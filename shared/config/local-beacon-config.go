@@ -32,6 +32,20 @@ type LocalBeaconConfig struct {
 	Teku       *TekuBnConfig
 }
 
+type LocalBeaconConfigSettings struct {
+	BeaconNode             BeaconNode  `json:"beaconNode"`
+	CheckpointSyncProvider string      `json:"checkpointSyncProvider"`
+	P2pPort                uint64      `json:"p2pPort"`
+	HttpPort               uint64      `json:"httpPort"`
+	OpenHttpPort           RpcPortMode `json:"openHttpPort"`
+
+	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse"`
+	Lodestar   *LodestarBnConfigSettings   `json:"lodestar"`
+	Nimbus     *NimbusBnConfigSettings     `json:"nimbus"`
+	Prysm      *PrysmBnConfigSettings      `json:"prysm"`
+	Teku       *TekuBnConfigSettings       `json:"teku"`
+}
+
 // Create a new LocalBeaconConfig struct
 func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg := &LocalBeaconConfig{}
@@ -142,21 +156,21 @@ func (cfg *LocalBeaconConfig) GetSections() map[string]hdconfig.ISection {
 // ==================
 
 // Get the Docker mapping for the selected API port mode
-func (cfg *LocalBeaconConfig) GetOpenApiPortMapping() []string {
+func (cfg *LocalBeaconConfigSettings) GetOpenApiPortMapping() []string {
 	bnOpenPorts := make([]string, 0)
 
 	// Handle the standard HTTP API port
-	apiPortMode := cfg.OpenHttpPort
+	apiPortMode := RpcPortMode(cfg.OpenHttpPort)
 	if apiPortMode.IsOpen() {
-		apiPort := cfg.HttpPort.Value
+		apiPort := uint64(cfg.HttpPort)
 		bnOpenPorts = append(bnOpenPorts, apiPortMode.DockerPortMapping(apiPort))
 	}
 
 	// Handle Prysm's RPC port
-	if cfg.BeaconNode.Value == BeaconNode_Prysm {
-		prysmRpcPortMode := cfg.Prysm.OpenRpcPort.Value
+	if cfg.BeaconNode == BeaconNode_Prysm {
+		prysmRpcPortMode := RpcPortMode(cfg.Prysm.OpenRpcPort)
 		if prysmRpcPortMode.IsOpen() {
-			prysmRpcPort := cfg.Prysm.RpcPort.Value
+			prysmRpcPort := uint64(cfg.Prysm.RpcPort)
 			bnOpenPorts = append(bnOpenPorts, prysmRpcPortMode.DockerPortMapping(prysmRpcPort))
 		}
 	}
@@ -164,55 +178,55 @@ func (cfg *LocalBeaconConfig) GetOpenApiPortMapping() []string {
 }
 
 // Gets the max peers of the selected EC
-func (cfg *LocalBeaconConfig) GetMaxPeers() uint64 {
-	switch cfg.BeaconNode.Value {
+func (cfg *LocalBeaconConfigSettings) GetMaxPeers() uint64 {
+	switch cfg.BeaconNode {
 	case BeaconNode_Lighthouse:
-		return cfg.Lighthouse.MaxPeers.Value
+		return cfg.Lighthouse.MaxPeers
 	case BeaconNode_Lodestar:
-		return cfg.Lodestar.MaxPeers.Value
+		return cfg.Lodestar.MaxPeers
 	case BeaconNode_Nimbus:
-		return cfg.Nimbus.MaxPeers.Value
+		return cfg.Nimbus.MaxPeers
 	case BeaconNode_Prysm:
-		return cfg.Prysm.MaxPeers.Value
+		return cfg.Prysm.MaxPeers
 	case BeaconNode_Teku:
-		return cfg.Teku.MaxPeers.Value
+		return cfg.Teku.MaxPeers
 	default:
-		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode.Value)))
+		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
 	}
 }
 
 // Get the container tag of the selected BN
-func (cfg *LocalBeaconConfig) GetContainerTag() string {
-	switch cfg.BeaconNode.Value {
+func (cfg *LocalBeaconConfigSettings) GetContainerTag() string {
+	switch cfg.BeaconNode {
 	case BeaconNode_Lighthouse:
-		return cfg.Lighthouse.ContainerTag.Value
+		return cfg.Lighthouse.ContainerTag
 	case BeaconNode_Lodestar:
-		return cfg.Lodestar.ContainerTag.Value
+		return cfg.Lodestar.ContainerTag
 	case BeaconNode_Nimbus:
-		return cfg.Nimbus.ContainerTag.Value
+		return cfg.Nimbus.ContainerTag
 	case BeaconNode_Prysm:
-		return cfg.Prysm.ContainerTag.Value
+		return cfg.Prysm.ContainerTag
 	case BeaconNode_Teku:
-		return cfg.Teku.ContainerTag.Value
+		return cfg.Teku.ContainerTag
 	default:
-		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode.Value)))
+		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
 	}
 }
 
 // Gets the additional flags of the selected BN
-func (cfg *LocalBeaconConfig) GetAdditionalFlags() string {
-	switch cfg.BeaconNode.Value {
+func (cfg *LocalBeaconConfigSettings) GetAdditionalFlags() string {
+	switch cfg.BeaconNode {
 	case BeaconNode_Lighthouse:
-		return cfg.Lighthouse.AdditionalFlags.Value
+		return cfg.Lighthouse.AdditionalFlags
 	case BeaconNode_Lodestar:
-		return cfg.Lodestar.AdditionalFlags.Value
+		return cfg.Lodestar.AdditionalFlags
 	case BeaconNode_Nimbus:
-		return cfg.Nimbus.AdditionalFlags.Value
+		return cfg.Nimbus.AdditionalFlags
 	case BeaconNode_Prysm:
-		return cfg.Prysm.AdditionalFlags.Value
+		return cfg.Prysm.AdditionalFlags
 	case BeaconNode_Teku:
-		return cfg.Teku.AdditionalFlags.Value
+		return cfg.Teku.AdditionalFlags
 	default:
-		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode.Value)))
+		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
 	}
 }

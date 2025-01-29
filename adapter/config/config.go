@@ -1,8 +1,6 @@
 package config
 
 import (
-	"path/filepath"
-
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
@@ -38,15 +36,10 @@ const (
 )
 
 type HyperdriveEthereumConfig struct {
-	EnableIPv6               hdconfig.BoolParameter
-	ProjectName              hdconfig.StringParameter
-	ApiPort                  hdconfig.UintParameter
-	UserDataPath             hdconfig.StringParameter
-	AutoTxMaxFee             hdconfig.FloatParameter
-	MaxPriorityFee           hdconfig.FloatParameter
-	AutoTxGasThreshold       hdconfig.FloatParameter
-	AdditionalDockerNetworks hdconfig.StringParameter
-	ClientTimeout            hdconfig.UintParameter
+	ApiPort            hdconfig.UintParameter
+	AutoTxMaxFee       hdconfig.FloatParameter
+	MaxPriorityFee     hdconfig.FloatParameter
+	AutoTxGasThreshold hdconfig.FloatParameter
 
 	Network    hdconfig.ChoiceParameter[sharedconfig.Network] // hdconfig.Parameter[config.Network]
 	ClientMode hdconfig.ChoiceParameter[ClientMode]           // hdconfig.Parameter[config.ClientMode]
@@ -69,16 +62,13 @@ type HyperdriveEthereumConfig struct {
 	ContainerTag hdconfig.StringParameter
 
 	// Logging
-	Logging *sharedconfig.LoggingConfig
+	// Logging *sharedconfig.LoggingConfig
 
 	// Modules
 	// ModuleConfigs []*hdconfig.ModuleConfig
 
 	// Internal fields
-	Version                 string
-	hyperdriveUserDirectory string
-	systemPath              string
-	moduleEnableStatus      map[string]bool
+	Version string
 }
 
 type LocalBeaconClientSettings struct {
@@ -86,15 +76,10 @@ type LocalBeaconClientSettings struct {
 }
 
 type HyperdriveEthereumConfigSettings struct {
-	EnableIPv6               bool    `json:"enableIPv6"`
-	ProjectName              string  `json:"projectName"`
-	ApiPort                  uint    `json:"apiPort"`
-	UserDataPath             string  `json:"userDataPath"`
-	AutoTxMaxFee             float64 `json:"autoTxMaxFee"`
-	MaxPriorityFee           float64 `json:"maxPriorityFee"`
-	AutoTxGasThreshold       float64 `json:"autoTxGasThreshold"`
-	AdditionalDockerNetworks string  `json:"additionalDockerNetworks"`
-	ClientTimeout            uint    `json:"clientTimeout"`
+	ApiPort            uint    `json:"apiPort"`
+	AutoTxMaxFee       float64 `json:"autoTxMaxFee"`
+	MaxPriorityFee     float64 `json:"maxPriorityFee"`
+	AutoTxGasThreshold float64 `json:"autoTxGasThreshold"`
 
 	Network    sharedconfig.Network `json:"network"`
 	ClientMode ClientMode           `json:"clientMode"`
@@ -102,24 +87,15 @@ type HyperdriveEthereumConfigSettings struct {
 	LocalBeaconClient    *LocalBeaconClientSettings         `json:"localBeaconClient"`
 	ExternalBeaconClient *sharedconfig.ExternalBeaconConfig `json:"externalBeaconClient"`
 
-	// TODO: Ask Joe if it needs clients, logging etc (i.e. exact 1:1 match up top)
+	Fallback *sharedconfig.FallbackConfig `json:"fallback"`
 
 	ContainerTag string `json:"containerTag"`
+
+	Version string `json:"version"`
 }
 
-func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEthereumConfig {
-	cfg := &HyperdriveEthereumConfig{
-		hyperdriveUserDirectory: hdDir,
-		systemPath:              systemPath,
-		moduleEnableStatus:      make(map[string]bool),
-	}
-
-	// Project Name
-	cfg.ProjectName.ID = hdconfig.Identifier(ids.ProjectNameID)
-	cfg.ProjectName.Name = "Project Name"
-	cfg.ProjectName.Description.Default = "This is the prefix that will be attached to all of the Docker containers managed by Hyperdrive."
-	cfg.ProjectName.Default = DefaultProjectName
-	cfg.ProjectName.AffectedContainers = []string{string(sharedconfig.ContainerID_All)}
+func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
+	cfg := &HyperdriveEthereumConfig{}
 
 	// API Port
 	cfg.ApiPort.ID = hdconfig.Identifier(ids.ApiPortID)
@@ -127,33 +103,6 @@ func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEth
 	cfg.ApiPort.Description.Default = "The port that Hyperdrive's API server should run on within the internal Docker network. Note this is bound to the local machine only; it cannot be accessed by other machines."
 	cfg.ApiPort.Default = uint64(DefaultApiPort)
 	cfg.ApiPort.AffectedContainers = []string{string(ContainerID_Daemon)}
-
-	// Enable IPv6
-	cfg.EnableIPv6.ID = hdconfig.Identifier(ids.EnableIPv6ID)
-	cfg.EnableIPv6.Name = "Enable IPv6"
-	cfg.EnableIPv6.Description.Default = "Enable IPv6 networking for Hyperdrive services. This is useful if you have an IPv6 network and want to use it for Hyperdrive.\n\nIf this isn't the first time you're starting Hyperdrive, you'll have to recreate the network after changing this box with `hyperdrive service down` and `hyperdrive service start` for it to take effect.\n\n[orange]NOTE: For IPv6 support to work, you must manually set up your Docker daemon to support it. Please follow the instructions at https://docs.docker.com/config/daemon/ipv6/#dynamic-ipv6-subnet-allocation before checking this box."
-	cfg.EnableIPv6.Default = DefaultEnableIPv6
-	cfg.EnableIPv6.AffectedContainers = []string{string(sharedconfig.ContainerID_All)}
-
-	// User Data Path
-	cfg.UserDataPath.ID = hdconfig.Identifier(ids.UserDataPathID)
-	cfg.UserDataPath.Name = "User Data Path"
-	cfg.UserDataPath.Description.Default = "The absolute path of your personal `data` folder that contains secrets such as your node wallet's encrypted file, the password for your node wallet, and all of the validator keys for any Hyperdrive modules."
-	cfg.UserDataPath.Default = filepath.Join(hdDir, "data")
-	cfg.UserDataPath.AffectedContainers = []string{string(ContainerID_Daemon)}
-
-	// Additional Docker Networks
-	cfg.AdditionalDockerNetworks.ID = hdconfig.Identifier(ids.AdditionalDockerNetworksID)
-	cfg.AdditionalDockerNetworks.Name = "Additional Docker Networks"
-	cfg.AdditionalDockerNetworks.Description.Default = "List any other externally-managed Docker networks running on this machine that you'd like to give the Hyperdrive services access to here. Use a comma-separated list of network names.\n\nTo get a list of local Docker networks, run `docker network ls`."
-	cfg.AdditionalDockerNetworks.AffectedContainers = []string{string(sharedconfig.ContainerID_All)}
-
-	// Client Timeout
-	cfg.ClientTimeout.ID = hdconfig.Identifier(ids.ClientTimeoutID)
-	cfg.ClientTimeout.Name = "Client Timeout"
-	cfg.ClientTimeout.Description.Default = "The maximum time (in seconds) that Hyperdrive will wait for a response during HTTP requests (such as Execution Client, Beacon Node, or nodeset.io requests) before timing out."
-	cfg.ClientTimeout.Default = uint64(DefaultClientTimeout)
-	cfg.ClientTimeout.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Container Tag
 	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
@@ -185,7 +134,6 @@ func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEth
 	cfg.AutoTxGasThreshold.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Create the subconfigs
-	cfg.Logging = sharedconfig.NewLoggingConfig()
 	cfg.LocalBeaconClient = sharedconfig.NewLocalBeaconConfig()
 	cfg.LocalExecutionClient = sharedconfig.NewLocalExecutionConfig()
 	cfg.ExternalBeaconClient = sharedconfig.NewExternalBeaconConfig()
@@ -199,12 +147,7 @@ func NewHyperdriveEthereumConfig(hdDir string, systemPath string) *HyperdriveEth
 
 func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
-		&cfg.ProjectName,
 		&cfg.ApiPort,
-		&cfg.EnableIPv6,
-		&cfg.UserDataPath,
-		&cfg.AdditionalDockerNetworks,
-		&cfg.ClientTimeout,
 		&cfg.ContainerTag,
 		&cfg.AutoTxMaxFee,
 		&cfg.MaxPriorityFee,
@@ -213,23 +156,16 @@ func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 }
 
 func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
-	return []hdconfig.ISection{
-		cfg.Logging,
-	}
+	return []hdconfig.ISection{}
 }
 
 func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumSettings) *HyperdriveEthereumConfigSettings {
 	instance := &HyperdriveEthereumConfigSettings{
-		EnableIPv6:               native.EnableIPv6,
-		ProjectName:              native.ProjectName,
-		ApiPort:                  native.ApiPort,
-		UserDataPath:             native.UserDataPath,
-		AutoTxMaxFee:             native.AutoTxMaxFee,
-		MaxPriorityFee:           native.MaxPriorityFee,
-		AutoTxGasThreshold:       native.AutoTxGasThreshold,
-		AdditionalDockerNetworks: native.AdditionalDockerNetworks,
-		ClientTimeout:            native.ClientTimeout,
-		Network:                  native.Network,
+		ApiPort:            native.ApiPort,
+		AutoTxMaxFee:       native.AutoTxMaxFee,
+		MaxPriorityFee:     native.MaxPriorityFee,
+		AutoTxGasThreshold: native.AutoTxGasThreshold,
+		Network:            native.Network,
 		// ClientMode:               native.ClientMode,
 		ContainerTag: native.ContainerTag,
 	}
@@ -238,16 +174,11 @@ func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereu
 
 func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *sharedconfig.NativeHyperdriveEthereumSettings {
 	native := &sharedconfig.NativeHyperdriveEthereumSettings{
-		EnableIPv6:               instance.EnableIPv6,
-		ProjectName:              instance.ProjectName,
-		ApiPort:                  instance.ApiPort,
-		UserDataPath:             instance.UserDataPath,
-		AutoTxMaxFee:             instance.AutoTxMaxFee,
-		MaxPriorityFee:           instance.MaxPriorityFee,
-		AutoTxGasThreshold:       instance.AutoTxGasThreshold,
-		AdditionalDockerNetworks: instance.AdditionalDockerNetworks,
-		ClientTimeout:            instance.ClientTimeout,
-		Network:                  instance.Network,
+		ApiPort:            instance.ApiPort,
+		AutoTxMaxFee:       instance.AutoTxMaxFee,
+		MaxPriorityFee:     instance.MaxPriorityFee,
+		AutoTxGasThreshold: instance.AutoTxGasThreshold,
+		Network:            instance.Network,
 		// ClientMode:               instance.ClientMode,
 		ContainerTag: instance.ContainerTag,
 	}

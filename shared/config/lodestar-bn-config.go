@@ -21,6 +21,12 @@ type LodestarBnConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type LodestarBnConfigSettings struct {
+	MaxPeers        uint64 `json:"maxPeers"`
+	ContainerTag    string `json:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags"`
+}
+
 // Generates a new Lodestar BN configuration
 func NewLodestarBnConfig() *LodestarBnConfig {
 	cfg := &LodestarBnConfig{}

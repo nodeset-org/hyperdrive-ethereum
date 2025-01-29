@@ -17,6 +17,12 @@ type ExternalBeaconConfig struct {
 	PrysmRpcUrl hdconfig.StringParameter
 }
 
+type ExternalBeaconConfigSettings struct {
+	BeaconNode  BeaconNode `json:"beaconNode"`
+	HttpUrl     string     `json:"httpUrl"`
+	PrysmRpcUrl string     `json:"prysmRpcUrl"`
+}
+
 // Generates a new ExternalBeaconConfig configuration
 func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	cfg := &ExternalBeaconConfig{}

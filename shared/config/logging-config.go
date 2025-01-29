@@ -36,6 +36,17 @@ type LoggingConfig struct {
 	Compress hdconfig.BoolParameter
 }
 
+type LoggingConfigSettings struct {
+	Level      logging.LogLevel  `json:"level"`
+	Format     logging.LogFormat `json:"format"`
+	AddSource  bool              `json:"addSource"`
+	MaxSize    uint64            `json:"maxSize"`
+	MaxBackups uint64            `json:"maxBackups"`
+	MaxAge     uint64            `json:"maxAge"`
+	LocalTime  bool              `json:"localTime"`
+	Compress   bool              `json:"compress"`
+}
+
 // Generates a new Logger configuration
 func NewLoggingConfig() *LoggingConfig {
 	cfg := &LoggingConfig{}
@@ -169,15 +180,15 @@ func (cfg *LoggingConfig) GetSections() []config.ISection {
 }
 
 // Convert the config into a LoggerOptions struct
-func (cfg *LoggingConfig) GetOptions() logging.LoggerOptions {
+func (cfg *LoggingConfigSettings) GetOptions() logging.LoggerOptions {
 	return logging.LoggerOptions{
-		MaxSize:    int(cfg.MaxSize.Value),
-		MaxBackups: int(cfg.MaxBackups.Value),
-		MaxAge:     int(cfg.MaxAge.Value),
-		LocalTime:  cfg.LocalTime.Value,
-		Compress:   cfg.Compress.Value,
-		Format:     cfg.Format.Value,
-		Level:      cfg.Level.Value,
-		AddSource:  cfg.AddSource.Value,
+		MaxSize:    int(cfg.MaxSize),
+		MaxBackups: int(cfg.MaxBackups),
+		MaxAge:     int(cfg.MaxAge),
+		LocalTime:  cfg.LocalTime,
+		Compress:   cfg.Compress,
+		Format:     cfg.Format,
+		Level:      cfg.Level,
+		AddSource:  cfg.AddSource,
 	}
 }

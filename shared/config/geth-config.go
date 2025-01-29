@@ -32,6 +32,14 @@ type GethConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type GethConfigSettings struct {
+	MaxPeers        uint64 `json:"maxPeers"`
+	EvmTimeout      uint64 `json:"evmTimeout"`
+	ArchiveMode     bool   `json:"archiveMode"`
+	ContainerTag    string `json:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags"`
+}
+
 // Generates a new Geth configuration
 func NewGethConfig() *GethConfig {
 	cfg := &GethConfig{}

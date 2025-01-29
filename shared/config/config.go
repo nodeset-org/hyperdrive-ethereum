@@ -27,8 +27,6 @@ type NativeHyperdriveEthereumSettings struct {
 	Network    Network    `json:"network"`
 	ClientMode ClientMode `json:"clientMode"`
 
-	// TODO: Ask Joe if it needs clients, logging etc (i.e. exact 1:1 match up top)
-
 	ContainerTag string `json:"containerTag"`
 }
 

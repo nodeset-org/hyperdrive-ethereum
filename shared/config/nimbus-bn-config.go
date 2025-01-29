@@ -37,6 +37,13 @@ type NimbusBnConfig struct {
 	AdditionalFlags config.StringParameter
 }
 
+type NimbusBnConfigSettings struct {
+	MaxPeers        uint64 `json:"maxPeers"`
+	ContainerTag    string `json:"containerTag"`
+	PruningMode     string `json:"pruningMode"`
+	AdditionalFlags string `json:"additionalFlags"`
+}
+
 // Generates a new Nimbus configuration
 func NewNimbusBnConfig() *NimbusBnConfig {
 	cfg := &NimbusBnConfig{}

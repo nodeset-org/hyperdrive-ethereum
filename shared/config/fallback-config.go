@@ -20,6 +20,13 @@ type FallbackConfig struct {
 	PrysmRpcUrl hdconfig.StringParameter
 }
 
+type FallbackConfigSettings struct {
+	UseFallbackClients bool   `json:"useFallbackClients"`
+	EcHttpUrl          string `json:"ecHttpUrl"`
+	BnHttpUrl          string `json:"bnHttpUrl"`
+	PrysmRpcUrl        string `json:"prysmRpcUrl"`
+}
+
 // Generates a new FallbackConfig configuration
 func NewFallbackConfig() *FallbackConfig {
 	cfg := &FallbackConfig{}

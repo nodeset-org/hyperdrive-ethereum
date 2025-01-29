@@ -28,6 +28,14 @@ type PrysmBnConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type PrysmBnConfigSettings struct {
+	MaxPeers        uint64 `json:"maxPeers"`
+	RpcPort         uint64 `json:"rpcPort"`
+	OpenRpcPort     string `json:"openRpcPort"`
+	ContainerTag    string `json:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags"`
+}
+
 // Generates a new Prysm BN configuration
 func NewPrysmBnConfig() *PrysmBnConfig {
 	cfg := &PrysmBnConfig{}

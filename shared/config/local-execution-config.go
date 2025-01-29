@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
@@ -30,6 +32,20 @@ type LocalExecutionConfig struct {
 	Nethermind *NethermindConfig
 	Besu       *BesuConfig
 	Reth       *RethConfig
+}
+
+type LocalExecutionConfigSettings struct {
+	ExecutionClient ExecutionClient `json:"executionClient"`
+	HttpPort        uint64          `json:"httpPort"`
+	WebsocketPort   uint64          `json:"wsPort"`
+	EnginePort      uint64          `json:"enginePort"`
+	OpenApiPorts    RpcPortMode     `json:"openApiPorts"`
+	P2pPort         uint64          `json:"p2pPort"`
+
+	Geth       *GethConfigSettings       `json:"geth"`
+	Nethermind *NethermindConfigSettings `json:"nethermind"`
+	Besu       *BesuConfigSettings       `json:"besu"`
+	Reth       *RethConfigSettings       `json:"reth"`
 }
 
 // Create a new LocalExecutionConfig struct
@@ -142,64 +158,62 @@ func (cfg *LocalExecutionConfig) GetSections() map[string]hdconfig.ISection {
 // === Templating ===
 // ==================
 
-// TODO: Is this stuff important?
+// Get the Docker mapping for the selected API port mode
+func (cfg *LocalExecutionConfigSettings) GetOpenApiPortMapping() string {
+	rpcMode := RpcPortMode(cfg.OpenApiPorts)
+	if !rpcMode.IsOpen() {
+		return ""
+	}
+	httpMapping := rpcMode.DockerPortMapping(uint64(cfg.HttpPort))
+	wsMapping := rpcMode.DockerPortMapping(uint64(cfg.WebsocketPort))
+	return fmt.Sprintf(", \"%s\", \"%s\"", httpMapping, wsMapping)
+}
 
-// // Get the Docker mapping for the selected API port mode
-// func (cfg *LocalExecutionConfig) GetOpenApiPortMapping() string {
-// 	rpcMode := cfg.OpenApiPorts.Value
-// 	if !rpcMode.IsOpen() {
-// 		return ""
-// 	}
-// 	httpMapping := rpcMode.DockerPortMapping(cfg.HttpPort.Value)
-// 	wsMapping := rpcMode.DockerPortMapping(cfg.WebsocketPort.Value)
-// 	return fmt.Sprintf(", \"%s\", \"%s\"", httpMapping, wsMapping)
-// }
+// Gets the max peers of the selected EC
+// Note that Reth treats the max peer count specially
+func (cfg *LocalExecutionConfigSettings) GetMaxPeers() uint64 {
+	switch cfg.ExecutionClient {
+	case ExecutionClient_Geth:
+		return cfg.Geth.MaxPeers
+	case ExecutionClient_Nethermind:
+		return cfg.Nethermind.MaxPeers
+	case ExecutionClient_Besu:
+		return cfg.Besu.MaxPeers
+	case ExecutionClient_Reth:
+		return cfg.Reth.MaxInboundPeers + cfg.Reth.MaxOutboundPeers
+	default:
+		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient)))
+	}
+}
 
-// // Gets the max peers of the selected EC
-// // Note that Reth treats the max peer count specially
-// func (cfg *LocalExecutionConfig) GetMaxPeers() uint64 {
-// 	switch cfg.ExecutionClient.Value {
-// 	case ExecutionClient_Geth:
-// 		return cfg.Geth.MaxPeers.Value
-// 	case ExecutionClient_Nethermind:
-// 		return cfg.Nethermind.MaxPeers.Value
-// 	case ExecutionClient_Besu:
-// 		return cfg.Besu.MaxPeers.Value
-// 	case ExecutionClient_Reth:
-// 		return cfg.Reth.MaxInboundPeers.Value + cfg.Reth.MaxOutboundPeers.Value
-// 	default:
-// 		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient.Value)))
-// 	}
-// }
+// Get the container tag of the selected EC
+func (cfg *LocalExecutionConfigSettings) GetContainerTag() string {
+	switch cfg.ExecutionClient {
+	case ExecutionClient_Geth:
+		return cfg.Geth.ContainerTag
+	case ExecutionClient_Nethermind:
+		return cfg.Nethermind.ContainerTag
+	case ExecutionClient_Besu:
+		return cfg.Besu.ContainerTag
+	case ExecutionClient_Reth:
+		return cfg.Reth.ContainerTag
+	default:
+		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient)))
+	}
+}
 
-// // Get the container tag of the selected EC
-// func (cfg *LocalExecutionConfig) GetContainerTag() string {
-// 	switch cfg.ExecutionClient.Value {
-// 	case ExecutionClient_Geth:
-// 		return cfg.Geth.ContainerTag.Value
-// 	case ExecutionClient_Nethermind:
-// 		return cfg.Nethermind.ContainerTag.Value
-// 	case ExecutionClient_Besu:
-// 		return cfg.Besu.ContainerTag.Value
-// 	case ExecutionClient_Reth:
-// 		return cfg.Reth.ContainerTag.Value
-// 	default:
-// 		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient.Value)))
-// 	}
-// }
-
-// // Gets the additional flags of the selected EC
-// func (cfg *LocalExecutionConfig) GetAdditionalFlags() string {
-// 	switch cfg.ExecutionClient.Value {
-// 	case ExecutionClient_Geth:
-// 		return cfg.Geth.AdditionalFlags.Value
-// 	case ExecutionClient_Nethermind:
-// 		return cfg.Nethermind.AdditionalFlags.Value
-// 	case ExecutionClient_Besu:
-// 		return cfg.Besu.AdditionalFlags.Value
-// 	case ExecutionClient_Reth:
-// 		return cfg.Reth.AdditionalFlags.Value
-// 	default:
-// 		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient.Value)))
-// 	}
-// }
+// Gets the additional flags of the selected EC
+func (cfg *LocalExecutionConfigSettings) GetAdditionalFlags() string {
+	switch cfg.ExecutionClient {
+	case ExecutionClient_Geth:
+		return cfg.Geth.AdditionalFlags
+	case ExecutionClient_Nethermind:
+		return cfg.Nethermind.AdditionalFlags
+	case ExecutionClient_Besu:
+		return cfg.Besu.AdditionalFlags
+	case ExecutionClient_Reth:
+		return cfg.Reth.AdditionalFlags
+	default:
+		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient)))
+	}
+}

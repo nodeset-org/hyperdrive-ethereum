@@ -32,6 +32,15 @@ type BesuConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type BesuConfigSettings struct {
+	JvmHeapSize     uint64 `json:"jvmHeapSize"`
+	MaxPeers        uint64 `json:"maxPeers"`
+	MaxBackLayers   uint64 `json:"maxBackLayers"`
+	ArchiveMode     bool   `json:"archiveMode"`
+	ContainerTag    string `json:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags"`
+}
+
 // Generates a new Besu configuration
 func NewBesuConfig() *BesuConfig {
 	cfg := &BesuConfig{}

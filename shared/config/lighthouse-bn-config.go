@@ -25,6 +25,13 @@ type LighthouseBnConfig struct {
 	AdditionalFlags hdconfig.StringParameter
 }
 
+type LighthouseBnConfigSettings struct {
+	P2pQuicPort     uint64 `json:"p2pQuicPort"`
+	MaxPeers        uint64 `json:"maxPeers"`
+	ContainerTag    string `json:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags"`
+}
+
 // Generates a new Lighthouse BN configuration
 func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg := &LighthouseBnConfig{}

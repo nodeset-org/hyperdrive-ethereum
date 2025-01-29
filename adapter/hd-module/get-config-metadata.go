@@ -18,7 +18,7 @@ func getConfigMetadata(c *cli.Context) error {
 	}
 
 	// Get the config
-	cfg := config.NewHyperdriveEthereumConfig("TODO", "TODO")
+	cfg := config.NewHyperdriveEthereumConfig()
 
 	// Create the response
 	cfgMap := hdconfig.MarshalConfigurationToMap(cfg)
