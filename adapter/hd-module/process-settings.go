@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -42,7 +42,7 @@ func processSettings(c *cli.Context) error {
 	if !exists {
 		return fmt.Errorf("could not find settings for %s", utils.FullyQualifiedModuleName)
 	}
-	var settings config.NativeHyperdriveEthereumSettings
+	var settings config.HyperdriveEthereumConfigSettings
 	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
 	if err != nil {
 		return fmt.Errorf("error loading settings: %w", err)

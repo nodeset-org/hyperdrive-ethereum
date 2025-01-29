@@ -211,7 +211,7 @@ func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 	}
 }
 
-func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumConfig) *HyperdriveEthereumConfigSettings {
+func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumSettings) *HyperdriveEthereumConfigSettings {
 	instance := &HyperdriveEthereumConfigSettings{
 		EnableIPv6:               native.EnableIPv6,
 		ProjectName:              native.ProjectName,
@@ -223,14 +223,14 @@ func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereu
 		AdditionalDockerNetworks: native.AdditionalDockerNetworks,
 		ClientTimeout:            native.ClientTimeout,
 		Network:                  native.Network,
-		ClientMode:               native.ClientMode,
-		ContainerTag:             native.ContainerTag,
+		// ClientMode:               native.ClientMode,
+		ContainerTag: native.ContainerTag,
 	}
 	return instance
 }
 
-func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *sharedconfig.NativeHyperdriveEthereumConfig {
-	native := &sharedconfig.NativeHyperdriveEthereumConfig{
+func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *sharedconfig.NativeHyperdriveEthereumSettings {
+	native := &sharedconfig.NativeHyperdriveEthereumSettings{
 		EnableIPv6:               instance.EnableIPv6,
 		ProjectName:              instance.ProjectName,
 		ApiPort:                  instance.ApiPort,
@@ -241,8 +241,8 @@ func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *
 		AdditionalDockerNetworks: instance.AdditionalDockerNetworks,
 		ClientTimeout:            instance.ClientTimeout,
 		Network:                  instance.Network,
-		ClientMode:               instance.ClientMode,
-		ContainerTag:             instance.ContainerTag,
+		// ClientMode:               instance.ClientMode,
+		ContainerTag: instance.ContainerTag,
 	}
 	return native
 }

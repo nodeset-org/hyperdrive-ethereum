@@ -7,10 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
+	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
+
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"gopkg.in/yaml.v2"
 
-	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	"github.com/urfave/cli/v2"
 )
 
@@ -53,17 +54,17 @@ func (m *AdapterConfigManager) LoadConfigFromDisk() (*HyperdriveEthereumConfigSe
 	}
 
 	// Load it
-	bytes, err := os.ReadFile(m.adapterConfigPath)
-	if err != nil {
-		return nil, fmt.Errorf("error reading config file [%s]: %w", m.adapterConfigPath, err)
-	}
+	// bytes, err := os.ReadFile(m.adapterConfigPath)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("error reading config file [%s]: %w", m.adapterConfigPath, err)
+	// }
 
 	// Deserialize it
 	modCfg := CreateInstanceFromNativeConfig(nativeCfg)
-	err = yaml.Unmarshal(bytes, &modCfg.ServerConfig)
-	if err != nil {
-		return nil, fmt.Errorf("error deserializing adapter config file [%s]: %w", m.adapterConfigPath, err)
-	}
+	// err = yaml.Unmarshal(bytes, &modCfg.ServerConfig)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("error deserializing adapter config file [%s]: %w", m.adapterConfigPath, err)
+	// }
 	m.AdapterConfig = modCfg
 	return modCfg, nil
 }

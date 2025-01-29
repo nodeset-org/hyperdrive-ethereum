@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/urfave/cli/v2"
 )
 
@@ -73,13 +75,13 @@ func resyncBeaconNode(c *cli.Context) error {
 	// 	return fmt.Errorf("Error deleting volume: %w", err)
 	// }
 
-	// // Restart Hyperdrive
-	// fmt.Printf("Rebuilding %s and restarting Hyperdrive...\n", beaconContainerName)
-	// err = startService(c, true)
-	// if err != nil {
-	// 	return fmt.Errorf("Error starting Hyperdrive: %s", err)
-	// }
+	// Restart Hyperdrive
+	fmt.Printf("Rebuilding %s and restarting Hyperdrive...\n", beaconContainerName)
+	err = startService(c, true)
+	if err != nil {
+		return fmt.Errorf("Error starting Hyperdrive: %s", err)
+	}
 
-	// fmt.Printf("\nDone! Your Beacon Node is now resyncing. You can follow its progress with `hyperdrive service logs bn`.\n")
+	fmt.Printf("\nDone! Your Beacon Node is now resyncing. You can follow its progress with `hyperdrive service logs bn`.\n")
 	return nil
 }

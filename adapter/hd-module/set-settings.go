@@ -32,7 +32,7 @@ func setSettings(c *cli.Context) error {
 	if !exists {
 		return fmt.Errorf("could not find config for %s", utils.FullyQualifiedModuleName)
 	}
-	var settings config.NativeHyperdriveEthereumSettings
+	var settings config.HyperdriveEthereumConfigSettings
 	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
 	if err != nil {
 		return fmt.Errorf("error loading settings: %w", err)
@@ -43,7 +43,7 @@ func setSettings(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("error creating config manager: %w", err)
 	}
-	cfgMgr.AdapterConfig = cfg
+	cfgMgr.AdapterConfig = &settings
 
 	// Save it
 	err = cfgMgr.SaveConfigToDisk()
