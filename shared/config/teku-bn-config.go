@@ -2,9 +2,8 @@ package config
 
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
-	"github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
-	nmcconfig "github.com/rocket-pool/node-manager-core/config"
 )
 
 const (
@@ -15,46 +14,46 @@ const (
 // Configuration for Teku
 type TekuBnConfig struct {
 	// Max number of P2P peers to connect to
-	JvmHeapSize config.UintParameter
+	JvmHeapSize hdconfig.UintParameter
 
 	// The max number of P2P peers to connect to
-	MaxPeers config.UintParameter
+	MaxPeers hdconfig.UintParameter
 
 	// The archive mode flag
-	ArchiveMode config.BoolParameter
+	ArchiveMode hdconfig.BoolParameter
 
 	// The Docker Hub tag for the Teku BN
-	ContainerTag config.StringParameter
+	ContainerTag hdconfig.StringParameter
 
 	// Custom command line flags for the BN
-	AdditionalFlags config.StringParameter
+	AdditionalFlags hdconfig.StringParameter
 }
 
 // Generates a new Teku BN configuration
 func NewTekuBnConfig() *TekuBnConfig {
 	cfg := &TekuBnConfig{}
 
-	cfg.JvmHeapSize.ID = config.Identifier(ids.TekuJvmHeapSizeID)
+	cfg.JvmHeapSize.ID = hdconfig.Identifier(ids.TekuJvmHeapSizeID)
 	cfg.JvmHeapSize.Name = "JVM Heap Size"
 	cfg.JvmHeapSize.Description.Default = "The max amount of RAM, in MB, that Teku's JVM should limit itself to. Setting this lower will cause Teku to use less RAM, though it will always use more than this limit.\n\nUse 0 for automatic allocation."
 	cfg.JvmHeapSize.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
 	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-	cfg.ArchiveMode.ID = config.Identifier(ids.TekuArchiveModeID)
+	cfg.ArchiveMode.ID = hdconfig.Identifier(ids.TekuArchiveModeID)
 	cfg.ArchiveMode.Name = "Enable Archive Mode"
 	cfg.ArchiveMode.Description.Default = "When enabled, Teku will run in \"archive\" mode which means it can recreate the state of the Beacon chain for a previous block. This is required for manually generating the Merkle rewards tree.\n\nIf you are sure you will never be manually generating a tree, you can disable archive mode."
 	cfg.ArchiveMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Teku container on Docker Hub you want to use for the Beacon Node."
 	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.ID = hdconfig.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Teku's Beacon Node, to take advantage of other settings that aren't covered here."
 	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
@@ -68,8 +67,8 @@ func (cfg *TekuBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *TekuBnConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *TekuBnConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
 		&cfg.JvmHeapSize,
 		&cfg.MaxPeers,
 		&cfg.ArchiveMode,
@@ -79,8 +78,8 @@ func (cfg *TekuBnConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *TekuBnConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
-	return map[string]nmcconfig.IConfigSection{}
+func (cfg *TekuBnConfig) GetSections() map[string]hdconfig.ISection {
+	return map[string]hdconfig.ISection{}
 }
 
 // Get the recommended heap size for Teku
@@ -90,34 +89,4 @@ func getTekuHeapSize() uint64 {
 		return 2048
 	}
 	return 0
-}
-
-// TODO (HN)
-func (cfg *TekuBnConfig) GetDescription() config.DynamicProperty[string] {
-	return config.DynamicProperty[string]{}
-}
-
-// TODO (HN)
-func (cfg *TekuBnConfig) GetDisabled() config.DynamicProperty[bool] {
-	return config.DynamicProperty[bool]{}
-}
-
-// TODO (HN)
-func (cfg *TekuBnConfig) GetHidden() config.DynamicProperty[bool] {
-	return config.DynamicProperty[bool]{}
-}
-
-// TODO (HN)
-func (cfg *TekuBnConfig) GetID() config.Identifier {
-	return config.Identifier("")
-}
-
-// TODO (HN)
-func (cfg *TekuBnConfig) GetName() string {
-	return ""
-}
-
-// TODO (HN)
-func (cfg *TekuBnConfig) GetSections() []config.ISection {
-	return []config.ISection{}
 }

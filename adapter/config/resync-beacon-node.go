@@ -3,18 +3,17 @@ package config
 import (
 	"fmt"
 
+	adapterutils "github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
 	"github.com/urfave/cli/v2"
 )
 
 // TODO (HN)
 // Destroy and resync the Beacon Node from scratch
 func resyncBeaconNode(c *cli.Context) error {
-	// Get Hyperdrive client
-	// hd, err := client.NewHyperdriveClientFromCtx(c)
-	// if err != nil {
-	// 	return err
-	// }
-
 	// // Get the merged config
 	// cfg, isNew, err := hd.LoadConfig()
 	// if err != nil {
@@ -22,29 +21,6 @@ func resyncBeaconNode(c *cli.Context) error {
 	// }
 	// if isNew {
 	// 	return fmt.Errorf("Settings file not found. Please run `hyperdrive service config` to set up Hyperdrive.")
-	// }
-
-	// fmt.Println("This will delete the chain data of your Beacon Node and resync it from scratch.")
-	// fmt.Printf("%sYou should only do this if your Beacon Node has failed and can no longer start or sync properly.\nThis is meant to be a last resort.%s\n\n", terminal.ColorYellow, terminal.ColorReset)
-
-	// // Check the client mode
-	// if cfg.Hyperdrive.ClientMode.Value == ClientMode_External {
-	// 	fmt.Println("You use an externally-managed Beacon Node. Hyperdrive cannot resync it for you.")
-	// 	return nil
-	// }
-
-	// // Get the current checkpoint sync URL
-	// checkpointSyncUrl := cfg.Hyperdrive.LocalBeaconClient.CheckpointSyncProvider.Value
-	// if checkpointSyncUrl == "" {
-	// 	fmt.Printf("%sYou do not have a checkpoint sync provider configured.\nIf you have active validators, they %swill be considered offline and will lose ETH%s%s until your Beacon Node finishes syncing.\nWe strongly recommend you configure a checkpoint sync provider with `hyperdrive service config` so it syncs instantly before running this.%s\n\n", terminal.ColorRed, terminal.ColorBold, terminal.ColorReset, terminal.ColorRed, terminal.ColorReset)
-	// } else {
-	// 	fmt.Printf("You have a checkpoint sync provider configured (%s).\nYour Beacon Node will use it to sync to the head of the Beacon Chain instantly after being rebuilt.\n\n", checkpointSyncUrl)
-	// }
-
-	// // Prompt for confirmation
-	// if !(c.Bool(utils.YesFlag.Name) || utils.Confirm(fmt.Sprintf("%sAre you SURE you want to delete and resync your main Beacon Node from scratch? This cannot be undone!%s", terminal.ColorRed, terminal.ColorReset))) {
-	// 	fmt.Println("Cancelled.")
-	// 	return nil
 	// }
 
 	// // Stop the BN
@@ -74,6 +50,33 @@ func resyncBeaconNode(c *cli.Context) error {
 	// if err != nil {
 	// 	return fmt.Errorf("Error deleting volume: %w", err)
 	// }
+
+	// Create the configuration manager
+	cfgMgr, err := NewAdapterConfigManager(c)
+	if err != nil {
+		return fmt.Errorf("error creating config manager: %w", err)
+	}
+	cfg, err := cfgMgr.LoadConfigFromDisk()
+	if err != nil {
+		return fmt.Errorf("error loading config: %w", err)
+	}
+	if cfg == nil {
+		return fmt.Errorf("config has not been created yet")
+	}
+
+	// Get the current checkpoint sync URL
+	checkpointSyncUrl := string(cfg.LocalBeaconClient.CheckpointSyncProvider)
+	if checkpointSyncUrl == "" {
+		fmt.Printf("%sYou do not have a checkpoint sync provider configured.\nIf you have active validators, they %swill be considered offline and will lose ETH%s%s until your Beacon Node finishes syncing.\nWe strongly recommend you configure a checkpoint sync provider with `hyperdrive service config` so it syncs instantly before running this.%s\n\n", terminal.ColorRed, terminal.ColorBold, terminal.ColorReset, terminal.ColorRed, terminal.ColorReset)
+	} else {
+		fmt.Printf("You have a checkpoint sync provider configured (%s).\nYour Beacon Node will use it to sync to the head of the Beacon Chain instantly after being rebuilt.\n\n", checkpointSyncUrl)
+	}
+
+	// Prompt for confirmation
+	if !(c.Bool(adapterutils.YesFlag.Name) || utils.Confirm(fmt.Sprintf("%sAre you SURE you want to delete and resync your main Beacon Node from scratch? This cannot be undone!%s", terminal.ColorRed, terminal.ColorReset))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
 
 	// Restart Hyperdrive
 	fmt.Printf("Rebuilding %s and restarting Hyperdrive...\n", beaconContainerName)

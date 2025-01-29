@@ -2,74 +2,75 @@ package config
 
 import (
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/nodeset-org/hyperdrive/shared/config/ids"
 	"github.com/nodeset-org/hyperdrive/shared/logging"
 )
 
 // Configuration for the daemon loggers
 type LoggingConfig struct {
-	config.SectionHeader
+	hdconfig.SectionHeader
 
 	// The minimum record level that will be logged
-	Level config.ChoiceParameter[logging.LogLevel]
+	Level hdconfig.ChoiceParameter[logging.LogLevel]
 
 	// The format to use when printing logs
-	Format config.ChoiceParameter[logging.LogFormat]
+	Format hdconfig.ChoiceParameter[logging.LogFormat]
 
 	// True to include the source code position of the log statement in log messages
-	AddSource config.BoolParameter
+	AddSource hdconfig.BoolParameter
 
 	// The maximum size (in megabytes) of the log file before it gets rotated
-	MaxSize config.UintParameter
+	MaxSize hdconfig.UintParameter
 
 	// The maximum number of old log files to retain
-	MaxBackups config.UintParameter
+	MaxBackups hdconfig.UintParameter
 
 	// The maximum number of days to retain old log files based on the timestamp encoded in their filename
-	MaxAge config.UintParameter
+	MaxAge hdconfig.UintParameter
 
 	// Toggle for saving rotated logs with local system time in the name vs. UTC
-	LocalTime config.BoolParameter
+	LocalTime hdconfig.BoolParameter
 
 	// Toggle for compressing rotated logs
-	Compress config.BoolParameter
+	Compress hdconfig.BoolParameter
 }
 
 // Generates a new Logger configuration
 func NewLoggingConfig() *LoggingConfig {
 	cfg := &LoggingConfig{}
-	cfg.SectionHeader.ID = config.Identifier(ids.LoggingSectionID)
+	cfg.SectionHeader.ID = hdconfig.Identifier(ids.LoggingSectionID)
 	cfg.SectionHeader.Name = "Logging"
 	cfg.SectionHeader.Description.Default = "Configure the logging options for the Hyperdrive sercive and any modules that support it."
 
 	// Level
-	cfg.Level.ID = config.Identifier(ids.LoggerLevelID)
+	cfg.Level.ID = hdconfig.Identifier(ids.LoggerLevelID)
 	cfg.Level.Name = "Log Level"
 	cfg.Level.Description.Default = "Select the minimum level for log messages. The lower it goes, the more verbose output the logs contain."
 	cfg.Level.Default = logging.LogLevel_Info
 	cfg.Level.AffectedContainers = []string{string(ContainerID_Daemon)}
-	cfg.Level.Options = []config.ParameterOption[logging.LogLevel]{
+	cfg.Level.Options = []hdconfig.ParameterOption[logging.LogLevel]{
 		{
 			Name: "Debug",
-			Description: config.DynamicProperty[string]{
+			Description: hdconfig.DynamicProperty[string]{
 				Default: "Log debug messages - useful for development, or if something goes wrong and you need to provide extra information to supporters in order to track issues down.",
 			},
 			Value: logging.LogLevel_Debug,
 		}, {
 			Name: "Info",
-			Description: config.DynamicProperty[string]{
+			Description: hdconfig.DynamicProperty[string]{
 				Default: "Log routine info messages.",
 			},
 			Value: logging.LogLevel_Info,
 		}, {
 			Name: "Warn",
-			Description: config.DynamicProperty[string]{
+			Description: hdconfig.DynamicProperty[string]{
 				Default: "Only log warnings or higher, skipping info messages.",
 			},
 			Value: logging.LogLevel_Warn,
 		}, {
 			Name: "Error",
-			Description: config.DynamicProperty[string]{
+			Description: hdconfig.DynamicProperty[string]{
 				Default: "Only log errors that prevent the daemon from running as expected.",
 			},
 			Value: logging.LogLevel_Error,

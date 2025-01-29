@@ -2,38 +2,37 @@ package config
 
 import (
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
-	"github.com/nodeset-org/hyperdrive/modules/config"
-	nmcconfig "github.com/rocket-pool/node-manager-core/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 // Configuration for external Execution clients
 type ExternalExecutionConfig struct {
 	// The selected EC
-	ExecutionClient config.ChoiceParameter[ExecutionClient] //Parameter[ExecutionClient]
+	ExecutionClient hdconfig.ChoiceParameter[ExecutionClient] //Parameter[ExecutionClient]
 
 	// The URL of the HTTP endpoint
-	HttpUrl config.StringParameter
+	HttpUrl hdconfig.StringParameter
 
 	// The URL of the Websocket endpoint
-	WebsocketUrl config.StringParameter
+	WebsocketUrl hdconfig.StringParameter
 }
 
 // Generates a new ExternalExecutionConfig configuration
 func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg := &ExternalExecutionConfig{}
 
-	cfg.HttpUrl.ID = config.Identifier(ids.HttpUrlID)
+	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
 	cfg.HttpUrl.Description.Default = "The URL of the HTTP RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:8545'."
 	cfg.HttpUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
 
-	cfg.WebsocketUrl.ID = config.Identifier(ids.ExternalEcWebsocketUrlID)
+	cfg.WebsocketUrl.ID = hdconfig.Identifier(ids.ExternalEcWebsocketUrlID)
 	cfg.WebsocketUrl.Name = "Websocket URL"
 	cfg.WebsocketUrl.Description.Default = "The URL of the Websocket RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:8546'."
 	cfg.WebsocketUrl.AffectedContainers = []string{}
 
 	// Options for ExecutionClient
-	options := make([]config.ParameterOption[ExecutionClient], 4)
+	options := make([]hdconfig.ParameterOption[ExecutionClient], 4)
 	options[0].Name = string(ExecutionClient_Geth)
 	options[0].Description.Default = "Select if your external client is Geth."
 	options[0].Value = ExecutionClient_Geth
@@ -50,7 +49,7 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	options[3].Description.Default = "Select if your external client is Reth."
 	options[3].Value = ExecutionClient_Reth
 
-	cfg.ExecutionClient.ID = config.Identifier(ids.EcID)
+	cfg.ExecutionClient.ID = hdconfig.Identifier(ids.EcID)
 	cfg.ExecutionClient.Name = "Execution Client"
 	cfg.ExecutionClient.Description.Default = "Select which Execution client your external client is."
 	cfg.ExecutionClient.AffectedContainers = []string{string(ContainerID_ValidatorClient)}
@@ -65,8 +64,8 @@ func (cfg *ExternalExecutionConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *ExternalExecutionConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *ExternalExecutionConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
 		&cfg.ExecutionClient,
 		&cfg.HttpUrl,
 		&cfg.WebsocketUrl,
@@ -74,6 +73,6 @@ func (cfg *ExternalExecutionConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *ExternalExecutionConfig) GetSubconfigs() map[string]nmcconfig.IConfigSection {
-	return map[string]nmcconfig.IConfigSection{}
+func (cfg *ExternalExecutionConfig) GetSections() map[string]hdconfig.ISection {
+	return map[string]hdconfig.ISection{}
 }

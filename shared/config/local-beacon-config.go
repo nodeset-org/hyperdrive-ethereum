@@ -4,25 +4,25 @@ import (
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
-	"github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 // Common parameters shared by all of the Beacon Clients
 type LocalBeaconConfig struct {
 	// The selected BN
-	BeaconNode config.ChoiceParameter[BeaconNode] //Parameter[BeaconNode]
+	BeaconNode hdconfig.ChoiceParameter[BeaconNode] //Parameter[BeaconNode]
 
 	// The checkpoint sync URL if used
-	CheckpointSyncProvider config.StringParameter
+	CheckpointSyncProvider hdconfig.StringParameter
 
 	// The port to use for gossip traffic
-	P2pPort config.UintParameter
+	P2pPort hdconfig.UintParameter
 
 	// The port to expose the HTTP API on
-	HttpPort config.UintParameter
+	HttpPort hdconfig.UintParameter
 
 	// Toggle for forwarding the HTTP API port outside of Docker
-	OpenHttpPort config.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
+	OpenHttpPort hdconfig.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
 
 	// Subconfigs
 	Lighthouse *LighthouseBnConfig
@@ -42,25 +42,25 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.Prysm = NewPrysmBnConfig()
 	cfg.Teku = NewTekuBnConfig()
 
-	cfg.CheckpointSyncProvider.ID = config.Identifier(ids.LocalBnCheckpointSyncUrlID)
+	cfg.CheckpointSyncProvider.ID = hdconfig.Identifier(ids.LocalBnCheckpointSyncUrlID)
 	cfg.CheckpointSyncProvider.Name = "Checkpoint Sync URL"
 	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
 		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
 		"Leave this blank if you want to sync normally from the start of the chain."
 	cfg.CheckpointSyncProvider.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-	cfg.P2pPort.ID = config.Identifier(ids.P2pPortID)
+	cfg.P2pPort.ID = hdconfig.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
 	cfg.P2pPort.Description.Default = "The port to use for P2P (blockchain) traffic."
 	cfg.P2pPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
-	cfg.HttpPort.ID = config.Identifier(ids.HttpPortID)
+	cfg.HttpPort.ID = hdconfig.Identifier(ids.HttpPortID)
 	cfg.HttpPort.Name = "HTTP API Port"
 	cfg.HttpPort.Description.Default = "The port your Beacon Node should run its HTTP API on."
 	cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient), string(ContainerID_Prometheus)}
 
 	// Options for OpenHttpPort
-	options := make([]config.ParameterOption[RpcPortMode], 3)
+	options := make([]hdconfig.ParameterOption[RpcPortMode], 3)
 	options[0].Name = string(RpcPortMode_Closed)
 	options[0].Description.Default = "Do not expose the RPC port outside of the Docker container."
 	options[0].Value = RpcPortMode_Closed
@@ -73,14 +73,14 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	options[2].Description.Default = "Expose the RPC port to other machines on your local network."
 	options[2].Value = RpcPortMode_OpenExternal
 
-	cfg.OpenHttpPort.ID = config.Identifier(ids.OpenHttpPortsID)
+	cfg.OpenHttpPort.ID = hdconfig.Identifier(ids.OpenHttpPortsID)
 	cfg.OpenHttpPort.Name = "Expose API Port"
 	cfg.OpenHttpPort.Description.Default = "Select an option to expose your Beacon Node's API port to your localhost or external hosts on the network, so other machines can access it too."
 	cfg.OpenHttpPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 	cfg.OpenHttpPort.Options = options
 
 	// Options for BeaconNode
-	optionsBeaconNode := make([]config.ParameterOption[BeaconNode], 5)
+	optionsBeaconNode := make([]hdconfig.ParameterOption[BeaconNode], 5)
 	optionsBeaconNode[0].Name = "Lighthouse"
 	optionsBeaconNode[0].Description.Default = "Lighthouse is a Beacon Node with a heavy focus on speed and security. The team behind it, Sigma Prime, is an information security and software engineering firm who have funded Lighthouse along with the Ethereum Foundation, Consensys, and private individuals. Lighthouse is built in Rust and offered under an Apache 2.0 License."
 	optionsBeaconNode[0].Value = BeaconNode_Lighthouse
@@ -101,7 +101,7 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	optionsBeaconNode[4].Description.Default = "PegaSys Teku (formerly known as Artemis) is a Java-based Ethereum 2.0 client designed & built to meet institutional needs and security requirements. PegaSys is an arm of ConsenSys dedicated to building enterprise-ready clients and tools for interacting with the core Ethereum platform. Teku is Apache 2 licensed and written in Java, a language notable for its maturity & ubiquity."
 	optionsBeaconNode[4].Value = BeaconNode_Teku
 
-	cfg.BeaconNode.ID = config.Identifier(ids.BnID)
+	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BnID)
 	cfg.BeaconNode.Name = "Beacon Node"
 	cfg.BeaconNode.Description.Default = "Select which Beacon Node client you would like to use."
 	cfg.BeaconNode.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient)}
@@ -116,8 +116,8 @@ func (cfg *LocalBeaconConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LocalBeaconConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *LocalBeaconConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
 		&cfg.BeaconNode,
 		&cfg.CheckpointSyncProvider,
 		&cfg.P2pPort,
@@ -127,8 +127,8 @@ func (cfg *LocalBeaconConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *LocalBeaconConfig) GetSubconfigs() map[string]config.ISection {
-	return map[string]config.ISection{
+func (cfg *LocalBeaconConfig) GetSections() map[string]hdconfig.ISection {
+	return map[string]hdconfig.ISection{
 		ids.LocalBnLighthouseID: cfg.Lighthouse,
 		ids.LocalBnLodestarID:   cfg.Lodestar,
 		ids.LocalBnNimbusID:     cfg.Nimbus,
@@ -146,7 +146,7 @@ func (cfg *LocalBeaconConfig) GetOpenApiPortMapping() []string {
 	bnOpenPorts := make([]string, 0)
 
 	// Handle the standard HTTP API port
-	apiPortMode := cfg.OpenHttpPort.Value
+	apiPortMode := cfg.OpenHttpPort
 	if apiPortMode.IsOpen() {
 		apiPort := cfg.HttpPort.Value
 		bnOpenPorts = append(bnOpenPorts, apiPortMode.DockerPortMapping(apiPort))

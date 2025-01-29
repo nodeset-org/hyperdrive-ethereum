@@ -81,6 +81,10 @@ type HyperdriveEthereumConfig struct {
 	moduleEnableStatus      map[string]bool
 }
 
+type LocalBeaconClientSettings struct {
+	CheckpointSyncProvider string `json:"checkpointSyncProvider"`
+}
+
 type HyperdriveEthereumConfigSettings struct {
 	EnableIPv6               bool    `json:"enableIPv6"`
 	ProjectName              string  `json:"projectName"`
@@ -94,6 +98,9 @@ type HyperdriveEthereumConfigSettings struct {
 
 	Network    sharedconfig.Network `json:"network"`
 	ClientMode ClientMode           `json:"clientMode"`
+
+	LocalBeaconClient    *LocalBeaconClientSettings         `json:"localBeaconClient"`
+	ExternalBeaconClient *sharedconfig.ExternalBeaconConfig `json:"externalBeaconClient"`
 
 	// TODO: Ask Joe if it needs clients, logging etc (i.e. exact 1:1 match up top)
 
