@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/pbnjay/memory"
-	"github.com/rocket-pool/node-manager-core/config/ids"
 )
 
 // Constants
