@@ -130,8 +130,8 @@ func (cfg *NethermindConfig) GetParameters() []hdconfig.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *NethermindConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *NethermindConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
 
 // Calculate the recommended size for Nethermind's cache based on the amount of system RAM
@@ -205,4 +205,25 @@ func calculateNethermindPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *NethermindConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *NethermindConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *NethermindConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *NethermindConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier("")
+}
+
+func (cfg *NethermindConfig) GetName() string {
+	return ""
 }

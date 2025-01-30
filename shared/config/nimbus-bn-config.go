@@ -92,8 +92,8 @@ func (cfg *NimbusBnConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *NimbusBnConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *NimbusBnConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
 
 // Get the default number of peers
@@ -106,4 +106,25 @@ func getNimbusDefaultPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *NimbusBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *NimbusBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *NimbusBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *NimbusBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier("")
+}
+
+func (cfg *NimbusBnConfig) GetName() string {
+	return ""
 }

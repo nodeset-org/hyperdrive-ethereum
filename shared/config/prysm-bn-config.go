@@ -100,6 +100,27 @@ func (cfg *PrysmBnConfig) GetParameters() []hdconfig.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *PrysmBnConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *PrysmBnConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *PrysmBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *PrysmBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *PrysmBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *PrysmBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier("")
+}
+
+func (cfg *PrysmBnConfig) GetName() string {
+	return ""
 }

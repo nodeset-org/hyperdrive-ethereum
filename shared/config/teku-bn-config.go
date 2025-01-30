@@ -86,8 +86,8 @@ func (cfg *TekuBnConfig) GetParameters() []hdconfig.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *TekuBnConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *TekuBnConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
 
 // Get the recommended heap size for Teku
@@ -97,4 +97,25 @@ func getTekuHeapSize() uint64 {
 		return 2048
 	}
 	return 0
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *TekuBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *TekuBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *TekuBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *TekuBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier("")
+}
+
+func (cfg *TekuBnConfig) GetName() string {
+	return ""
 }

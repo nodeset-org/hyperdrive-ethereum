@@ -88,8 +88,8 @@ func (cfg *RethConfig) GetParameters() []hdconfig.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *RethConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *RethConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
 
 // Calculate the recommended size for Reth's cache based on the amount of system RAM
@@ -119,4 +119,25 @@ func calculateRethPeers() uint16 {
 		return 12
 	}
 	return 25
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *RethConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *RethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *RethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *RethConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier("")
+}
+
+func (cfg *RethConfig) GetName() string {
+	return ""
 }

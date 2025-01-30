@@ -89,8 +89,8 @@ func (cfg *GethConfig) GetParameters() []hdconfig.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *GethConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *GethConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
 
 // Calculate the default number of Geth peers
@@ -103,4 +103,25 @@ func calculateGethPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *GethConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *GethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *GethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *GethConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier("")
+}
+
+func (cfg *GethConfig) GetName() string {
+	return ""
 }
