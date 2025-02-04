@@ -10,10 +10,10 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter"
+	hdmodule "github.com/nodeset-org/hyperdrive-ethereum/adapter/hd-module"
 	internal_test "github.com/nodeset-org/hyperdrive-ethereum/internal/test"
-	"github.com/nodeset-org/hyperdrive-ethereum/modules/config"
-	"github.com/nodeset-org/hyperdrive-ethereum/utils/command"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/utils/command"
+	"github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 	docker *client.Client
 
 	// Info for the example module
-	modInfo *config.ModuleInfo
+	modInfo *hdconfig.ModuleInfo
 )
 
 func TestMain(m *testing.M) {
@@ -62,11 +62,11 @@ func TestMain(m *testing.M) {
 	}
 
 	// Create the adapter clients
-	gac, err = adapter.NewAdapterClient(internal_test.GlobalAdapterContainerName, string(internal_test.TestKey))
+	gac, err = hdmodule.NewAdapterClient(internal_test.GlobalAdapterContainerName, string(internal_test.TestKey))
 	if err != nil {
 		fail(fmt.Errorf("error creating global adapter client: %w", err))
 	}
-	pac, err = adapter.NewAdapterClient(internal_test.ProjectAdapterContainerName, string(internal_test.TestKey))
+	pac, err = hdmodule.NewAdapterClient(internal_test.ProjectAdapterContainerName, string(internal_test.TestKey))
 	if err != nil {
 		fail(fmt.Errorf("error creating project adapter client: %w", err))
 	}
