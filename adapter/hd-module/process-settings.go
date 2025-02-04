@@ -15,6 +15,7 @@ import (
 type processSettingsRequest struct {
 	utils.KeyedRequest
 
+	// TODO (HN): Ask Joe Should this be HyperdriveSettings?
 	// The config instance to process
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }

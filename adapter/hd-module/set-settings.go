@@ -1,54 +1,37 @@
 package hdmodule
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
+)
 
-	"github.com/urfave/cli/v2"
+const (
+	SetSettingsCommandString string = HyperdriveModuleCommand + " set-settings"
 )
 
 // Request format for `set-config`
-type setSettingsRequest struct {
+type SetSettingsRequest struct {
 	utils.KeyedRequest
 
 	// The config instance to process
-	Settings *hdconfig.HyperdriveSettings `json:"settings"`
+	Settings map[string]any `json:"settings"`
+	// Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
 
 // Handle the `set-config` command
-func setSettings(c *cli.Context) error {
-	// Get the request
-	request, err := utils.HandleKeyedRequest[*setSettingsRequest](c)
-	if err != nil {
-		return err
+func (c *AdapterClient) SetSettings(ctx context.Context, settings map[string]any) error {
+	request := &SetSettingsRequest{
+		KeyedRequest: utils.KeyedRequest{
+			Key: c.key,
+		},
+		Settings: settings,
 	}
 
-	// TODO(HN)
-	// Construct the module settings from the Hyperdrive config
-	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
-	if !exists {
-		return fmt.Errorf("could not find config for %s", utils.FullyQualifiedModuleName)
-	}
-	var settings config.HyperdriveEthereumConfigSettings
-	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
+	err := runCommand[SetSettingsRequest, struct{}](c, ctx, SetSettingsCommandString, request, nil)
 	if err != nil {
-		return fmt.Errorf("error loading settings: %w", err)
-	}
-
-	// Make a config manager
-	cfgMgr, err := config.NewAdapterConfigManager(c)
-	if err != nil {
-		return fmt.Errorf("error creating config manager: %w", err)
-	}
-	cfgMgr.AdapterConfig = &settings
-
-	// Save it
-	err = cfgMgr.SaveConfigToDisk()
-	if err != nil {
-		return fmt.Errorf("error saving config: %w", err)
+		return fmt.Errorf("error setting module settings: %w", err)
 	}
 	return nil
 }
