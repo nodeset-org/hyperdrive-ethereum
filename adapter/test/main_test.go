@@ -14,14 +14,15 @@ import (
 	internal_test "github.com/nodeset-org/hyperdrive-ethereum/internal/test"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/utils/command"
 	"github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 var (
 	// Adapter client for global mode
-	gac *AdapterClient
+	gac *hdmodule.AdapterClient
 
 	// Adapter client for project mode
-	pac *AdapterClient
+	pac *hdmodule.AdapterClient
 
 	// Docker client
 	docker *client.Client
