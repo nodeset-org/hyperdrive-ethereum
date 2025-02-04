@@ -53,7 +53,7 @@ func NewLighthouseBnConfig() *LighthouseBnConfig {
 
 	cfg.P2pQuicPort.ID = hdconfig.Identifier(ids.P2pQuicPortID)
 	cfg.P2pQuicPort.Name = "P2pQuicPort"
-	cfg.P2pQuicPort.Description.Default = "TODO"
+	cfg.P2pQuicPort.Description.Default = "The port to use for P2P (blockchain) traffic using the QUIC protocol."
 	cfg.P2pQuicPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	return cfg
