@@ -13,13 +13,11 @@ import (
 	hdmodule "github.com/nodeset-org/hyperdrive-ethereum/adapter/hd-module"
 	internal_test "github.com/nodeset-org/hyperdrive-ethereum/internal/test"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/utils/command"
-	"github.com/nodeset-org/hyperdrive/modules/config"
-	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
 var (
 	// Adapter client for global mode
-	gac *hdmodule.AdapterClient
+	// gac *hdmodule.AdapterClient
 
 	// Adapter client for project mode
 	pac *hdmodule.AdapterClient
@@ -28,61 +26,57 @@ var (
 	docker *client.Client
 
 	// Info for the example module
-	modInfo *hdconfig.ModuleInfo
+	// modInfo *hdconfig.ModuleInfo
 )
 
 func TestMain(m *testing.M) {
-	// Create a Docker client
 	var err error
-	docker, err = client.NewClientWithOpts(
-		client.WithAPIVersionNegotiation(),
-	)
+	docker, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation())
 	if err != nil {
 		fail(fmt.Errorf("error creating Docker client: %w", err))
 	}
 
-	// Check if the adapter containers are already created
-	globalAdapterID := getContainerID(internal_test.GlobalAdapterContainerName)
-	if globalAdapterID != "" {
-		fail(fmt.Errorf("global adapter container already exists - please remove it before running tests"))
-	}
-	projectAdapterID := getContainerID(internal_test.ProjectAdapterContainerName)
-	if projectAdapterID != "" {
-		fail(fmt.Errorf("project adapter container already exists - please remove it before running tests"))
-	}
-
-	// Initialize everything and get the adapter container info
-	initializeArtifacts()
-	globalAdapterID = getContainerID(internal_test.GlobalAdapterContainerName)
-	if globalAdapterID == "" {
-		fail(fmt.Errorf("global adapter container not found"))
-	}
-	projectAdapterID = getContainerID(internal_test.ProjectAdapterContainerName)
+	// Check if the adapter container is running
+	projectAdapterID := getContainerID("hyperdrive-ethereum-project-adapter")
 	if projectAdapterID == "" {
-		fail(fmt.Errorf("project adapter container not found"))
+		fmt.Println("Project adapter not found. Starting it...")
+
+		// Run the container
+		runCmd := fmt.Sprintf(
+			"docker run --rm -d "+
+				"-e HD_ADAPTER_MODE=project "+
+				"-e HD_PROJECT_NAME=hyperdrive-test "+
+				"-e HD_CONFIG_DIR=/app/config "+
+				"-e HD_LOG_DIR=/app/logs "+
+				"-e HD_KEY_FILE=/app/secret/key "+
+				"-v %s:/app/config "+
+				"-v %s:/app/logs "+
+				"-v %s:/app/secret "+
+				"--network hyperdrive-test_net "+
+				"--name hyperdrive-ethereum-project-adapter "+
+				"hyperdrive-ethereum:latest",
+			"./config", "./logs", "./secret",
+		)
+		fmt.Printf("!!runCmd: %v\n", runCmd)
+		_, err := command.ReadOutput(runCmd)
+		if err != nil {
+			fail(fmt.Errorf("error starting project adapter container: %w", err))
+		}
+
+		// Verify it's running now
+		projectAdapterID = getContainerID("hyperdrive-ethereum-project-adapter")
+		if projectAdapterID == "" {
+			fail(fmt.Errorf("failed to start project adapter container"))
+		}
 	}
 
-	// Create the adapter clients
-	gac, err = hdmodule.NewAdapterClient(internal_test.GlobalAdapterContainerName, string(internal_test.TestKey))
-	if err != nil {
-		fail(fmt.Errorf("error creating global adapter client: %w", err))
-	}
-	pac, err = hdmodule.NewAdapterClient(internal_test.ProjectAdapterContainerName, string(internal_test.TestKey))
+	// Now that it's running, initialize the adapter client
+	pac, err = hdmodule.NewAdapterClient("hyperdrive-ethereum-project-adapter", "test-key")
 	if err != nil {
 		fail(fmt.Errorf("error creating project adapter client: %w", err))
 	}
 
-	// Get the module config info
-	modCfgMeta, err := gac.GetConfigMetadata(context.Background())
-	if err != nil {
-		fail(fmt.Errorf("error getting module config metadata: %w", err))
-	}
-	modInfo = &config.ModuleInfo{
-		Descriptor:    internal_test.ExampleDescriptor,
-		Configuration: modCfgMeta,
-	}
-
-	// Run the tests and clean up after
+	// Run tests
 	code := m.Run()
 	cleanup()
 	os.Exit(code)
