@@ -2,7 +2,7 @@
     "name": "hyperdrive-ethereum",
     "shortcut": "he",
     "description": "Ethereum node module",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "author": "NodeSet",
     "url": "https://github.com/nodeset-org/hyperdrive-ethereum",
     "email": "info@nodeset.io",

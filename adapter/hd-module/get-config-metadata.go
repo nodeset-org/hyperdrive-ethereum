@@ -1,35 +1,26 @@
 package hdmodule
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
-
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	"github.com/urfave/cli/v2"
 )
 
-const (
-	GetConfigMetadataCommandString string = HyperdriveModuleCommand + " get-config-metadata"
-)
+func getConfigMetadata(c *cli.Context) error {
+	// Get the config
+	cfg := config.NewHyperdriveEthereumConfig()
 
-// Get the module config metadata from the adapter
-func (c *AdapterClient) GetConfigMetadata(ctx context.Context) (hdconfig.IModuleConfiguration, error) {
-	request := &utils.KeyedRequest{
-		Key: c.key,
-	}
-	configMap := map[string]any{}
-
-	// Get the config from the adapter
-	err := runCommand(c, ctx, GetConfigMetadataCommandString, request, &configMap)
+	// Create the response
+	cfgMap := hdconfig.MarshalConfigurationToMap(cfg)
+	bytes, err := json.Marshal(cfgMap)
 	if err != nil {
-		return nil, fmt.Errorf("error getting configuration metadata: %w", err)
+		return fmt.Errorf("error marshalling config: %w", err)
 	}
 
-	// Unmarshal the config from the map
-	response, err := hdconfig.UnmarshalConfigurationFromMap(configMap)
-	if err != nil {
-		return nil, fmt.Errorf("error unmarshalling configuration metadata: %w", err)
-	}
-	return response, nil
+	// Print it
+	fmt.Println(string(bytes))
+	return nil
 }

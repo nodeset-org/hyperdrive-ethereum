@@ -1,5 +1,5 @@
 package shared
 
 const (
-	HyperdriveEthereumVersion string = "1.0.0-dev"
+	HyperdriveEthereumVersion string = "0.1.0"
 )

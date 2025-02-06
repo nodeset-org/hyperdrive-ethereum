@@ -1,25 +1,25 @@
 package hdmodule
 
-import (
-	"context"
-	"fmt"
-)
-
-const (
-	VersionCommandString string = HyperdriveModuleCommand + " version"
-)
-
-// Response for the version command
-type VersionResponse struct {
+// Response format for `version`
+type versionResponse struct {
+	// Version of the module
 	Version string `json:"version"`
 }
 
-// Get the version of the adapter
-func (c *AdapterClient) GetVersion(ctx context.Context) (string, error) {
-	var version VersionResponse
-	err := runCommand[struct{}](c, ctx, VersionCommandString, nil, &version)
-	if err != nil {
-		return "", fmt.Errorf("error getting version: %w", err)
-	}
-	return version.Version, nil
+// Handle the `version` command
+func version() error {
+	// Create the response
+	// version := versionResponse{
+	// 	Version: shared.HyperdriveEthereumVersion,
+	// }
+
+	// // Marshal it
+	// bytes, err := json.Marshal(version)
+	// if err != nil {
+	// 	return fmt.Errorf("error marshalling version response: %w", err)
+	// }
+
+	// // Print it
+	// fmt.Println(string(bytes))
+	return nil
 }

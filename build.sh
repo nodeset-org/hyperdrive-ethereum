@@ -16,14 +16,14 @@ build_adapter() {
     echo "Building adapter image..."
     # If uploading, make and push a manifest
     if [ "$UPLOAD" = true ]; then
-        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-example-adapter:$VERSION -f docker/adapter.dockerfile --push . || fail "Error building adapter image."
+        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile --push . || fail "Error building adapter image."
     elif [ "$LOCAL_UPLOAD" = true ]; then
         if [ -z "$LOCAL_DOCKER_REGISTRY" ]; then
             fail "LOCAL_DOCKER_REGISTRY must be set to upload to a local registry."
         fi
-        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t $LOCAL_DOCKER_REGISTRY/nodeset/hyperdrive-example-adapter:$VERSION -f docker/adapter.dockerfile --push . || fail "Error building adapter image."
+        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t $LOCAL_DOCKER_REGISTRY/nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile --push . || fail "Error building adapter image."
     else
-        docker buildx build --rm --load --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-example-adapter:$VERSION -f docker/adapter.dockerfile . || fail "Error building adapter image."
+        docker buildx build --rm --load --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile . || fail "Error building adapter image."
     fi
     echo "done!"
 }
@@ -35,14 +35,14 @@ build_service() {
     echo "Building service image..."
     # If uploading, make and push a manifest
     if [ "$UPLOAD" = true ]; then
-        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-example-service:$VERSION -f docker/service.dockerfile --push . || fail "Error building service image."
+        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-service:$VERSION -f docker/service.dockerfile --push . || fail "Error building service image."
     elif [ "$LOCAL_UPLOAD" = true ]; then
         if [ -z "$LOCAL_DOCKER_REGISTRY" ]; then
             fail "LOCAL_DOCKER_REGISTRY must be set to upload to a local registry."
         fi
-        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t $LOCAL_DOCKER_REGISTRY/nodeset/hyperdrive-example-service:$VERSION -f docker/service.dockerfile --push . || fail "Error building service image."
+        docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t $LOCAL_DOCKER_REGISTRY/nodeset/hyperdrive-ethereum-service:$VERSION -f docker/service.dockerfile --push . || fail "Error building service image."
     else
-        docker buildx build --rm --load --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-example-service:$VERSION -f docker/service.dockerfile . || fail "Error building service image."
+        docker buildx build --rm --load --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-service:$VERSION -f docker/service.dockerfile . || fail "Error building service image."
     fi
     echo "done!"
 }
@@ -51,7 +51,7 @@ build_service() {
 # Builds the module package
 build_package() {
     echo -n "Building module package... "
-    tar cfJ build/$VERSION/hyperdrive-example.zip package/* || fail "Error building module package."
+    tar cfJ build/$VERSION/hyperdrive-ethereum.zip package/* || fail "Error building module package."
     echo "done!"
 }
 
@@ -59,14 +59,14 @@ build_package() {
 # Tags the 'latest' Docker Hub image
 tag_latest() {
     echo -n "Tagging 'latest' Docker images... "
-    docker tag nodeset/hyperdrive-example-adapter:$VERSION nodeset/hyperdrive-example-adapter:latest
-    docker tag nodeset/hyperdrive-example-service:$VERSION nodeset/hyperdrive-example-service:latest
+    docker tag nodeset/hyperdrive-ethereum-adapter:$VERSION nodeset/hyperdrive-ethereum-adapter:latest
+    docker tag nodeset/hyperdrive-ethereum-service:$VERSION nodeset/hyperdrive-ethereum-service:latest
     echo "done!"
 
     if [ "$UPLOAD" = true ]; then
         echo -n "Pushing to Docker Hub... "
-        docker push nodeset/hyperdrive-example-adapter:latest
-        docker push nodeset/hyperdrive-example-service:latest
+        docker push nodeset/hyperdrive-ethereum-adapter:latest
+        docker push nodeset/hyperdrive-ethereum-service:latest
         echo "done!"
     else
         echo "The image tags only exist locally. Rerun with -u to upload to Docker Hub."

@@ -93,6 +93,7 @@ func getContainerID(name string) string {
 	containerList, err := docker.ContainerList(context.Background(), container.ListOptions{
 		All: true,
 	})
+	fmt.Printf("!!containerList: %v\n", containerList)
 	if err != nil {
 		fail(fmt.Errorf("error inspecting adapter container: %w", err))
 	}
@@ -151,6 +152,7 @@ func initializeArtifacts() {
 		internal_test.GlobalAdapterContainerName,
 		internal_test.AdapterTag,
 	)
+	fmt.Printf("!!runCmd: %v\n", runCmd)
 	_, err = command.ReadOutput(runCmd)
 	if err != nil {
 		fail(fmt.Errorf("error running global adapter container: %w", err))

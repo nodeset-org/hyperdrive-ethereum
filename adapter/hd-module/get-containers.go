@@ -1,31 +1,35 @@
 package hdmodule
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-)
-
-const (
-	GetContainersCommandString string = HyperdriveModuleCommand + " get-containers"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+	"github.com/urfave/cli/v2"
 )
 
 // Response format for `get-containers`
-type GetContainersResponse struct {
+type getContainersResponse struct {
 	// The list of containers owned by this module
 	Containers []string `json:"containers"`
 }
 
-// Get the list of containers owned by this module
-func (c *AdapterClient) GetContainers(ctx context.Context) ([]string, error) {
-	request := &utils.KeyedRequest{
-		Key: c.key,
+// Handle the `get-containers` command
+func getContainers(c *cli.Context) error {
+	// Create the response
+	response := getContainersResponse{
+		Containers: []string{
+			shared.ServiceContainerName,
+		},
 	}
-	response := &GetContainersResponse{}
-	err := runCommand(c, ctx, GetContainersCommandString, request, response)
+
+	// Marshal it
+	bytes, err := json.Marshal(response)
 	if err != nil {
-		return nil, fmt.Errorf("error getting containers: %w", err)
+		return fmt.Errorf("error marshalling get-containers response: %w", err)
 	}
-	return response.Containers, nil
+
+	// Print it
+	fmt.Println(string(bytes))
+	return nil
 }

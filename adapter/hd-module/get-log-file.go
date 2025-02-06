@@ -1,17 +1,17 @@
 package hdmodule
 
 import (
-	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-)
-
-const (
-	GetLogFileCommandString string = HyperdriveModuleCommand + " get-log-file"
+	"github.com/urfave/cli/v2"
 )
 
 // Request format for `get-log-file`
-type GetLogFileRequest struct {
+type getLogFileRequest struct {
 	utils.KeyedRequest
 
 	// The log file source to retrieve
@@ -19,23 +19,40 @@ type GetLogFileRequest struct {
 }
 
 // Response format for `get-log-file`
-type GetLogFileResponse struct {
+type getLogFileResponse struct {
 	// The path to the log file
 	Path string `json:"path"`
 }
 
-// Get a log file path from the adapter
-func (c *AdapterClient) GetLogFile(ctx context.Context, source string) (*GetLogFileResponse, error) {
-	request := &GetLogFileRequest{
-		KeyedRequest: utils.KeyedRequest{
-			Key: c.key,
-		},
-		Source: source,
-	}
-	response := &GetLogFileResponse{}
-	err := runCommand(c, ctx, GetLogFileCommandString, request, response)
+// Handle the `get-log-file` command
+func getLogFile(c *cli.Context) error {
+	// Get the request
+	request, err := utils.HandleKeyedRequest[*getLogFileRequest](c)
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("error reading set-settings request: %w", err)
 	}
-	return response, nil
+
+	// Get the path
+	path := ""
+	switch request.Source {
+	case "adapter":
+		path = utils.AdapterLogFile
+	case shared.ServiceContainerName:
+		path = shared.ServiceLogFile
+	}
+
+	// Create the response
+	response := getLogFileResponse{
+		Path: path,
+	}
+
+	// Marshal it
+	bytes, err := json.Marshal(response)
+	if err != nil {
+		return fmt.Errorf("error marshalling get-log-file response: %w", err)
+	}
+
+	// Print it
+	fmt.Println(string(bytes))
+	return nil
 }

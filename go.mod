@@ -5,6 +5,7 @@ go 1.22.7
 toolchain go1.22.10
 
 require (
+	github.com/blang/semver/v4 v4.0.0
 	github.com/docker/docker v27.3.1+incompatible
 	github.com/ethereum/go-ethereum v1.14.12
 	github.com/glendc/go-external-ip v0.1.0
@@ -19,8 +20,8 @@ require (
 )
 
 require (
+	al.essio.dev/pkg/shellescape v1.5.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

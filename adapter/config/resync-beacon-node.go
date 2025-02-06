@@ -1,13 +1,6 @@
 package config
 
 import (
-	"fmt"
-
-	adapterutils "github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
-
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
 	"github.com/urfave/cli/v2"
 )
 
@@ -51,40 +44,41 @@ func resyncBeaconNode(c *cli.Context) error {
 	// 	return fmt.Errorf("Error deleting volume: %w", err)
 	// }
 
+	// TODO (HN): WIP
 	// Create the configuration manager
-	cfgMgr, err := NewAdapterConfigManager(c)
-	if err != nil {
-		return fmt.Errorf("error creating config manager: %w", err)
-	}
-	cfg, err := cfgMgr.LoadConfigFromDisk()
-	if err != nil {
-		return fmt.Errorf("error loading config: %w", err)
-	}
-	if cfg == nil {
-		return fmt.Errorf("config has not been created yet")
-	}
+	// cfgMgr, err := NewAdapterConfigManager(c)
+	// if err != nil {
+	// 	return fmt.Errorf("error creating config manager: %w", err)
+	// }
+	// cfg, err := cfgMgr.LoadConfigFromDisk()
+	// if err != nil {
+	// 	return fmt.Errorf("error loading config: %w", err)
+	// }
+	// if cfg == nil {
+	// 	return fmt.Errorf("config has not been created yet")
+	// }
 
-	// Get the current checkpoint sync URL
-	checkpointSyncUrl := string(cfg.LocalBeaconClient.CheckpointSyncProvider)
-	if checkpointSyncUrl == "" {
-		fmt.Printf("%sYou do not have a checkpoint sync provider configured.\nIf you have active validators, they %swill be considered offline and will lose ETH%s%s until your Beacon Node finishes syncing.\nWe strongly recommend you configure a checkpoint sync provider with `hyperdrive service config` so it syncs instantly before running this.%s\n\n", terminal.ColorRed, terminal.ColorBold, terminal.ColorReset, terminal.ColorRed, terminal.ColorReset)
-	} else {
-		fmt.Printf("You have a checkpoint sync provider configured (%s).\nYour Beacon Node will use it to sync to the head of the Beacon Chain instantly after being rebuilt.\n\n", checkpointSyncUrl)
-	}
+	// // Get the current checkpoint sync URL
+	// checkpointSyncUrl := string(cfg.LocalBeaconClient.CheckpointSyncProvider)
+	// if checkpointSyncUrl == "" {
+	// 	fmt.Printf("%sYou do not have a checkpoint sync provider configured.\nIf you have active validators, they %swill be considered offline and will lose ETH%s%s until your Beacon Node finishes syncing.\nWe strongly recommend you configure a checkpoint sync provider with `hyperdrive service config` so it syncs instantly before running this.%s\n\n", terminal.ColorRed, terminal.ColorBold, terminal.ColorReset, terminal.ColorRed, terminal.ColorReset)
+	// } else {
+	// 	fmt.Printf("You have a checkpoint sync provider configured (%s).\nYour Beacon Node will use it to sync to the head of the Beacon Chain instantly after being rebuilt.\n\n", checkpointSyncUrl)
+	// }
 
-	// Prompt for confirmation
-	if !(c.Bool(adapterutils.YesFlag.Name) || utils.Confirm(fmt.Sprintf("%sAre you SURE you want to delete and resync your main Beacon Node from scratch? This cannot be undone!%s", terminal.ColorRed, terminal.ColorReset))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
+	// // Prompt for confirmation
+	// if !(c.Bool(adapterutils.YesFlag.Name) || utils.Confirm(fmt.Sprintf("%sAre you SURE you want to delete and resync your main Beacon Node from scratch? This cannot be undone!%s", terminal.ColorRed, terminal.ColorReset))) {
+	// 	fmt.Println("Cancelled.")
+	// 	return nil
+	// }
 
-	// Restart Hyperdrive
-	fmt.Printf("Rebuilding %s and restarting Hyperdrive...\n", beaconContainerName)
-	err = startService(c, true)
-	if err != nil {
-		return fmt.Errorf("Error starting Hyperdrive: %s", err)
-	}
+	// // Restart Hyperdrive
+	// fmt.Printf("Rebuilding %s and restarting Hyperdrive...\n", beaconContainerName)
+	// err = startService(c, true)
+	// if err != nil {
+	// 	return fmt.Errorf("Error starting Hyperdrive: %s", err)
+	// }
 
-	fmt.Printf("\nDone! Your Beacon Node is now resyncing. You can follow its progress with `hyperdrive service logs bn`.\n")
+	// fmt.Printf("\nDone! Your Beacon Node is now resyncing. You can follow its progress with `hyperdrive service logs bn`.\n")
 	return nil
 }

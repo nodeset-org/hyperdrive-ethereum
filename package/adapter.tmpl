@@ -4,7 +4,7 @@
 
 services:
   {{.GetContainerName em_adapter}}:
-    image: nodeset/hyperdrive-ethereum:v1.0.0
+    image: nodeset/hyperdrive-ethereum:v0.1.0
     restart: unless-stopped
     entrypoint: /usr/bin/hd-adapter -s {{.ModuleSecretFile}} # This is the path to the adapter binary
     environment:
