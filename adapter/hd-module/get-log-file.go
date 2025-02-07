@@ -11,7 +11,7 @@ import (
 )
 
 // Request format for `get-log-file`
-type getLogFileRequest struct {
+type GetLogFileRequest struct {
 	utils.KeyedRequest
 
 	// The log file source to retrieve
@@ -27,7 +27,7 @@ type getLogFileResponse struct {
 // Handle the `get-log-file` command
 func getLogFile(c *cli.Context) error {
 	// Get the request
-	request, err := utils.HandleKeyedRequest[*getLogFileRequest](c)
+	request, err := utils.HandleKeyedRequest[*GetLogFileRequest](c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}
