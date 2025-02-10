@@ -25,9 +25,9 @@ type getLogFileResponse struct {
 }
 
 // Handle the `get-log-file` command
-func getLogFile(c *cli.Context) error {
+func getLogFile(c *cli.Context, handler utils.KeyedRequestHandler[*GetLogFileRequest]) error {
 	// Get the request
-	request, err := utils.HandleKeyedRequest[*GetLogFileRequest](c)
+	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}

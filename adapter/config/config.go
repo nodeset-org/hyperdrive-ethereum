@@ -68,7 +68,7 @@ type HyperdriveEthereumConfig struct {
 	// ModuleConfigs []*hdconfig.ModuleConfig
 
 	// Internal fields
-	Version string
+	Version hdconfig.StringParameter
 }
 
 type LocalBeaconClientSettings struct {

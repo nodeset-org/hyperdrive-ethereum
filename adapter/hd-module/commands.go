@@ -33,9 +33,10 @@ func RegisterCommands(app *cli.App) {
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
+					handler := utils.DefaultKeyedRequestHandler[*GetLogFileRequest]{}
 
 					// Run
-					return getLogFile(c)
+					return getLogFile(c, handler)
 				},
 			},
 			{

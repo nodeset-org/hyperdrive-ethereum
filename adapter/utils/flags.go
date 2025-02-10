@@ -2,10 +2,29 @@ package utils
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils/terminal"
 	"github.com/urfave/cli/v2"
 )
+
+type AdapterMode string
+
+const (
+	// Unknown (blank) mode; should be treated as an error since Hyperdrive always sets this
+	AdapterMode_Unknown AdapterMode = ""
+
+	// Global mode: stateless, no user-specific configuration.
+	AdapterMode_Global AdapterMode = "global"
+
+	// Project mode: stateful, user-specific configuration.
+	AdapterMode_Project AdapterMode = "project"
+
+	// The mode to run the adapter in - global or project
+	AdapterModeEnvVarName string = "HD_ADAPTER_MODE"
+)
+
+var Mode AdapterMode = AdapterMode(os.Getenv(AdapterModeEnvVarName))
 
 var (
 	YesFlag *cli.BoolFlag = &cli.BoolFlag{

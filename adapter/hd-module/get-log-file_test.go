@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"os"
 	"testing"
 
@@ -12,36 +11,34 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Mocked HandleKeyedRequest to simulate different scenarios
-func MockHandleKeyedRequest(c *cli.Context) (*GetLogFileRequest, error) {
-	return &GetLogFileRequest{Source: "adapter"}, fmt.Errorf("mock error")
+type MockKeyedRequestHandler[RequestType utils.IKeyedRequest] struct {
+	ReturnRequest RequestType
+	ReturnError   error
+}
+
+func (m MockKeyedRequestHandler[RequestType]) HandleKeyedRequest(c *cli.Context) (RequestType, error) {
+	return m.ReturnRequest, m.ReturnError
 }
 
 // TestGetLogFile_AdapterSource tests the getLogFile function with "adapter" source
 func TestGetLogFile_AdapterSource(t *testing.T) {
-	// Backup the original function
-	originalFunc := utils.HandleKeyedRequest[*GetLogFileRequest]
-
-	// Restore after test
-	defer func() { utils.HandleKeyedRequest = originalFunc }()
-
-	// Assign our mock function to a variable and use it explicitly
-	utils.HandleKeyedRequest = MockHandleKeyedRequest
+	mockHandler := MockKeyedRequestHandler[*GetLogFileRequest]{
+		ReturnRequest: &GetLogFileRequest{Source: "adapter"},
+		ReturnError:   nil,
+	}
 
 	// Capture stdout
-	var buf bytes.Buffer
-	oldStdout := os.Stdout
 	r, w, _ := os.Pipe()
+	oldStdout := os.Stdout
 	os.Stdout = w
 
 	// Set up CLI context with "adapter" source
 	app := cli.NewApp()
 	set := flag.NewFlagSet("test", 0)
-	set.String("source", "adapter", "doc")
 	ctx := cli.NewContext(app, set, nil)
 
 	// Call the function
-	err := getLogFile(ctx)
+	err := getLogFile(ctx, mockHandler)
 	if err != nil {
 		t.Fatalf("getLogFile() returned an error: %v", err)
 	}
@@ -49,6 +46,7 @@ func TestGetLogFile_AdapterSource(t *testing.T) {
 	// Restore stdout and read captured output
 	w.Close()
 	os.Stdout = oldStdout
+	var buf bytes.Buffer
 	_, err = buf.ReadFrom(r)
 	if err != nil {
 		t.Fatalf("Failed to read from pipe: %v", err)

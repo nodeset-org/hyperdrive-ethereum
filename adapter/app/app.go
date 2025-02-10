@@ -41,12 +41,14 @@ func CreateApp() *cli.App {
 	config.RegisterCommands(app)
 
 	app.Before = func(c *cli.Context) error {
-		// Make the authenticator
-		auth, err := utils.NewAuthenticator(c)
-		if err != nil {
-			return err
+		if utils.Mode == utils.AdapterMode_Project {
+			// Make the authenticator
+			auth, err := utils.NewAuthenticator(c)
+			if err != nil {
+				return err
+			}
+			c.App.Metadata[utils.AuthenticatorMetadataKey] = auth
 		}
-		c.App.Metadata[utils.AuthenticatorMetadataKey] = auth
 
 		return nil
 	}
