@@ -15,10 +15,10 @@ type upgradeInstanceRequest struct {
 }
 
 // Handle the `upgrade-instance` command
-func upgradeInstance(c *cli.Context) error {
+func upgradeInstance(c *cli.Context, handler utils.KeyedRequestHandler[*upgradeInstanceRequest]) error {
 	return nil
 	// // Get the request
-	// request, err := utils.HandleKeyedRequest[*upgradeInstanceRequest](c)
+	// request, err := handler.HandleKeyedRequest(c)
 	// if err != nil {
 	// 	return err
 	// }

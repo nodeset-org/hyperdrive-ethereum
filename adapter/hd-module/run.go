@@ -12,7 +12,7 @@ import (
 )
 
 // Request format for `run`
-type runRequest struct {
+type RunRequest struct {
 	utils.KeyedRequest
 
 	// The command to run
@@ -20,9 +20,9 @@ type runRequest struct {
 }
 
 // Handle the `run` command
-func run(c *cli.Context) error {
+func run(c *cli.Context, handler utils.KeyedRequestHandler[*RunRequest]) error {
 	// Get the request
-	request, err := utils.HandleKeyedRequest[*runRequest](c)
+	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}

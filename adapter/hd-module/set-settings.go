@@ -19,9 +19,9 @@ type setSettingsRequest struct {
 }
 
 // Handle the `set-config` command
-func setSettings(c *cli.Context) error {
+func setSettings(c *cli.Context, handler utils.KeyedRequestHandler[*setSettingsRequest]) error {
 	// Get the request
-	request, err := utils.HandleKeyedRequest[*setSettingsRequest](c)
+	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}

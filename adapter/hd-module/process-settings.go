@@ -12,7 +12,9 @@ import (
 )
 
 // Request format for `process-settings`
-type processSettingsRequest struct {
+type ProcessSettingsRequest struct {
+	utils.KeyedRequest
+
 	// The config instance to process
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
@@ -27,13 +29,12 @@ type processConfigResponse struct {
 }
 
 // Handle the `process-settings` command
-func processSettings(c *cli.Context) error {
+func processSettings(c *cli.Context, handler utils.KeyedRequestHandler[*ProcessSettingsRequest]) error {
 	// Get the request
-	request, err := utils.HandleRequest[*processSettingsRequest](c)
+	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}
-	// TODO: (HN)
 	// Construct the module settings from the Hyperdrive config
 	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {

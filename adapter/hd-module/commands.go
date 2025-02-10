@@ -53,29 +53,31 @@ func RegisterCommands(app *cli.App) {
 				},
 			},
 			{
-				Name:    "process-config",
+				Name:    "process-settings",
 				Aliases: []string{"p"},
 				Flags:   []cli.Flag{},
 				Usage:   "Process the module's configuration, validating it without saving.",
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
+					handler := utils.DefaultKeyedRequestHandler[*ProcessSettingsRequest]{}
 
 					// Run
-					return processSettings(c)
+					return processSettings(c, handler)
 				},
 			},
 			{
-				Name:    "set-config",
+				Name:    "set-settings",
 				Aliases: []string{"s"},
 				Flags:   []cli.Flag{},
 				Usage:   "Sets the module's configuration, saving it to disk.",
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
+					handler := utils.DefaultKeyedRequestHandler[*setSettingsRequest]{}
 
 					// Run
-					return setSettings(c)
+					return setSettings(c, handler)
 				},
 			},
 			{
@@ -99,9 +101,9 @@ func RegisterCommands(app *cli.App) {
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
-
+					handler := utils.DefaultKeyedRequestHandler[*RunRequest]{}
 					// Run
-					return run(c)
+					return run(c, handler)
 				},
 			},
 		},
