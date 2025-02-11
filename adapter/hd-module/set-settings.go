@@ -19,36 +19,44 @@ type setSettingsRequest struct {
 }
 
 // Handle the `set-config` command
-func setSettings(c *cli.Context, handler utils.KeyedRequestHandler[*setSettingsRequest]) error {
+func setSettings(
+	c *cli.Context,
+	handler utils.KeyedRequestHandler[*setSettingsRequest],
+	configManagerFactory func(*cli.Context) (config.AdapterConfigManagerInterface, error),
+) error {
 	// Get the request
 	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}
 
-	// TODO(HN)
 	// Construct the module settings from the Hyperdrive config
 	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		return fmt.Errorf("could not find config for %s", utils.FullyQualifiedModuleName)
 	}
+
 	var settings config.HyperdriveEthereumConfigSettings
 	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
 	if err != nil {
 		return fmt.Errorf("error loading settings: %w", err)
 	}
 
-	// Make a config manager
-	cfgMgr, err := config.NewAdapterConfigManager(c)
+	// Use injected config manager factory
+	cfgMgr, err := configManagerFactory(c)
 	if err != nil {
 		return fmt.Errorf("error creating config manager: %w", err)
 	}
-	cfgMgr.AdapterConfig = &settings
+	err = cfgMgr.SetAdapterConfig(&settings)
+	if err != nil {
+		return fmt.Errorf("error setting config: %w", err)
+	}
 
 	// Save it
 	err = cfgMgr.SaveConfigToDisk()
 	if err != nil {
 		return fmt.Errorf("error saving config: %w", err)
 	}
+
 	return nil
 }

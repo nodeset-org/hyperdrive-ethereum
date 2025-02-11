@@ -15,6 +15,11 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+type AdapterConfigManagerInterface interface {
+	SaveConfigToDisk() error
+	SetAdapterConfig(*HyperdriveEthereumConfigSettings) error
+}
+
 // Configuration manager
 type AdapterConfigManager struct {
 	// The adapter configuration instance
@@ -24,18 +29,18 @@ type AdapterConfigManager struct {
 	nativeConfigManager *sharedconfig.ConfigManager
 
 	// The path to the adapter configuration file
-	adapterConfigPath string
+	AdapterConfigPath string
 }
 
 // Create a new configuration manager for the adapter
-func NewAdapterConfigManager(c *cli.Context) (*AdapterConfigManager, error) {
+func NewAdapterConfigManager(c *cli.Context) (AdapterConfigManagerInterface, error) {
 	configDir := c.String(utils.ConfigDirFlag.Name)
 	if configDir == "" {
 		return nil, fmt.Errorf("config directory is required")
 	}
 	return &AdapterConfigManager{
 		nativeConfigManager: sharedconfig.NewConfigManager(filepath.Join(configDir, utils.ServiceConfigFile)),
-		adapterConfigPath:   filepath.Join(configDir, utils.AdapterConfigFile),
+		AdapterConfigPath:   filepath.Join(configDir, utils.AdapterConfigFile),
 	}, nil
 }
 
@@ -48,7 +53,7 @@ func (m *AdapterConfigManager) LoadConfigFromDisk() (*HyperdriveEthereumConfigSe
 	}
 
 	// Check if the adapter config exists
-	_, err = os.Stat(m.adapterConfigPath)
+	_, err = os.Stat(m.AdapterConfigPath)
 	if errors.Is(err, fs.ErrNotExist) {
 		return nil, nil
 	}
@@ -90,9 +95,17 @@ func (m *AdapterConfigManager) SaveConfigToDisk() error {
 	}
 
 	// Write it
-	err = os.WriteFile(m.adapterConfigPath, bytes, sharedconfig.ConfigFileMode)
+	err = os.WriteFile(m.AdapterConfigPath, bytes, sharedconfig.ConfigFileMode)
 	if err != nil {
-		return fmt.Errorf("error writing adapter config file [%s]: %w", m.adapterConfigPath, err)
+		return fmt.Errorf("error writing adapter config file [%s]: %w", m.AdapterConfigPath, err)
 	}
+	return nil
+}
+
+func (m *AdapterConfigManager) SetAdapterConfig(newConfig *HyperdriveEthereumConfigSettings) error {
+	if newConfig == nil {
+		return fmt.Errorf("cannot set adapter config to nil")
+	}
+	m.AdapterConfig = newConfig
 	return nil
 }

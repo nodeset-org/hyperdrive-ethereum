@@ -1,6 +1,7 @@
 package hdmodule
 
 import (
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -69,15 +70,17 @@ func RegisterCommands(app *cli.App) {
 			{
 				Name:    "set-settings",
 				Aliases: []string{"s"},
-				Flags:   []cli.Flag{},
-				Usage:   "Sets the module's configuration, saving it to disk.",
+				Flags: []cli.Flag{
+					utils.ConfigDirFlag,
+				},
+				Usage: "Sets the module's configuration, saving it to disk.",
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
 					handler := utils.DefaultKeyedRequestHandler[*setSettingsRequest]{}
 
 					// Run
-					return setSettings(c, handler)
+					return setSettings(c, handler, config.NewAdapterConfigManager)
 				},
 			},
 			{
