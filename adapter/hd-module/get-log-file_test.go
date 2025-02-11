@@ -10,6 +10,7 @@ import (
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
 
@@ -57,14 +58,11 @@ func TestGetLogFile_HandleKeyedRequestError(t *testing.T) {
 	err := getLogFile(ctx, mockHandler)
 
 	// Validate error handling
-	if err == nil {
-		t.Fatalf("Expected an error, but getLogFile() returned nil")
-	}
+	assert.Error(t, err, "Expected an error, but getLogFile() returned nil")
 
 	expectedErrorMsg := "error reading set-settings request: mock error"
-	if err.Error() != expectedErrorMsg {
-		t.Errorf("Expected error message %q, but got %q", expectedErrorMsg, err.Error())
-	}
+
+	assert.Equal(t, expectedErrorMsg, err.Error(), "Expected error message %q, but got %q", expectedErrorMsg, err.Error())
 }
 
 func TestGetLogFile_UnknownSource(t *testing.T) {
@@ -89,27 +87,20 @@ func verifyGetLogFileOutput(t *testing.T, handler MockKeyedRequestHandler[*GetLo
 
 	// Call the function
 	err := getLogFile(ctx, handler)
-	if err != nil {
-		t.Fatalf("getLogFile() returned an error: %v", err)
-	}
+	assert.NoError(t, err, "getLogFile() returned an error: %v", err)
 
 	// Restore stdout and read captured output
 	w.Close()
 	os.Stdout = oldStdout
 	var buf bytes.Buffer
 	_, err = buf.ReadFrom(r)
-	if err != nil {
-		t.Fatalf("Failed to read from pipe: %v", err)
-	}
+	assert.NoError(t, err, "Failed to read from pipe: %v", err)
 
 	// Parse the captured output
 	var response getLogFileResponse
-	if err := json.Unmarshal(buf.Bytes(), &response); err != nil {
-		t.Fatalf("Failed to parse JSON output: %v", err)
-	}
+	err = json.Unmarshal(buf.Bytes(), &response)
+	assert.NoError(t, err, "Failed to parse JSON output: %v", err)
 
 	// Verify the response path
-	if response.Path != expectedPath {
-		t.Errorf("Expected path %q, got %q", expectedPath, response.Path)
-	}
+	assert.Equal(t, expectedPath, response.Path, "Expected path %q, got %q", expectedPath, response.Path)
 }

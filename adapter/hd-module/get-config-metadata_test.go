@@ -8,6 +8,7 @@ import (
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
+	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
 
@@ -27,17 +28,13 @@ func TestGetConfigMetadata(t *testing.T) {
 
 	// Call the function
 	err := getConfigMetadata(ctx)
-	if err != nil {
-		t.Fatalf("getConfigMetadata() returned an error: %v", err)
-	}
+	assert.NoError(t, err, "getConfigMetadata() returned an error: %v", err)
 
 	// Close writer and read output
 	w.Close()
 	var buf bytes.Buffer
 	_, err = buf.ReadFrom(r)
-	if err != nil {
-		t.Fatalf("Failed to read from pipe: %v", err)
-	}
+	assert.NoError(t, err, "Failed to read from pipe: %v", err)
 
 	// Parse the captured output
 	var configMap map[string]interface{}

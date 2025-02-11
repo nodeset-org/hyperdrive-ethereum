@@ -11,98 +11,123 @@ import (
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
+	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
-
-// type MockAdapterConfigManager struct {
-// 	SaveConfigErr error
-// }
-
-// func (m *MockAdapterConfigManager) SaveConfigToDisk() error {
-// 	return m.SaveConfigErr
-// }
-
-var MockNewAdapterConfigManager = func(c *cli.Context) (*config.AdapterConfigManager, error) {
-	return &config.AdapterConfigManager{}, nil
-}
 
 type MockAdapterConfigManager struct {
 	*config.AdapterConfigManager
 }
 
 func (m *MockAdapterConfigManager) SaveConfigToDisk() error {
+	return nil
+}
+
+type MockAdapterConfigManagerSaveToDiskError struct {
+	*config.AdapterConfigManager
+}
+
+func (m *MockAdapterConfigManagerSaveToDiskError) SaveConfigToDisk() error {
 	return fmt.Errorf("mock save error")
 }
 
-// func TestSetSettings_Success(t *testing.T) {
-// 	// Setup mock handler with valid settings
-// 	mockSettings := &hdconfig.HyperdriveSettings{
-// 		Modules: map[string]*modconfig.ModuleInstance{
-// 			utils.FullyQualifiedModuleName: {
-// 				Settings: `{"some_setting": "value"}`,
-// 			},
-// 		},
-// 	}
+func TestSetSettings_Success(t *testing.T) {
+	configDir := "/tmp/hyperdrive-test"
 
-// 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
-// 		ReturnRequest: &setSettingsRequest{Settings: mockSettings},
-// 		ReturnError:   nil,
-// 	}
+	err := os.MkdirAll(configDir, 0755)
+	assert.NoError(t, err, "Failed to create config directory: %v", err)
 
-// 	// Set up CLI context
-// 	app := cli.NewApp()
-// 	set := flag.NewFlagSet("test", 0)
-// 	ctx := cli.NewContext(app, set, nil)
+	defer os.RemoveAll(configDir)
 
-// 	// Run function
-// 	err := setSettings(ctx, mockHandler)
-// 	if err != nil {
-// 		t.Fatalf("Expected no error, but got: %v", err)
-// 	}
-// }
+	var settingsMap map[string]any
+	jsonData := `{"some_setting": "value"}`
 
-// func TestSetSettings_HandleKeyedRequestError(t *testing.T) {
-// 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
-// 		ReturnRequest: nil,
-// 		ReturnError:   fmt.Errorf("mock error"),
-// 	}
+	err = json.Unmarshal([]byte(jsonData), &settingsMap)
+	assert.NoError(t, err, "Failed to parse JSON: %v", err)
 
-// 	app := cli.NewApp()
-// 	set := flag.NewFlagSet("test", 0)
-// 	ctx := cli.NewContext(app, set, nil)
+	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
+		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
+			Modules: map[string]*modconfig.ModuleInstance{
+				utils.FullyQualifiedModuleName: {
+					Enabled:  true,
+					Version:  "0.1.0",
+					Settings: settingsMap,
+				},
+			},
+		}},
+		ReturnError: nil,
+	}
 
-// 	err := setSettings(ctx, mockHandler)
-// 	expectedError := "error reading set-settings request: mock error"
-// 	if err == nil || err.Error() != expectedError {
-// 		t.Errorf("Expected error %q, but got %v", expectedError, err)
-// 	}
-// }
+	mockConfigManagerFactory := func(c *cli.Context) (config.AdapterConfigManagerInterface, error) {
+		return &MockAdapterConfigManager{
+			AdapterConfigManager: &config.AdapterConfigManager{
+				AdapterConfig: &config.HyperdriveEthereumConfigSettings{},
+			},
+		}, nil
+	}
 
-// func TestSetSettings_MissingModuleConfig(t *testing.T) {
-// 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
-// 		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
-// 			Modules: map[string]*modconfig.ModuleInstance{},
-// 		}},
-// 		ReturnError: nil,
-// 	}
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	set.String(utils.ConfigDirFlag.Name, configDir, "doc")
+	_ = set.Parse([]string{"--" + utils.ConfigDirFlag.Name, configDir})
 
-// 	app := cli.NewApp()
-// 	set := flag.NewFlagSet("test", 0)
-// 	ctx := cli.NewContext(app, set, nil)
+	ctx := cli.NewContext(app, set, nil)
 
-// 	err := setSettings(ctx, mockHandler)
-// 	expectedError := fmt.Sprintf("could not find config for %s", utils.FullyQualifiedModuleName)
-// 	if err == nil || err.Error() != expectedError {
-// 		t.Errorf("Expected error %q, but got %v", expectedError, err)
-// 	}
-// }
+	err = setSettings(ctx, mockHandler, mockConfigManagerFactory)
+	assert.NoError(t, err, "Expected no error, but got: %v", err)
+}
 
+func TestSetSettings_HandleKeyedRequestError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
+		ReturnRequest: nil,
+		ReturnError:   fmt.Errorf("mock error"),
+	}
+
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
+
+	err := setSettings(ctx, mockHandler, func(*cli.Context) (config.AdapterConfigManagerInterface, error) {
+		return &MockAdapterConfigManager{}, nil
+	})
+
+	expectedError := "error reading set-settings request: mock error"
+	assert.EqualError(t, err, expectedError, "Expected a specific error message for HandleKeyedRequest failure")
+
+}
+
+func TestSetSettings_MissingModuleConfig(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
+		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
+			Modules: map[string]*modconfig.ModuleInstance{},
+		}},
+		ReturnError: nil,
+	}
+
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
+
+	err := setSettings(ctx, mockHandler, func(*cli.Context) (config.AdapterConfigManagerInterface, error) {
+		return &MockAdapterConfigManager{}, nil
+	})
+
+	expectedError := fmt.Sprintf("could not find config for %s", utils.FullyQualifiedModuleName)
+	assert.EqualError(t, err, expectedError, "Expected error for missing module config")
+
+}
+
+// TODO: Fix test
 // func TestSetSettings_DeserializeError(t *testing.T) {
 // 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
 // 		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
 // 			Modules: map[string]*modconfig.ModuleInstance{
 // 				utils.FullyQualifiedModuleName: {
-// 					Settings: `{"some_setting": value_without_quotes}`,
+// 					Enabled: true,
+// 					Version: "0.1.0",
+// 					Settings: map[string]any{
+// 						"mock_module": `{"some_setting": "unexpected_value"}`,
+// 					},
 // 				},
 // 			},
 // 		}},
@@ -113,56 +138,26 @@ func (m *MockAdapterConfigManager) SaveConfigToDisk() error {
 // 	set := flag.NewFlagSet("test", 0)
 // 	ctx := cli.NewContext(app, set, nil)
 
-// 	err := setSettings(ctx, mockHandler)
-// 	if err == nil || !errors.Is(err, fmt.Errorf("error loading settings:")) {
+// 	err := setSettings(ctx, mockHandler, func(*cli.Context) (config.AdapterConfigManagerInterface, error) {
+// 		return &MockAdapterConfigManager{
+// 			AdapterConfigManager: &config.AdapterConfigManager{
+// 				AdapterConfig: &config.HyperdriveEthereumConfigSettings{},
+// 			},
+// 		}, nil
+// 	})
+
+// 	if err == nil || !strings.Contains(err.Error(), "mock deserialization error") {
 // 		t.Errorf("Expected JSON deserialization error, but got %v", err)
-// 	}
-// }
-
-// func TestSetSettings_ConfigManagerError(t *testing.T) {
-// 	// Override constructor to simulate failure
-// 	originalFunc := config.NewAdapterConfigManager
-// 	config.NewAdapterConfigManager = func(c *cli.Context) (*config.AdapterConfigManager, error) {
-// 		return nil, fmt.Errorf("mock config manager error")
-// 	}
-// 	defer func() { config.NewAdapterConfigManager = originalFunc }()
-
-// 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
-// 		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
-// 			Modules: map[string]*modconfig.ModuleInstance{
-// 				utils.FullyQualifiedModuleName: {
-// 					Settings: `{"some_setting": "value"}`,
-// 				},
-// 			},
-// 		}},
-// 		ReturnError: nil,
-// 	}
-
-// 	app := cli.NewApp()
-// 	set := flag.NewFlagSet("test", 0)
-// 	ctx := cli.NewContext(app, set, nil)
-
-// 	err := setSettings(ctx, mockHandler)
-// 	expectedError := "error creating config manager: mock config manager error"
-// 	if err == nil || err.Error() != expectedError {
-// 		t.Errorf("Expected error %q, but got %v", expectedError, err)
 // 	}
 // }
 
 func TestSetSettings_SaveConfigError(t *testing.T) {
 	configDir := "/tmp/hyperdrive-test"
-
 	err := os.MkdirAll(configDir, 0755)
 	if err != nil {
 		t.Fatalf("Failed to create config directory: %v", err)
 	}
-
-	defer func() {
-		err := os.RemoveAll(configDir)
-		if err != nil {
-			t.Errorf("Failed to remove test config directory: %v", err)
-		}
-	}()
+	defer os.RemoveAll(configDir)
 
 	var settingsMap map[string]any
 	jsonData := `{"some_setting": "value"}`
@@ -185,14 +180,8 @@ func TestSetSettings_SaveConfigError(t *testing.T) {
 		ReturnError: nil,
 	}
 
-	// Define a mock config manager factory that returns an error
 	mockConfigManagerFactory := func(c *cli.Context) (config.AdapterConfigManagerInterface, error) {
-		mockConfig := &MockAdapterConfigManager{
-			AdapterConfigManager: &config.AdapterConfigManager{
-				AdapterConfig: &config.HyperdriveEthereumConfigSettings{},
-			},
-		}
-		return mockConfig, nil
+		return &MockAdapterConfigManagerSaveToDiskError{}, nil
 	}
 
 	app := cli.NewApp()
@@ -205,7 +194,6 @@ func TestSetSettings_SaveConfigError(t *testing.T) {
 	err = setSettings(ctx, mockHandler, mockConfigManagerFactory)
 
 	expectedError := "error saving config: mock save error"
-	if err == nil || err.Error() != expectedError {
-		t.Errorf("Expected error %q, but got %v", expectedError, err)
-	}
+	assert.EqualError(t, err, expectedError, "Expected error for failed config save")
+
 }

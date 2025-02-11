@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
 
@@ -23,17 +24,13 @@ func TestGetContainers_ValidResponse(t *testing.T) {
 
 	// Call the function
 	err := getContainers(ctx)
-	if err != nil {
-		t.Fatalf("getContainers() returned an error: %v", err)
-	}
+	assert.NoError(t, err, "getContainers() returned an error: %v", err)
 
 	// Read captured output
 	w.Close()
 	var buf bytes.Buffer
 	_, err = buf.ReadFrom(r)
-	if err != nil {
-		t.Fatalf("Failed to read from pipe: %v", err)
-	}
+	assert.NoError(t, err, "Failed to read from pipe: %v", err)
 
 	// Parse the JSON response
 	var response getContainersResponse
@@ -43,13 +40,9 @@ func TestGetContainers_ValidResponse(t *testing.T) {
 
 	// Verify the container list contains the expected values
 	expectedContainers := []string{shared.ServiceContainerName}
-	if len(response.Containers) != len(expectedContainers) {
-		t.Errorf("Expected %d containers, got %d", len(expectedContainers), len(response.Containers))
-	}
+	assert.Equal(t, expectedContainers, response.Containers, "Expected and actual containers should match")
 
 	for i, container := range expectedContainers {
-		if response.Containers[i] != container {
-			t.Errorf("Expected container %q, got %q", container, response.Containers[i])
-		}
+		assert.Equal(t, container, response.Containers[i], "Expected container %q, got %q", container, response.Containers[i])
 	}
 }
