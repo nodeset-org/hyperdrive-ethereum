@@ -3,6 +3,7 @@ package hdmodule
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"os"
 	"testing"
 
@@ -65,4 +66,100 @@ func TestProcessSettings_Success(t *testing.T) {
 		expectedPortKey: 8080,
 	}
 	assert.Equal(t, expectedPorts, response.Ports, "Expected correct port mapping")
+}
+
+func TestProcessSettings_HandleKeyedRequestError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
+		ReturnRequest: nil,
+		ReturnError:   fmt.Errorf("mock error"),
+	}
+
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
+
+	err := processSettings(ctx, mockHandler)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error reading set-settings request: mock error")
+}
+
+func TestProcessSettings_MissingModuleConfig(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
+		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
+			// Missing config to simulate failure
+			Modules: map[string]*modconfig.ModuleInstance{},
+		}},
+		ReturnError: nil,
+	}
+
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
+
+	err := processSettings(ctx, mockHandler)
+	expectedError := fmt.Sprintf("could not find settings for %s", utils.FullyQualifiedModuleName)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), expectedError)
+}
+
+func TestProcessSettings_DeserializeError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
+		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
+			Modules: map[string]*modconfig.ModuleInstance{
+				utils.FullyQualifiedModuleName: {
+					Enabled: true,
+					Version: "0.1.0",
+					Settings: map[string]any{
+						"server": map[string]any{
+							"portMode": "invalid_value", // bad data
+							"port":     "not_a_number",  // bad data
+						},
+					},
+				},
+			},
+		}},
+		ReturnError: nil,
+	}
+
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
+
+	err := processSettings(ctx, mockHandler)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error loading settings")
+}
+
+func TestProcessSettings_JSONMarshallingError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
+		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
+			Modules: map[string]*modconfig.ModuleInstance{
+				utils.FullyQualifiedModuleName: {
+					Enabled: true,
+					Version: "0.1.0",
+					Settings: map[string]any{
+						"server": map[string]any{
+							"portMode": config.PortMode_External,
+							"port":     8080,
+						},
+					},
+				},
+			},
+		}},
+		ReturnError: nil,
+	}
+
+	originalMarshal := json.Marshal
+	defer func() { json.Marshal = originalMarshal }()
+	json.Marshal = func(v any) ([]byte, error) {
+		return nil, fmt.Errorf("mock JSON marshalling error")
+	}
+
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
+
+	err := processSettings(ctx, mockHandler)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error marshalling process-config response")
 }
