@@ -13,7 +13,6 @@ import (
 )
 
 func TestGetConfigMetadata(t *testing.T) {
-	// Create a pipe to capture stdout
 	r, w, _ := os.Pipe()
 	oldStdout := os.Stdout
 	defer func() {
@@ -22,27 +21,22 @@ func TestGetConfigMetadata(t *testing.T) {
 	}()
 	os.Stdout = w
 
-	// Create a fake CLI context
 	app := cli.NewApp()
 	ctx := cli.NewContext(app, nil, nil)
 
-	// Call the function
 	err := getConfigMetadata(ctx)
 	assert.NoError(t, err, "getConfigMetadata() returned an error: %v", err)
 
-	// Close writer and read output
 	w.Close()
 	var buf bytes.Buffer
 	_, err = buf.ReadFrom(r)
 	assert.NoError(t, err, "Failed to read from pipe: %v", err)
 
-	// Parse the captured output
 	var configMap map[string]interface{}
 	if err := json.Unmarshal(buf.Bytes(), &configMap); err != nil {
 		t.Fatalf("Failed to parse JSON output: %v", err)
 	}
 
-	// Verify it contains expected configuration keys
 	expectedConfig := hdconfig.MarshalConfigurationToMap(config.NewHyperdriveEthereumConfig())
 	for key := range expectedConfig {
 		if _, exists := configMap[key]; !exists {

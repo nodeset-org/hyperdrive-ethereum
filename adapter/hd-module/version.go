@@ -13,20 +13,16 @@ type versionResponse struct {
 	Version string `json:"version"`
 }
 
-// Handle the `version` command
 func version() error {
-	// Create the response
 	version := versionResponse{
 		Version: shared.HyperdriveEthereumVersion,
 	}
 
-	// Marshal it
 	bytes, err := json.Marshal(version)
 	if err != nil {
 		return fmt.Errorf("error marshalling version response: %w", err)
 	}
 
-	// Print it
 	fmt.Println(string(bytes))
 	return nil
 }

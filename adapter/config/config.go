@@ -71,6 +71,11 @@ type HyperdriveEthereumConfig struct {
 	Version hdconfig.StringParameter
 }
 
+type ServerConfigSettings struct {
+	Port     uint64   `json:"port" yaml:"port"`
+	PortMode PortMode `json:"portMode" yaml:"portMode"`
+}
+
 type LocalBeaconClientSettings struct {
 	CheckpointSyncProvider string `json:"checkpointSyncProvider"`
 }
@@ -92,6 +97,8 @@ type HyperdriveEthereumConfigSettings struct {
 	ContainerTag string `json:"containerTag"`
 
 	Version string `json:"version"`
+
+	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
 }
 
 func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {

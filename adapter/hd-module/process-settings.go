@@ -7,35 +7,28 @@ import (
 	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
 
-// Request format for `process-settings`
 type ProcessSettingsRequest struct {
 	utils.KeyedRequest
 
-	// The config instance to process
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
 
-// Response format for `process-config`
 type processConfigResponse struct {
-	// A list of errors that occurred during processing, if any
 	Errors []string `json:"errors"`
 
-	// A list of ports that will be exposed
 	Ports map[string]uint16 `json:"ports"`
 }
 
-// Handle the `process-settings` command
 func processSettings(c *cli.Context, handler utils.KeyedRequestHandler[*ProcessSettingsRequest]) error {
-	// Get the request
 	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}
-	// Construct the module settings from the Hyperdrive config
 	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		return fmt.Errorf("could not find settings for %s", utils.FullyQualifiedModuleName)
@@ -46,29 +39,24 @@ func processSettings(c *cli.Context, handler utils.KeyedRequestHandler[*ProcessS
 		return fmt.Errorf("error loading settings: %w", err)
 	}
 
-	// This is where any examples of validation will go when added
 	errors := []string{}
 
-	// Get the open ports
 	ports := map[string]uint16{}
 
-	// if cfg.ServerConfig.PortMode.Value != config.PortMode_Closed {
-	// 	ports[ids.ServerConfigID+"/"+ids.PortModeID] = uint16(cfg.ServerConfig.Port.Value)
-	// }
+	if settings.ServerConfig.PortMode != config.PortMode_Closed {
+		ports[ids.ServerConfigID+"/"+ids.PortModeID] = uint16(settings.ServerConfig.Port)
+	}
 
-	// Create the response
 	response := processConfigResponse{
 		Errors: errors,
 		Ports:  ports,
 	}
 
-	// Marshal it
 	bytes, err := json.Marshal(response)
 	if err != nil {
 		return fmt.Errorf("error marshalling process-config response: %w", err)
 	}
 
-	// Print it
 	fmt.Println(string(bytes))
 	return nil
 }
