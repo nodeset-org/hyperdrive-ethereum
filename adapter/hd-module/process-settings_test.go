@@ -130,6 +130,12 @@ func TestProcessSettings_DeserializeError(t *testing.T) {
 	assert.Contains(t, err.Error(), "error loading settings")
 }
 
+type BrokenMarshalStruct struct{}
+
+func (b BrokenMarshalStruct) MarshalJSON() ([]byte, error) {
+	return nil, fmt.Errorf("mock JSON marshalling error")
+}
+
 func TestProcessSettings_JSONMarshallingError(t *testing.T) {
 	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
 		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
@@ -138,21 +144,12 @@ func TestProcessSettings_JSONMarshallingError(t *testing.T) {
 					Enabled: true,
 					Version: "0.1.0",
 					Settings: map[string]any{
-						"server": map[string]any{
-							"portMode": config.PortMode_External,
-							"port":     8080,
-						},
+						"server": BrokenMarshalStruct{},
 					},
 				},
 			},
 		}},
 		ReturnError: nil,
-	}
-
-	originalMarshal := json.Marshal
-	defer func() { json.Marshal = originalMarshal }()
-	json.Marshal = func(v any) ([]byte, error) {
-		return nil, fmt.Errorf("mock JSON marshalling error")
 	}
 
 	app := cli.NewApp()
@@ -161,5 +158,7 @@ func TestProcessSettings_JSONMarshallingError(t *testing.T) {
 
 	err := processSettings(ctx, mockHandler)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "error marshalling process-config response")
+	assert.Contains(t, err.Error(), "error loading settings")
+	assert.Contains(t, err.Error(), "error serializing module settings to JSON")
+	assert.Contains(t, err.Error(), "mock JSON marshalling error")
 }
