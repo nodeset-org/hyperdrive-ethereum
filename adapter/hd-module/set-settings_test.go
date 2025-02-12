@@ -161,9 +161,7 @@ func TestSetSettings_SaveConfigError(t *testing.T) {
 	jsonData := `{"some_setting": "value"}`
 
 	err = json.Unmarshal([]byte(jsonData), &settingsMap)
-	if err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
+	assert.NoError(t, err, "Failed to parse JSON: %v", err)
 
 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
 		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
@@ -179,7 +177,11 @@ func TestSetSettings_SaveConfigError(t *testing.T) {
 	}
 
 	mockConfigManagerFactory := func(c *cli.Context) (config.AdapterConfigManagerInterface, error) {
-		return &MockAdapterConfigManagerSaveToDiskError{}, nil
+		return &MockAdapterConfigManagerSaveToDiskError{
+			AdapterConfigManager: &config.AdapterConfigManager{
+				AdapterConfig: &config.HyperdriveEthereumConfigSettings{},
+			},
+		}, nil
 	}
 
 	app := cli.NewApp()
