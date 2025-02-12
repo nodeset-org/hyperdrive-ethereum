@@ -117,39 +117,39 @@ func TestSetSettings_MissingModuleConfig(t *testing.T) {
 
 }
 
-// TODO: Fix test
-// func TestSetSettings_DeserializeError(t *testing.T) {
-// 	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
-// 		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
-// 			Modules: map[string]*modconfig.ModuleInstance{
-// 				utils.FullyQualifiedModuleName: {
-// 					Enabled: true,
-// 					Version: "0.1.0",
-// 					Settings: map[string]any{
-// 						"mock_module": `{"some_setting": "unexpected_value"}`,
-// 					},
-// 				},
-// 			},
-// 		}},
-// 		ReturnError: nil,
-// 	}
+func TestSetSettings_DeserializeError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*setSettingsRequest]{
+		ReturnRequest: &setSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
+			Modules: map[string]*modconfig.ModuleInstance{
+				utils.FullyQualifiedModuleName: {
+					Enabled: true,
+					Version: "0.1.0",
+					Settings: map[string]any{
+						"server": BrokenMarshalStruct{},
+					},
+				},
+			},
+		}},
+		ReturnError: nil,
+	}
 
-// 	app := cli.NewApp()
-// 	set := flag.NewFlagSet("test", 0)
-// 	ctx := cli.NewContext(app, set, nil)
+	app := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(app, set, nil)
 
-// 	err := setSettings(ctx, mockHandler, func(*cli.Context) (config.AdapterConfigManagerInterface, error) {
-// 		return &MockAdapterConfigManager{
-// 			AdapterConfigManager: &config.AdapterConfigManager{
-// 				AdapterConfig: &config.HyperdriveEthereumConfigSettings{},
-// 			},
-// 		}, nil
-// 	})
+	err := setSettings(ctx, mockHandler, func(*cli.Context) (config.AdapterConfigManagerInterface, error) {
+		return &MockAdapterConfigManager{
+			AdapterConfigManager: &config.AdapterConfigManager{
+				AdapterConfig: &config.HyperdriveEthereumConfigSettings{},
+			},
+		}, nil
+	})
 
-// 	if err == nil || !strings.Contains(err.Error(), "mock deserialization error") {
-// 		t.Errorf("Expected JSON deserialization error, but got %v", err)
-// 	}
-// }
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error loading settings")
+	assert.Contains(t, err.Error(), "error serializing module settings to JSON")
+	assert.Contains(t, err.Error(), "mock JSON marshalling error") // Ensure root cause is present
+}
 
 func TestSetSettings_SaveConfigError(t *testing.T) {
 	configDir := "/tmp/hyperdrive-test"
