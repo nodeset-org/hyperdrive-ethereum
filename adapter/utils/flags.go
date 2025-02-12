@@ -19,12 +19,22 @@ const (
 
 	// Project mode: stateful, user-specific configuration.
 	AdapterMode_Project AdapterMode = "project"
-
-	// The mode to run the adapter in - global or project
-	AdapterModeEnvVarName string = "HD_ADAPTER_MODE"
 )
 
-var Mode AdapterMode = AdapterMode(os.Getenv(AdapterModeEnvVarName))
+// Adapter environment variables
+const (
+	// The mode to run the adapter in - global or project
+	AdapterModeEnvVarName string = "HD_ADAPTER_MODE"
+
+	// In project mode, the path of the user's config dir
+	ConfigDirEnvVarName string = "HD_CONFIG_DIR"
+
+	// In project mode, the path of the user's log dir
+	LogDirEnvVarName string = "HD_LOG_DIR"
+
+	// The path to the secret key file for authentication in project mode
+	KeyFileEnvVarName string = "HD_KEY_FILE"
+)
 
 var (
 	YesFlag *cli.BoolFlag = &cli.BoolFlag{
@@ -88,24 +98,6 @@ var (
 		Aliases: []string{"st"},
 		Usage:   "Sign any TXs and print the results, but don't submit it to the network. Useful if you want to save a TX for later or bundle it up with a service like Flashbots.",
 	}
-	KeyFileFlag *cli.StringFlag = &cli.StringFlag{
-		Name:    "secret",
-		Aliases: []string{"s"},
-		Usage:   "The path to the secret key file for authentication",
-		Value:   "/hd/secret",
-	}
-	ConfigDirFlag *cli.StringFlag = &cli.StringFlag{
-		Name:    "config-dir",
-		Aliases: []string{"c"},
-		Usage:   "The path to the directory for module configuration files",
-		Value:   "/hd/config",
-	}
-	LogDirFlag *cli.StringFlag = &cli.StringFlag{
-		Name:    "log-dir",
-		Aliases: []string{"l"},
-		Usage:   "The path to the directory for module log files",
-		Value:   "/hd/logs",
-	}
 )
 
 func InstantiateFlag[FlagType cli.Flag](prototype FlagType, description string) cli.Flag {
@@ -138,3 +130,17 @@ func InstantiateFlag[FlagType cli.Flag](prototype FlagType, description string) 
 		panic("unsupported flag type")
 	}
 }
+
+var (
+	// The mode the adapter has been started in
+	Mode AdapterMode = AdapterMode(os.Getenv(AdapterModeEnvVarName))
+
+	// If in project mode, the path to the user's config dir
+	ConfigDir string = os.Getenv(ConfigDirEnvVarName)
+
+	// If in project mode, the path to the user's log dir
+	LogDir string = os.Getenv(LogDirEnvVarName)
+
+	// The path to the secret key file for authentication in project mode
+	KeyFile string = os.Getenv(KeyFileEnvVarName)
+)

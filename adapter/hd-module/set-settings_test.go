@@ -68,8 +68,6 @@ func TestSetSettings_Success(t *testing.T) {
 
 	app := cli.NewApp()
 	set := flag.NewFlagSet("test", 0)
-	set.String(utils.ConfigDirFlag.Name, configDir, "doc")
-	_ = set.Parse([]string{"--" + utils.ConfigDirFlag.Name, configDir})
 
 	ctx := cli.NewContext(app, set, nil)
 
@@ -186,8 +184,6 @@ func TestSetSettings_SaveConfigError(t *testing.T) {
 
 	app := cli.NewApp()
 	set := flag.NewFlagSet("test", 0)
-	set.String(utils.ConfigDirFlag.Name, configDir, "doc")
-	_ = set.Parse([]string{"--" + utils.ConfigDirFlag.Name, configDir})
 
 	ctx := cli.NewContext(app, set, nil)
 

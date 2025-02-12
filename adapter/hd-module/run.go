@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/kballard/go-shellquote"
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/app"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -20,11 +19,14 @@ type RunRequest struct {
 }
 
 // Handle the `run` command
-func run(c *cli.Context, handler utils.KeyedRequestHandler[*RunRequest]) error {
+func run(
+	c *cli.Context,
+	appInstance *cli.App,
+) error {
 	// Get the request
-	request, err := handler.HandleKeyedRequest(c)
+	request, err := utils.HandleKeyedRequest[*RunRequest](c)
 	if err != nil {
-		return fmt.Errorf("error reading set-settings request: %w", err)
+		return err
 	}
 
 	// Prevent recursive calls
@@ -37,18 +39,11 @@ func run(c *cli.Context, handler utils.KeyedRequestHandler[*RunRequest]) error {
 	args, err := shellquote.Split(request.Command)
 	args = append([]string{
 		os.Args[0], // Adapter path
-		fmt.Sprintf("--%s", utils.KeyFileFlag.Name),
-		c.String(utils.KeyFileFlag.Name),
-		fmt.Sprintf("--%s", utils.ConfigDirFlag.Name),
-		c.String(utils.ConfigDirFlag.Name),
-		fmt.Sprintf("--%s", utils.LogDirFlag.Name),
-		c.String(utils.LogDirFlag.Name),
 	}, args...)
 	if err != nil {
 		return fmt.Errorf("error parsing command: %w", err)
 	}
 
 	// Create and run a new app
-	app := app.CreateApp()
-	return app.Run(args)
+	return appInstance.Run(args)
 }

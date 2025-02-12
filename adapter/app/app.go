@@ -31,11 +31,7 @@ func CreateApp() *cli.App {
 	app.EnableBashCompletion = true
 
 	// Set application flags
-	app.Flags = []cli.Flag{
-		utils.ConfigDirFlag,
-		utils.LogDirFlag,
-		utils.KeyFileFlag,
-	}
+	app.Flags = []cli.Flag{}
 
 	// Register commands
 	config.RegisterCommands(app)

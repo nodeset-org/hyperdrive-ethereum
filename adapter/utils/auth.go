@@ -37,7 +37,7 @@ type Authenticator struct {
 
 // Creates a new Authenticator instance
 func NewAuthenticator(c *cli.Context) (*Authenticator, error) {
-	keyFile := c.String(KeyFileFlag.Name)
+	keyFile := KeyFile
 	if keyFile == "" {
 		return nil, fmt.Errorf("secret key file is required")
 	}
