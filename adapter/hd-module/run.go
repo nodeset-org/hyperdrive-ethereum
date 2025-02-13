@@ -22,11 +22,16 @@ type RunRequest struct {
 func run(
 	c *cli.Context,
 	appInstance *cli.App,
+	handler utils.KeyedRequestHandler[*RunRequest],
 ) error {
 	// Get the request
-	request, err := utils.HandleKeyedRequest[*RunRequest](c)
+	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
-		return err
+		return fmt.Errorf("error reading request: %w", err)
+	}
+
+	if strings.TrimSpace(request.Command) == "" {
+		return fmt.Errorf("command cannot be empty")
 	}
 
 	// Prevent recursive calls

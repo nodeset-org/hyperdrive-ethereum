@@ -103,10 +103,11 @@ func RegisterCommands(app *cli.App) {
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
+					handler := utils.DefaultKeyedRequestHandler[*RunRequest]{}
 					// Run
 					app := adapterApp.CreateApp()
 
-					return run(c, app)
+					return run(c, app, handler)
 				},
 			},
 		},

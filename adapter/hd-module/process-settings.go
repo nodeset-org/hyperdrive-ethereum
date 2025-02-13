@@ -24,7 +24,9 @@ type processConfigResponse struct {
 	Ports map[string]uint16 `json:"ports"`
 }
 
-func processSettings(c *cli.Context, handler utils.KeyedRequestHandler[*ProcessSettingsRequest]) error {
+func processSettings(
+	c *cli.Context,
+	handler utils.KeyedRequestHandler[*ProcessSettingsRequest]) error {
 	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)

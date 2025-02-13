@@ -2,6 +2,7 @@ package hdmodule
 
 import (
 	"flag"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,27 +15,123 @@ type MockApp struct {
 
 func (m *MockApp) Run(args []string) error {
 	m.ReceivedArgs = args
-	return nil // Simulate successful execution
+	return nil
 }
 
 func TestRun_Success(t *testing.T) {
-	// Create a mock app to capture the args
+	mockHandler := MockKeyedRequestHandler[*RunRequest]{
+		ReturnRequest: &RunRequest{Command: "echo test"},
+		ReturnError:   nil,
+	}
+
 	mockApp := &cli.App{
 		Action: func(c *cli.Context) error {
-			// Simulate successful execution
+
 			return nil
 		},
 	}
 
-	// Setup CLI context
 	appInstance := cli.NewApp()
 	set := flag.NewFlagSet("test", 0)
-
 	ctx := cli.NewContext(appInstance, set, nil)
 
-	// Run the function with the mock app instance
-	err := run(ctx, mockApp)
+	err := run(ctx, mockApp, mockHandler)
 
-	// Assertions
 	assert.NoError(t, err, "Expected no error during execution")
+}
+
+func TestRun_CommandParsingError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*RunRequest]{
+		ReturnRequest: &RunRequest{Command: `"unterminated quote`},
+		ReturnError:   nil,
+	}
+
+	mockApp := &cli.App{}
+
+	appInstance := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(appInstance, set, nil)
+
+	err := run(ctx, mockApp, mockHandler)
+
+	assert.Error(t, err, "Expected an error due to command parsing failure")
+	assert.Contains(t, err.Error(), "error parsing command", "Error should mention parsing issue")
+}
+
+func TestRun_RecursiveCallError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*RunRequest]{
+		ReturnRequest: &RunRequest{Command: "hd-module process-settings"},
+		ReturnError:   nil,
+	}
+
+	mockApp := &cli.App{}
+
+	appInstance := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(appInstance, set, nil)
+
+	err := run(ctx, mockApp, mockHandler)
+
+	assert.Error(t, err, "Expected an error due to recursive call")
+	assert.Contains(t, err.Error(), "recursive calls to `run` are not allowed", "Error should indicate recursion prevention")
+}
+
+func TestRun_RequestHandlingError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*RunRequest]{
+		ReturnRequest: nil,
+		ReturnError:   fmt.Errorf("mock request error"),
+	}
+
+	mockApp := &cli.App{}
+
+	appInstance := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(appInstance, set, nil)
+
+	err := run(ctx, mockApp, mockHandler)
+
+	assert.Error(t, err, "Expected an error when request handling fails")
+	assert.Contains(t, err.Error(), "mock request error", "Error should match the mock request error")
+}
+
+func TestRun_EmptyCommandError(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*RunRequest]{
+		ReturnRequest: &RunRequest{Command: ""},
+		ReturnError:   nil,
+	}
+
+	mockApp := &cli.App{}
+
+	appInstance := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(appInstance, set, nil)
+
+	err := run(ctx, mockApp, mockHandler)
+
+	assert.Error(t, err, "Expected an error due to empty command")
+	assert.Contains(t, err.Error(), "command cannot be empty", "Error should mention missing command issue")
+}
+
+func TestRun_CommandExecutionWithArgs(t *testing.T) {
+	mockHandler := MockKeyedRequestHandler[*RunRequest]{
+		ReturnRequest: &RunRequest{Command: "ls -la"},
+		ReturnError:   nil,
+	}
+
+	mockApp := &cli.App{
+		Action: func(c *cli.Context) error {
+			expectedArgs := []string{"ls", "-la"}
+			actualArgs := c.Args().Slice()
+			assert.Equal(t, expectedArgs, actualArgs, "Unexpected command arguments")
+			return nil
+		},
+	}
+
+	appInstance := cli.NewApp()
+	set := flag.NewFlagSet("test", 0)
+	ctx := cli.NewContext(appInstance, set, nil)
+
+	err := run(ctx, mockApp, mockHandler)
+
+	assert.NoError(t, err, "Expected successful execution with arguments")
 }
