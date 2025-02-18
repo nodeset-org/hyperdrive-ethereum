@@ -27,7 +27,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 	cfg := cfgMgr.(*AdapterConfigManager).AdapterConfig
 
-	// TODO: Implement isNew
+	// TODO: Implement isNew ???
 	if cfg.IsNew {
 		return fmt.Errorf("No configuration detected. Please run `hyperdrive service config` to set up Hyperdrive before running it.")
 	}
@@ -77,7 +77,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
 func checkForValidatorChange(cfg *HyperdriveEthereumConfigSettings) (bool, error) {
 	// Get all of the VCs belonging to the project
-	prefix := cfg.Hyperdrive.ProjectName.Value
+	prefix := cfg.ProjectName
 	vcs, err := cfg.GetValidatorContainers(prefix + "_") // Used to be hd
 	if err != nil {
 		return false, fmt.Errorf("error getting validator client containers: %w", err)
@@ -126,19 +126,21 @@ func checkForValidatorChange(cfg *HyperdriveEthereumConfigSettings) (bool, error
 
 // Get the map of tags
 func getVcContainerTagParamMap(cfg *HyperdriveEthereumConfigSettings, vcs []string) (map[string]string, error) {
-	containerTagMap := map[string]string{}
-
-	modCfgs := cfg.GetAllModuleConfigs()
-	for _, module := range modCfgs {
-		vcInfo := module.GetValidatorContainerTagInfo()
-		for name, tag := range vcInfo {
-			fullName := cfg.Hyperdrive.GetDockerArtifactName(string(name))
-			if _, exists := containerTagMap[fullName]; exists {
-				return nil, fmt.Errorf("validator client map already had an entry named [%s]", fullName)
-			}
-			containerTagMap[fullName] = tag
-		}
+	containerTagMap := map[string]string{
+		"beacon-node":      cfg.GetDockerArtifactName(cfg.DockerConfig.BeaconNodeContainer),
+		"execution-client": cfg.GetDockerArtifactName(cfg.DockerConfig.ExecutionClientContainer),
 	}
+	// modCfgs := cfg.GetAllModuleConfigs()
+	// for _, module := range modCfgs {
+	// 	vcInfo := cfg.GetValidatorContainerTagInfo()
+	// 	for name, tag := range vcInfo {
+	// 		fullName := cfg.GetDockerArtifactName(string(name))
+	// 		if _, exists := containerTagMap[fullName]; exists {
+	// 			return nil, fmt.Errorf("validator client map already had an entry named [%s]", fullName)
+	// 		}
+	// 		containerTagMap[fullName] = tag
+	// 	}
+	// }
 
 	// SANITY CHECK
 	for _, vc := range vcs {
@@ -241,7 +243,7 @@ func StopContainer(containerName string) error {
 
 // Get the current Docker image used by the given container
 func GetDockerStatus(containerName string) (string, error) {
-	ci, err := inspectContainer(c, containerName)
+	ci, err := inspectContainer(containerName)
 	if err != nil {
 		return "", err
 	}

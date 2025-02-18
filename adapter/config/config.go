@@ -38,6 +38,7 @@ const (
 )
 
 type HyperdriveEthereumConfig struct {
+	ProjectName        hdconfig.StringParameter
 	ApiPort            hdconfig.UintParameter
 	AutoTxMaxFee       hdconfig.FloatParameter
 	MaxPriorityFee     hdconfig.FloatParameter
@@ -54,6 +55,7 @@ type HyperdriveEthereumConfig struct {
 	LocalBeaconClient    *sharedconfig.LocalBeaconConfig
 	ExternalBeaconClient *sharedconfig.ExternalBeaconConfig
 	// Fallback clients
+
 	Fallback *sharedconfig.FallbackConfig
 	// Metrics
 	// Metrics *config.MetricsConfig
@@ -86,6 +88,7 @@ type LocalBeaconClientSettings struct {
 }
 
 type HyperdriveEthereumConfigSettings struct {
+	ProjectName        string  `json:"projectName"`
 	ApiPort            uint    `json:"apiPort"`
 	AutoTxMaxFee       float64 `json:"autoTxMaxFee"`
 	MaxPriorityFee     float64 `json:"maxPriorityFee"`
@@ -97,6 +100,9 @@ type HyperdriveEthereumConfigSettings struct {
 	LocalBeaconClient    *LocalBeaconClientSettings         `json:"localBeaconClient"`
 	ExternalBeaconClient *sharedconfig.ExternalBeaconConfig `json:"externalBeaconClient"`
 
+	LocalExecutionClient    *sharedconfig.LocalExecutionConfig    `json:"localExecutionClient"`
+	ExternalExecutionClient *sharedconfig.ExternalExecutionConfig `json:"externalExecutionClient"`
+
 	Fallback *sharedconfig.FallbackConfig `json:"fallback"`
 
 	ContainerTag string `json:"containerTag"`
@@ -104,6 +110,7 @@ type HyperdriveEthereumConfigSettings struct {
 	Version string `json:"version"`
 
 	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
+	DockerConfig *DockerSettings       `json:"dockerConfig"`
 
 	IsNew bool `json:"isNew"`
 }
@@ -225,4 +232,22 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 		shared.ServiceContainerName,
 	}
 	return changedServices, nil
+}
+
+func (c *HyperdriveEthereumConfigSettings) GetDockerArtifactName(moduleName string) string {
+	switch moduleName {
+	case "beacon-node":
+		return c.DockerConfig.BeaconNodeContainer
+	case "execution-client":
+		return c.DockerConfig.ExecutionClientContainer
+	default:
+		return ""
+	}
+}
+
+func (c *HyperdriveEthereumConfigSettings) GetAllModuleConfigs() []any {
+	return []any{
+		c.LocalBeaconClient,
+		c.LocalExecutionClient,
+	}
 }
