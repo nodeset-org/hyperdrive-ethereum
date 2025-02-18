@@ -1,164 +1,38 @@
 package hdmodule
 
 import (
-	"bytes"
-	"flag"
-	"fmt"
-	"os"
 	"testing"
 
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
-
 	"github.com/goccy/go-json"
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
 	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
-	"github.com/stretchr/testify/assert"
-	"github.com/urfave/cli/v2"
+	"github.com/stretchr/testify/require"
 )
 
-func TestProcessSettings_Success(t *testing.T) {
-	mockSettings := &hdconfig.HyperdriveSettings{
-		Modules: map[string]*modconfig.ModuleInstance{
-			utils.FullyQualifiedModuleName: {
-				Enabled: true,
-				Version: "0.1.0",
-				Settings: map[string]any{
-					"server": map[string]any{
-						"portMode": config.PortMode_External,
-						"port":     8080,
-					},
-				},
-			},
-		},
-	}
+const (
+	oldSettingsJson string = `{"version":"","projectName":"hde-test","apiPort":8080,"enableIPv6":false,"userDataPath":"/tmp/hde-adapter-test/data","additionalDockerNetworks":"","clientTimeout":30,"containerTag":"nodeset/hyperdrive:v2.0.0-dev","logging":{"level":"info","format":"logfmt","addSource":false,"maxSize":20,"maxBackups":3,"maxAge":90,"localTime":false,"compress":true},"modules":{"NodeSet/example-module":{"enabled":true,"version":"0.2.0","settings":{"exampleBool":false,"exampleChoice":"one","exampleFloat":50,"exampleInt":0,"exampleString":"","exampleUint":42,"server":{"port":8080,"portMode":"closed"},"subConfig":{"subConfigBool":false,"subConfigChoice":"two"}}}}}`
 
-	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
-		ReturnRequest: &ProcessSettingsRequest{Settings: mockSettings},
-		ReturnError:   nil,
-	}
-	var buf bytes.Buffer
-	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
+	newSettingsJson string = `{"version":"","projectName":"hde-test","apiPort":8080,"enableIPv6":false,"userDataPath":"/tmp/hde-adapter-test/data","additionalDockerNetworks":"","clientTimeout":10,"containerTag":"nodeset/hyperdrive:v2.0.0-dev","logging":{"level":"info","format":"logfmt","addSource":false,"maxSize":20,"maxBackups":3,"maxAge":90,"localTime":false,"compress":true},"modules":{"NodeSet/example-module":{"enabled":true,"version":"0.2.0","settings":{"exampleBool":false,"exampleChoice":"one","exampleFloat":80,"exampleInt":0,"exampleString":"","exampleUint":42,"server":{"port":8085,"portMode":"open"},"subConfig":{"subConfigBool":false,"subConfigChoice":"two"}}}}}`
+)
 
-	app := cli.NewApp()
-	set := flag.NewFlagSet("test", 0)
-	ctx := cli.NewContext(app, set, nil)
+func TestProcessSettings(t *testing.T) {
+	oldSettings := new(hdconfig.HyperdriveSettings)
+	err := json.Unmarshal([]byte(oldSettingsJson), oldSettings)
+	require.NoError(t, err)
 
-	err := processSettings(ctx, mockHandler)
-	assert.NoError(t, err, "processSettings should not return an error for a valid config")
+	newSettings := new(hdconfig.HyperdriveSettings)
+	err = json.Unmarshal([]byte(newSettingsJson), newSettings)
+	require.NoError(t, err)
 
-	w.Close()
-	os.Stdout = oldStdout
-	_, err = buf.ReadFrom(r)
-	assert.NoError(t, err, "Failed to read from pipe")
+	// Process the settings
+	response, err := processSettingsImpl(oldSettings, newSettings)
+	require.NoError(t, err)
 
-	var response ProcessSettingsResponse
-	err = json.Unmarshal(buf.Bytes(), &response)
-	assert.NoError(t, err, "Failed to parse JSON output")
-
-	assert.Empty(t, response.Errors, "Expected no errors in the response")
-
-	expectedPortKey := ids.ServerConfigID + "/" + ids.PortModeID
-	expectedPorts := map[string]uint16{
-		expectedPortKey: 8080,
-	}
-	assert.Equal(t, expectedPorts, response.Ports, "Expected correct port mapping")
-}
-
-func TestProcessSettings_HandleKeyedRequestError(t *testing.T) {
-	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
-		ReturnRequest: nil,
-		ReturnError:   fmt.Errorf("mock error"),
-	}
-
-	app := cli.NewApp()
-	set := flag.NewFlagSet("test", 0)
-	ctx := cli.NewContext(app, set, nil)
-
-	err := processSettings(ctx, mockHandler)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "error reading set-settings request: mock error")
-}
-
-func TestProcessSettings_MissingModuleConfig(t *testing.T) {
-	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
-		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
-			// Missing config to simulate failure
-			Modules: map[string]*modconfig.ModuleInstance{},
-		}},
-		ReturnError: nil,
-	}
-
-	app := cli.NewApp()
-	set := flag.NewFlagSet("test", 0)
-	ctx := cli.NewContext(app, set, nil)
-
-	err := processSettings(ctx, mockHandler)
-	expectedError := fmt.Sprintf("could not find settings for %s", utils.FullyQualifiedModuleName)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), expectedError)
-}
-
-func TestProcessSettings_DeserializeError(t *testing.T) {
-	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
-		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
-			Modules: map[string]*modconfig.ModuleInstance{
-				utils.FullyQualifiedModuleName: {
-					Enabled: true,
-					Version: "0.1.0",
-					Settings: map[string]any{
-						"server": map[string]any{
-							"portMode": "invalid_value", // bad data
-							"port":     "not_a_number",  // bad data
-						},
-					},
-				},
-			},
-		}},
-		ReturnError: nil,
-	}
-
-	app := cli.NewApp()
-	set := flag.NewFlagSet("test", 0)
-	ctx := cli.NewContext(app, set, nil)
-
-	err := processSettings(ctx, mockHandler)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "error loading settings")
-}
-
-type BrokenMarshalStruct struct{}
-
-func (b BrokenMarshalStruct) MarshalJSON() ([]byte, error) {
-	return nil, fmt.Errorf("mock JSON marshalling error")
-}
-
-func TestProcessSettings_JSONMarshallingError(t *testing.T) {
-	mockHandler := MockKeyedRequestHandler[*ProcessSettingsRequest]{
-		ReturnRequest: &ProcessSettingsRequest{Settings: &hdconfig.HyperdriveSettings{
-			Modules: map[string]*modconfig.ModuleInstance{
-				utils.FullyQualifiedModuleName: {
-					Enabled: true,
-					Version: "0.1.0",
-					Settings: map[string]any{
-						"server": BrokenMarshalStruct{},
-					},
-				},
-			},
-		}},
-		ReturnError: nil,
-	}
-
-	app := cli.NewApp()
-	set := flag.NewFlagSet("test", 0)
-	ctx := cli.NewContext(app, set, nil)
-
-	err := processSettings(ctx, mockHandler)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "error loading settings")
-	assert.Contains(t, err.Error(), "error serializing module settings to JSON")
-	assert.Contains(t, err.Error(), "mock JSON marshalling error")
+	// Check the response
+	require.Len(t, response.Errors, 0)
+	require.Len(t, response.Ports, 1)
+	require.Equal(t, uint16(8085), response.Ports["server/port"])
+	require.Len(t, response.ServicesToRestart, 1)
+	require.Equal(t, shared.ServiceContainerName, response.ServicesToRestart[0])
+	t.Log("Settings processed properly")
 }

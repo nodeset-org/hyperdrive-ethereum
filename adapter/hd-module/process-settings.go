@@ -15,7 +15,11 @@ import (
 type ProcessSettingsRequest struct {
 	utils.KeyedRequest
 
-	Settings *hdconfig.HyperdriveSettings `json:"settings"`
+	// The current config settings
+	CurrentSettings *hdconfig.HyperdriveSettings `json:"currentSettings"`
+
+	// The new (proposed) config settings
+	NewSettings *hdconfig.HyperdriveSettings `json:"newSettings"`
 }
 
 type ProcessSettingsResponse struct {
@@ -54,13 +58,13 @@ func processSettings(
 }
 
 // Process the settings
-func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettings *hdconfig.HyperdriveSettings) (*processSettingsResponse, error) {
+func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettings *hdconfig.HyperdriveSettings) (*ProcessSettingsResponse, error) {
 	// Construct the old (current) module settings from the Hyperdrive config
 	var oldSettings config.HyperdriveEthereumConfigSettings
 	oldModInstance, exists := oldHdSettings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		// Create an instance with the default settings
-		cfg := config.HyperdriveEthereumConfigSettings{}
+		cfg := &config.HyperdriveEthereumConfig{}
 		oldModSettings := modconfig.CreateModuleSettings(cfg)
 		err := oldModSettings.ConvertToKnownType(&oldSettings)
 		if err != nil {

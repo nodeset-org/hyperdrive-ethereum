@@ -3,14 +3,18 @@
 
 services:
   execution-client:
-    image: {{.GetValue serviceContainerTag}}
-    container_name: {{.ModuleComposeProject}}_ethereum # Container names are provided by Hyperdrive to handle conflicts
+    image: {{.GetValue serviceContainerTag}})_ec
+    container_name: {{.ModuleComposeProject}}_execution-client # Container names are provided by Hyperdrive to handle conflicts
     restart: unless-stopped
     ports:
       - "127.0.0.1:{{.GetValue "service/port"}}:{{.GetValue "service/port"}}/tcp" # Restricted to localhost outside of Docker
     volumes:
       - {{.ModuleConfigDir}}:{{.ModuleConfigDir}}:ro # The module's config directory
       - {{.ModuleLogDir}}:{{.ModuleLogDir}} # The module's log directory
+      - {{.ModuleDataDir}}:/execution-data
+      # TODO: Ask Joe about these
+      # - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
+      # - /var/lib/hyperdrive/data/{{.Hyperdrive.ProjectName}}:/secrets
     command:
       - "--config-file"
       - "{{.ModuleConfigDir}}/service-cfg.yaml" # The module's config directory

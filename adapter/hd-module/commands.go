@@ -28,20 +28,6 @@ func RegisterCommands(app *cli.App) {
 				},
 			},
 			{
-				Name:    "get-log-file",
-				Aliases: []string{"l"},
-				Flags:   []cli.Flag{},
-				Usage:   "Get the path to a log file.",
-				Action: func(c *cli.Context) error {
-					// Validate args
-					utils.ValidateArgCount(c, 0)
-					handler := utils.DefaultKeyedRequestHandler[*GetLogFileRequest]{}
-
-					// Run
-					return getLogFile(c, handler)
-				},
-			},
-			{
 				Name:    "get-config-metadata",
 				Aliases: []string{"c"},
 				Flags:   []cli.Flag{},
@@ -80,19 +66,6 @@ func RegisterCommands(app *cli.App) {
 
 					// Run
 					return setSettings(c, handler, config.NewAdapterConfigManager)
-				},
-			},
-			{
-				Name:    "get-containers",
-				Aliases: []string{"t"},
-				Flags:   []cli.Flag{},
-				Usage:   "Get the list of containers owned by this module.",
-				Action: func(c *cli.Context) error {
-					// Validate args
-					utils.ValidateArgCount(c, 0)
-
-					// Run
-					return getContainers(c)
 				},
 			},
 			{

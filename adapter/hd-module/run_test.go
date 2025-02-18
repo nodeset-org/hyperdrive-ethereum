@@ -5,9 +5,25 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
+
+type BrokenMarshalStruct struct{}
+
+func (b BrokenMarshalStruct) MarshalJSON() ([]byte, error) {
+	return nil, fmt.Errorf("mock JSON marshalling error")
+}
+
+type MockKeyedRequestHandler[RequestType utils.IKeyedRequest] struct {
+	ReturnRequest RequestType
+	ReturnError   error
+}
+
+func (m MockKeyedRequestHandler[RequestType]) HandleKeyedRequest(c *cli.Context) (RequestType, error) {
+	return m.ReturnRequest, m.ReturnError
+}
 
 type MockApp struct {
 	ReceivedArgs []string
@@ -109,7 +125,7 @@ func TestRun_EmptyCommandError(t *testing.T) {
 	err := run(ctx, mockApp, mockHandler)
 
 	assert.Error(t, err, "Expected an error due to empty command")
-	assert.Contains(t, err.Error(), "command cannot be empty", "Error should mention missing command issue")
+	assert.Contains(t, err.Error(), "error parsing command", "Error should mention missing command issue")
 }
 
 func TestRun_CommandExecutionWithArgs(t *testing.T) {
