@@ -55,7 +55,7 @@ func TestProcessSettings_Success(t *testing.T) {
 	_, err = buf.ReadFrom(r)
 	assert.NoError(t, err, "Failed to read from pipe")
 
-	var response processConfigResponse
+	var response ProcessSettingsResponse
 	err = json.Unmarshal(buf.Bytes(), &response)
 	assert.NoError(t, err, "Failed to parse JSON output")
 

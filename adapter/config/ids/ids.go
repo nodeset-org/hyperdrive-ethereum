@@ -1,7 +1,11 @@
 package ids
 
+import (
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
+)
+
 const (
-	ServerConfigID string = "server"
-	PortModeID     string = "portMode"
-	PortID         string = "port"
+	ServerConfigID hdconfig.Identifier = "server"
+	PortModeID     hdconfig.Identifier = "portMode"
+	PortID         hdconfig.Identifier = "port"
 )

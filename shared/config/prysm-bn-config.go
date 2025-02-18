@@ -43,12 +43,12 @@ func NewPrysmBnConfig() *PrysmBnConfig {
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
-	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.RpcPort.ID = hdconfig.Identifier(ids.PrysmRpcPortID)
 	cfg.RpcPort.Name = "RPC Port"
 	cfg.RpcPort.Description.Default = "The port Prysm should run its JSON-RPC API on."
-	cfg.RpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient)}
+	// cfg.RpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient)}
 
 	// Options for OpenRpcPort
 	options := make([]hdconfig.ParameterOption[RpcPortMode], 3)
@@ -67,18 +67,18 @@ func NewPrysmBnConfig() *PrysmBnConfig {
 	cfg.OpenRpcPort.ID = hdconfig.Identifier(ids.PrysmOpenRpcPortID)
 	cfg.OpenRpcPort.Name = "Expose RPC Port"
 	cfg.OpenRpcPort.Description.Default = "Expose Prysm's JSON-RPC port to other processes on your machine, or to your local network so other machines can access it too."
-	cfg.OpenRpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.OpenRpcPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 	cfg.OpenRpcPort.Options = options
 
 	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Prysm Beacon Node container on Docker Hub you want to use for the Beacon Node."
-	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.AdditionalFlags.ID = hdconfig.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Prysm's Beacon Node, to take advantage of other settings that aren't covered here."
-	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	return cfg
 }

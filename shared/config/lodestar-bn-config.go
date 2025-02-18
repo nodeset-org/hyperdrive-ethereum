@@ -33,17 +33,17 @@ func NewLodestarBnConfig() *LodestarBnConfig {
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
-	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Lodestar container from Docker Hub you want to use for the Beacon Node."
-	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.AdditionalFlags.ID = hdconfig.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Lodestar's Beacon Client, to take advantage of other settings that aren't covered here."
-	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	return cfg
 }

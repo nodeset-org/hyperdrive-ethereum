@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
-
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 	"github.com/urfave/cli/v2"
 )
 
@@ -18,10 +18,14 @@ type ProcessSettingsRequest struct {
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
 
-type processConfigResponse struct {
+type ProcessSettingsResponse struct {
 	Errors []string `json:"errors"`
 
+	// A list of ports that will be exposed
 	Ports map[string]uint16 `json:"ports"`
+
+	// A list of services that need to be restarted as a result of the new settings
+	ServicesToRestart []string `json:"servicesToRestart"`
 }
 
 func processSettings(
@@ -31,34 +35,78 @@ func processSettings(
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}
-	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
-	if !exists {
-		return fmt.Errorf("could not find settings for %s", utils.FullyQualifiedModuleName)
-	}
-	var settings config.HyperdriveEthereumConfigSettings
-	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
+
+	// Process the settings
+	response, err := processSettingsImpl(request.CurrentSettings, request.NewSettings)
 	if err != nil {
-		return fmt.Errorf("error loading settings: %w", err)
+		return err
 	}
 
-	errors := []string{}
-
-	ports := map[string]uint16{}
-
-	if settings.ServerConfig.PortMode != config.PortMode_Closed {
-		ports[ids.ServerConfigID+"/"+ids.PortModeID] = uint16(settings.ServerConfig.Port)
-	}
-
-	response := processConfigResponse{
-		Errors: errors,
-		Ports:  ports,
-	}
-
+	// Marshal it
 	bytes, err := json.Marshal(response)
 	if err != nil {
-		return fmt.Errorf("error marshalling process-config response: %w", err)
+		return fmt.Errorf("error marshalling process-settings response: %w", err)
 	}
 
+	// Print it
 	fmt.Println(string(bytes))
 	return nil
+}
+
+// Process the settings
+func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettings *hdconfig.HyperdriveSettings) (*processSettingsResponse, error) {
+	// Construct the old (current) module settings from the Hyperdrive config
+	var oldSettings config.HyperdriveEthereumConfigSettings
+	oldModInstance, exists := oldHdSettings.Modules[utils.FullyQualifiedModuleName]
+	if !exists {
+		// Create an instance with the default settings
+		cfg := config.HyperdriveEthereumConfigSettings{}
+		oldModSettings := modconfig.CreateModuleSettings(cfg)
+		err := oldModSettings.ConvertToKnownType(&oldSettings)
+		if err != nil {
+			return nil, fmt.Errorf("error creating default settings: %w", err)
+		}
+	} else {
+		err := oldModInstance.DeserializeSettingsIntoKnownType(&oldSettings)
+		if err != nil {
+			return nil, fmt.Errorf("error loading old settings: %w", err)
+		}
+	}
+
+	// Construct the new (proposed) module settings from the Hyperdrive config
+	var newSettings config.HyperdriveEthereumConfigSettings
+	newModInstance, exists := newHdSettings.Modules[utils.FullyQualifiedModuleName]
+	if !exists {
+		return nil, fmt.Errorf("could not find new settings for %s", utils.FullyQualifiedModuleName)
+	}
+	err := newModInstance.DeserializeSettingsIntoKnownType(&newSettings)
+	if err != nil {
+		return nil, fmt.Errorf("error loading new settings: %w", err)
+	}
+
+	// This is where any examples of validation will go when added
+	errors := []string{}
+
+	// Get the open ports
+	ports := map[string]uint16{}
+	if newSettings.ServerConfig.PortMode != config.PortMode_Closed {
+		ports[ids.ServerConfigID.String()+"/"+ids.PortID.String()] = uint16(newSettings.ServerConfig.Port)
+	}
+
+	// Get the list of services that need to be restarted
+	servicesToRestart, err := newSettings.GetChangedServices(&oldSettings)
+	if err != nil {
+		return nil, fmt.Errorf("error getting changed services: %w", err)
+	}
+	if servicesToRestart == nil {
+		servicesToRestart = []string{}
+	}
+
+	// Create the response
+	response := &ProcessSettingsResponse{
+		Errors:            errors,
+		Ports:             ports,
+		ServicesToRestart: servicesToRestart,
+	}
+	return response, nil
 }

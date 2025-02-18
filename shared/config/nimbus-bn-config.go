@@ -51,27 +51,27 @@ func NewNimbusBnConfig() *NimbusBnConfig {
 	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
-	cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.PruningMode.ID = config.Identifier(ids.NimbusPruningModeID)
 	cfg.PruningMode.Name = "Pruning Mode"
 	cfg.PruningMode.Description.Default = "Choose how Nimbus will prune its database. Highlight each option to learn more about it."
-	cfg.PruningMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.PruningMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.PruningMode.ID = config.Identifier(ids.NimbusPruningModeID)
 	cfg.PruningMode.Name = "Pruning Mode"
 	cfg.PruningMode.Description.Default = "Choose how Nimbus will prune its database. Highlight each option to learn more about it."
-	cfg.PruningMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.PruningMode.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Nimbus Beacon Node container you want to use on Docker Hub."
-	cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that aren't covered here."
-	cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	// cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 
 	return cfg
 }
