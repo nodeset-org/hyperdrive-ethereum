@@ -9,7 +9,6 @@ import (
 
 	dt "github.com/docker/docker/api/types"
 	dtc "github.com/docker/docker/api/types/container"
-	docker "github.com/docker/docker/client"
 
 	"github.com/nodeset-org/hyperdrive-daemon/shared/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/utils"
@@ -63,7 +62,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
 	// Start only the Beacon Node and Execution Client
 	fmt.Println("Starting Beacon Node and Execution Client...")
-	err = hd.StartService([]string{
+	err = cfg.DockerConfig.StartService([]string{
 		"beacon-node",
 		"execution-client",
 	})
@@ -106,7 +105,7 @@ func checkForValidatorChange(cfg *HyperdriveEthereumConfigSettings) (bool, error
 	// Get the list of any VCs that can't be safely started yet
 	longestRemainingTime := time.Duration(0)
 	for _, vc := range vcs {
-		remainingTime, err := checkValidatorClient(vc, newTagMap)
+		remainingTime, err := checkValidatorClient(cfg, vc, newTagMap)
 		if err != nil {
 			return false, err
 		}
@@ -173,9 +172,9 @@ func showSlashingDelay(remainingTime time.Duration) {
 	fmt.Println("You may now safely start Hyperdrive without fear of being slashed.")
 }
 
-func checkValidatorClient(vcName string, newTagMap map[string]string) (time.Duration, error) {
+func checkValidatorClient(c *HyperdriveEthereumConfigSettings, vcName string, newTagMap map[string]string) (time.Duration, error) {
 	// Get the current and pending VC images
-	currentTag, err := GetDockerImage(vcName)
+	currentTag, err := GetDockerImage(c, vcName)
 	if err != nil {
 		return 0, fmt.Errorf("error getting Docker image tag for [%s]: %w", vcName, err)
 	}
@@ -194,20 +193,20 @@ func checkValidatorClient(vcName string, newTagMap map[string]string) (time.Dura
 		fmt.Printf("Validator Client [%s] is still [%s] - no slashing prevention delay necessary.\n", vcName, currentVcType)
 		return 0, nil
 	} else {
-		validatorFinishTime, err := GetDockerContainerShutdownTime(vcName)
+		validatorFinishTime, err := GetDockerContainerShutdownTime(c, vcName)
 		if err != nil {
 			return 0, fmt.Errorf("error getting VC [%s] shutdown time: %w", vcName, err)
 		}
 
 		// If it hasn't exited yet, shut it down
 		zeroTime := time.Time{}
-		status, err := GetDockerStatus(vcName)
+		status, err := GetDockerStatus(c, vcName)
 		if err != nil {
 			return 0, fmt.Errorf("error getting VC [%s] status: %w", vcName, err)
 		}
 		if validatorFinishTime == zeroTime || status == "running" {
 			fmt.Printf("%sValidator Client [%s] is currently running, stopping it...%s\n", terminal.ColorYellow, vcName, terminal.ColorReset)
-			err := StopContainer(vcName)
+			err := StopContainer(c, vcName)
 			if err != nil {
 				return 0, fmt.Errorf("error stopping VC [%s]: %w", vcName, err)
 			}
@@ -233,8 +232,8 @@ func checkValidatorClient(vcName string, newTagMap map[string]string) (time.Dura
 	}
 }
 
-func StopContainer(containerName string) error {
-	d, err := c.GetDocker()
+func StopContainer(c *HyperdriveEthereumConfigSettings, containerName string) error {
+	d, err := c.DockerConfig.GetDocker()
 	if err != nil {
 		return err
 	}
@@ -242,8 +241,8 @@ func StopContainer(containerName string) error {
 }
 
 // Get the current Docker image used by the given container
-func GetDockerStatus(containerName string) (string, error) {
-	ci, err := inspectContainer(containerName)
+func GetDockerStatus(c *HyperdriveEthereumConfigSettings, containerName string) (string, error) {
+	ci, err := inspectContainer(c, containerName)
 	if err != nil {
 		return "", err
 	}
@@ -271,8 +270,8 @@ func getDockerImageName(image string) (string, error) {
 	return imageName, nil
 }
 
-func GetDockerContainerShutdownTime(containerName string) (time.Time, error) {
-	ci, err := inspectContainer(containerName)
+func GetDockerContainerShutdownTime(c *HyperdriveEthereumConfigSettings, containerName string) (time.Time, error) {
+	ci, err := inspectContainer(c, containerName)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -285,16 +284,16 @@ func GetDockerContainerShutdownTime(containerName string) (time.Time, error) {
 	return finishTime, nil
 }
 
-func GetDockerImage(containerName string) (string, error) {
-	ci, err := inspectContainer(containerName)
+func GetDockerImage(c *HyperdriveEthereumConfigSettings, containerName string) (string, error) {
+	ci, err := inspectContainer(c, containerName)
 	if err != nil {
 		return "", err
 	}
 	return ci.Config.Image, nil
 }
 
-func inspectContainer(container string) (dt.ContainerJSON, error) {
-	d, err := GetDocker()
+func inspectContainer(c *HyperdriveEthereumConfigSettings, container string) (dt.ContainerJSON, error) {
+	d, err := c.DockerConfig.GetDocker()
 	if err != nil {
 		return dt.ContainerJSON{}, err
 	}
@@ -305,21 +304,8 @@ func inspectContainer(container string) (dt.ContainerJSON, error) {
 	return ci, nil
 }
 
-// Get the Docker client
-func GetDocker() (*docker.Client, error) {
-	if c.docker == nil {
-		var err error
-		c.docker, err = docker.NewClientWithOpts(docker.WithAPIVersionNegotiation())
-		if err != nil {
-			return nil, fmt.Errorf("error creating Docker client: %w", err)
-		}
-	}
-
-	return c.docker, nil
-}
-
 func (c *HyperdriveEthereumConfigSettings) GetValidatorContainers(projectName string) ([]string, error) {
-	d, err := c.GetDocker()
+	d, err := c.DockerConfig.GetDocker()
 	if err != nil {
 		return nil, err
 	}
