@@ -10,9 +10,99 @@ import (
 )
 
 const (
-	oldSettingsJson string = `{"version":"","projectName":"hde-test","apiPort":8080,"enableIPv6":false,"userDataPath":"/tmp/hde-adapter-test/data","additionalDockerNetworks":"","clientTimeout":30,"containerTag":"nodeset/hyperdrive:v2.0.0-dev","logging":{"level":"info","format":"logfmt","addSource":false,"maxSize":20,"maxBackups":3,"maxAge":90,"localTime":false,"compress":true},"modules":{"NodeSet/example-module":{"enabled":true,"version":"0.2.0","settings":{"exampleBool":false,"exampleChoice":"one","exampleFloat":50,"exampleInt":0,"exampleString":"","exampleUint":42,"server":{"port":8080,"portMode":"closed"},"subConfig":{"subConfigBool":false,"subConfigChoice":"two"}}}}}`
+	oldSettingsJson string = `{
+        "modules": {
+            "NodeSet/hyperdrive-ethereum": {
+                "enabled": true,
+                "version": "0.2.0",
+                "settings": {
+                    "projectName": "hyperdrive-ethereum",
+                    "apiPort": 8085,
+                    "autoTxMaxFee": 100.5,
+                    "maxPriorityFee": 2,
+                    "autoTxGasThreshold": 1.5,
+                    "network": "mainnet",
+                    "clientMode": "local",
+                    "localExecutionClient": {
+                        "executionClient": "geth",
+                        "httpPort": 8545,
+                        "wsPort": 8546,
+                        "enginePort": 8551,
+                        "openApiPorts": "open",
+                        "p2pPort": 30303
+                    },
+                    "externalExecutionClient": {
+                        "endpoint": "https://external-execution-node.io",
+                        "enginePort": 8552
+                    },
+                    "localBeaconClient": {
+                        "checkpointSyncProvider": "https://beacon-node.io"
+                    },
+                    "externalBeaconClient": {
+                        "endpoint": "https://external-beacon-node.io"
+                    },
+                    "fallback": {
+                        "enabled": true,
+                        "retryDelay": 5
+                    },
+                    "server": {
+                        "port": 8085,
+                        "portMode": "open"
+                    },
+                    "containerTag": "v0.2.0",
+                    "version": "0.2.0",
+                    "isNew": false
+                }
+            }
+        }
+    }`
 
-	newSettingsJson string = `{"version":"","projectName":"hde-test","apiPort":8080,"enableIPv6":false,"userDataPath":"/tmp/hde-adapter-test/data","additionalDockerNetworks":"","clientTimeout":10,"containerTag":"nodeset/hyperdrive:v2.0.0-dev","logging":{"level":"info","format":"logfmt","addSource":false,"maxSize":20,"maxBackups":3,"maxAge":90,"localTime":false,"compress":true},"modules":{"NodeSet/example-module":{"enabled":true,"version":"0.2.0","settings":{"exampleBool":false,"exampleChoice":"one","exampleFloat":80,"exampleInt":0,"exampleString":"","exampleUint":42,"server":{"port":8085,"portMode":"open"},"subConfig":{"subConfigBool":false,"subConfigChoice":"two"}}}}}`
+	newSettingsJson string = `{
+        "modules": {
+            "NodeSet/hyperdrive-ethereum": {
+                "enabled": true,
+                "version": "0.3.0",
+                "settings": {
+                    "projectName": "hyperdrive-ethereum",
+                    "apiPort": 8085,
+                    "autoTxMaxFee": 100.5,
+                    "maxPriorityFee": 2,
+                    "autoTxGasThreshold": 1.5,
+                    "network": "mainnet",
+                    "clientMode": "local",
+                    "localExecutionClient": {
+                        "executionClient": "geth",
+                        "httpPort": 8545,
+                        "wsPort": 8546,
+                        "enginePort": 8551,
+                        "openApiPorts": "open",
+                        "p2pPort": 30303
+                    },
+                    "externalExecutionClient": {
+                        "endpoint": "https://external-execution-node.io",
+                        "enginePort": 8552
+                    },
+                    "localBeaconClient": {
+                        "checkpointSyncProvider": "https://beacon-node.io"
+                    },
+                    "externalBeaconClient": {
+                        "endpoint": "https://external-beacon-node.io"
+                    },
+                    "fallback": {
+                        "enabled": true,
+                        "retryDelay": 5
+                    },
+                    "server": {
+                        "port": 8085,
+                        "portMode": "open"
+                    },
+                    "containerTag": "v0.3.0",
+                    "version": "0.3.0",
+                    "isNew": true
+                }
+            }
+        }
+    }`
 )
 
 func TestProcessSettings(t *testing.T) {

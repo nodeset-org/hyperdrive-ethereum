@@ -97,13 +97,13 @@ type HyperdriveEthereumConfigSettings struct {
 	Network    sharedconfig.Network `json:"network"`
 	ClientMode ClientMode           `json:"clientMode"`
 
-	LocalBeaconClient    *LocalBeaconClientSettings         `json:"localBeaconClient"`
-	ExternalBeaconClient *sharedconfig.ExternalBeaconConfig `json:"externalBeaconClient"`
+	LocalBeaconClient    *LocalBeaconClientSettings                 `json:"localBeaconClient"`
+	ExternalBeaconClient *sharedconfig.ExternalBeaconConfigSettings `json:"externalBeaconClient"`
 
-	LocalExecutionClient    *sharedconfig.LocalExecutionConfig    `json:"localExecutionClient"`
-	ExternalExecutionClient *sharedconfig.ExternalExecutionConfig `json:"externalExecutionClient"`
+	LocalExecutionClient    *sharedconfig.LocalExecutionConfigSettings    `json:"localExecutionClient"`
+	ExternalExecutionClient *sharedconfig.ExternalExecutionConfigSettings `json:"externalExecutionClient"`
 
-	Fallback *sharedconfig.FallbackConfig `json:"fallback"`
+	Fallback *sharedconfig.FallbackConfigSettings `json:"fallback"`
 
 	ContainerTag string `json:"containerTag"`
 
@@ -123,13 +123,11 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg.ApiPort.Name = "Service API Port"
 	cfg.ApiPort.Description.Default = "The port that Hyperdrive's API server should run on within the internal Docker network. Note this is bound to the local machine only; it cannot be accessed by other machines."
 	cfg.ApiPort.Default = uint64(DefaultApiPort)
-	// cfg.ApiPort.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Container Tag
 	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Service Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Hyperdrive Daemon image to use."
-	// cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_Daemon)}
 	cfg.ContainerTag.OverwriteOnUpgrade = true
 	cfg.ContainerTag.Default = hyperdriveTag
 
@@ -138,21 +136,18 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg.AutoTxMaxFee.Name = "Auto TX Max Fee"
 	cfg.AutoTxMaxFee.Description.Default = "Set this if you want all of Hyperdrive's automatic transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will use the suggested max fee based on the current network conditions.\n\nAny other value will ignore the network suggestion and use this value instead."
 	cfg.AutoTxMaxFee.Default = DefaultAutoTxMaxFee
-	// cfg.AutoTxMaxFee.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// MaxPriorityFee
 	cfg.MaxPriorityFee.ID = hdconfig.Identifier(ids.MaxPriorityFeeID)
 	cfg.MaxPriorityFee.Name = "Max Priority Fee"
 	cfg.MaxPriorityFee.Description.Default = "The default value for the priority fee (in gwei) for all of your transactions, including automatic ones. This describes how much you're willing to pay *above the network's current base fee* - the higher this is, the more ETH you give to the validators for including your transaction, which generally means it will be included in a block faster (as long as your max fee is sufficiently high to cover the current network conditions).\n\nMust be larger than 0."
 	cfg.MaxPriorityFee.Default = DefaultMaxPriorityFee
-	// cfg.MaxPriorityFee.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// AutoTxGasThreshold
 	cfg.AutoTxGasThreshold.ID = hdconfig.Identifier(ids.AutoTxGasThresholdID)
 	cfg.AutoTxGasThreshold.Name = "Auto TX Gas Threshold"
 	cfg.AutoTxGasThreshold.Description.Default = "The threshold (in gwei) that the recommended network gas price must be under in order for automated transactions to be submitted when due. A value of 0 will disable non-essential automatic transactions.\n\nNOTE: If Auto TX Max Fee is set, this setting will be ignored."
 	cfg.AutoTxGasThreshold.Default = DefaultAutoTxGasThreshold
-	// cfg.AutoTxGasThreshold.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Create the subconfigs
 	cfg.LocalBeaconClient = sharedconfig.NewLocalBeaconConfig()
@@ -208,7 +203,7 @@ func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *
 
 // GetChangedServices returns a list of services that would be affected by the new settings
 func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *HyperdriveEthereumConfigSettings) ([]string, error) {
-	cfg := &HyperdriveEthereumConfig{}
+	cfg := NewHyperdriveEthereumConfig()
 	newModSettings := hdconfig.CreateModuleSettings(cfg)
 	err := newModSettings.CopySettingsFromKnownType(s)
 	if err != nil {
