@@ -23,7 +23,7 @@ build_adapter() {
         fi
         docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t $LOCAL_DOCKER_REGISTRY/nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile --push . || fail "Error building adapter image."
     else
-        docker buildx build --rm --load --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile . || fail "Error building adapter image."
+        docker buildx build --rm --load --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile . || fail "Error building adapter image."
     fi
     echo "done!"
 }
