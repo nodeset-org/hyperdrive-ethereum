@@ -3,7 +3,7 @@
 
 services:
   adapter:
-    image: nodeset/hyperdrive-ethereum-adapter:v0.2.0
+    image: nodeset/hyperdrive-ethereum-adapter:v0.1.0
     container_name: {{.AdapterContainerName}}
     restart: unless-stopped
     entrypoint: /usr/bin/hd-adapter # This is the path to the adapter binary

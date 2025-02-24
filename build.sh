@@ -23,7 +23,7 @@ build_adapter() {
         fi
         docker buildx build --rm --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t $LOCAL_DOCKER_REGISTRY/nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile --push . || fail "Error building adapter image."
     else
-        docker buildx build --rm --load --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile . || fail "Error building adapter image."
+        docker buildx build --rm --load --platform=linux/amd64,linux/arm64 --build-arg BINARIES_PATH=build/$VERSION -t nodeset/hyperdrive-ethereum-adapter:$VERSION -f docker/adapter.dockerfile . || fail "Error building adapter image."
     fi
     echo "done!"
 }
@@ -52,7 +52,7 @@ build_service() {
 build_package() {
     echo -n "Building module package... "
     cd package
-    zip -rq ../build/$VERSION/hyperdrive-example.zip * || fail "Error building module package."
+    zip -rq ../build/$VERSION/hyperdrive-ethereum.zip * || fail "Error building module package."
     cd ..
     echo "done!"
 }
