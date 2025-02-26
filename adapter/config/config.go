@@ -65,22 +65,14 @@ type HyperdriveEthereumConfig struct {
 	// The Docker Hub tag for the daemon container
 	ContainerTag hdconfig.StringParameter
 
-	// Logging
-	// Logging *sharedconfig.LoggingConfig
-
-	// Modules
-	// ModuleConfigs []*hdconfig.ModuleConfig
-
 	// Internal fields
 	Version hdconfig.StringParameter
 
+	ServerConfig *ServerConfig
+	// DockerConfig *Docker
+
 	// Server settings
 	IsNew hdconfig.BoolParameter
-}
-
-type ServerConfigSettings struct {
-	Port     uint64   `json:"port" yaml:"port"`
-	PortMode PortMode `json:"portMode" yaml:"portMode"`
 }
 
 type LocalBeaconClientSettings struct {
@@ -158,6 +150,8 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	// cfg.Metrics = NewMetricsConfig()
 	// cfg.MevBoost = NewMevBoostConfig(cfg)
 
+	cfg.ServerConfig = NewServerConfig()
+
 	return cfg
 }
 
@@ -184,6 +178,7 @@ func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereu
 		Network:            native.Network,
 		// ClientMode:               native.ClientMode,
 		ContainerTag: native.ContainerTag,
+		ServerConfig: &ServerConfigSettings{},
 	}
 	return instance
 }
