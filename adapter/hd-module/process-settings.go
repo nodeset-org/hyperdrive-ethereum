@@ -13,8 +13,6 @@ import (
 )
 
 type ProcessSettingsRequest struct {
-	utils.KeyedRequest
-
 	// The current config settings
 	CurrentSettings *hdconfig.HyperdriveSettings `json:"currentSettings"`
 
@@ -32,12 +30,10 @@ type ProcessSettingsResponse struct {
 	ServicesToRestart []string `json:"servicesToRestart"`
 }
 
-func processSettings(
-	c *cli.Context,
-	handler utils.KeyedRequestHandler[*ProcessSettingsRequest]) error {
-	request, err := handler.HandleKeyedRequest(c)
+func processSettings(c *cli.Context) error {
+	request, err := utils.HandleRequest[*ProcessSettingsRequest](c)
 	if err != nil {
-		return fmt.Errorf("error reading set-settings request: %w", err)
+		return fmt.Errorf("error reading process-settings request: %w", err)
 	}
 
 	// Process the settings

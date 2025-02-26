@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type setSettingsRequest struct {
+type SetSettingsRequest struct {
 	utils.KeyedRequest
 
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
@@ -18,8 +18,8 @@ type setSettingsRequest struct {
 
 func setSettings(
 	c *cli.Context,
-	handler utils.KeyedRequestHandler[*setSettingsRequest],
-	configManagerFactory func(*cli.Context) (config.AdapterConfigManagerInterface, error),
+	handler utils.KeyedRequestHandler[*SetSettingsRequest],
+	cfgMgr config.AdapterConfigManagerInterface,
 ) error {
 	request, err := handler.HandleKeyedRequest(c)
 	if err != nil {
@@ -37,10 +37,6 @@ func setSettings(
 		return fmt.Errorf("error loading settings: %w", err)
 	}
 
-	cfgMgr, err := configManagerFactory(c)
-	if err != nil {
-		return fmt.Errorf("error creating config manager: %w", err)
-	}
 	err = cfgMgr.SetAdapterConfig(&settings)
 	if err != nil {
 		return fmt.Errorf("error setting config: %w", err)

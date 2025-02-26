@@ -1,6 +1,8 @@
 package hdmodule
 
 import (
+	"fmt"
+
 	adapterApp "github.com/nodeset-org/hyperdrive-ethereum/adapter/app"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
@@ -48,24 +50,28 @@ func RegisterCommands(app *cli.App) {
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
-					handler := utils.DefaultKeyedRequestHandler[*ProcessSettingsRequest]{}
 
 					// Run
-					return processSettings(c, handler)
+					return processSettings(c)
 				},
 			},
 			{
 				Name:    "set-settings",
-				Aliases: []string{"s"},
+				Aliases: []string{"ss"},
 				Flags:   []cli.Flag{},
 				Usage:   "Sets the module's configuration, saving it to disk.",
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
-					handler := utils.DefaultKeyedRequestHandler[*setSettingsRequest]{}
+					handler := utils.DefaultKeyedRequestHandler[*SetSettingsRequest]{}
+					cfgMgr, err := config.NewAdapterConfigManager(c)
+
+					if err != nil {
+						return fmt.Errorf("error creating config manager: %w", err)
+					}
 
 					// Run
-					return setSettings(c, handler, config.NewAdapterConfigManager)
+					return setSettings(c, handler, cfgMgr)
 				},
 			},
 			{
