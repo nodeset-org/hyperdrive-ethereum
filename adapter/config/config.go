@@ -166,7 +166,9 @@ func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 }
 
 func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
-	return []hdconfig.ISection{}
+	return []hdconfig.ISection{
+		cfg.ServerConfig,
+	}
 }
 
 func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumSettings) *HyperdriveEthereumConfigSettings {
