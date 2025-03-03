@@ -12,6 +12,9 @@ type LocalExecutionConfig struct {
 	// The selected EC
 	ExecutionClient hdconfig.ChoiceParameter[ExecutionClient] //Parameter[ExecutionClient]
 
+	// The Hostname
+	HostName hdconfig.StringParameter
+
 	// The HTTP API port
 	HttpPort hdconfig.UintParameter
 
@@ -36,6 +39,7 @@ type LocalExecutionConfig struct {
 
 type LocalExecutionConfigSettings struct {
 	ExecutionClient ExecutionClient `json:"executionClient"`
+	HostName        string          `json:"hostName"`
 	HttpPort        uint64          `json:"httpPort"`
 	WebsocketPort   uint64          `json:"wsPort"`
 	EnginePort      uint64          `json:"enginePort"`

@@ -72,11 +72,8 @@ type HyperdriveEthereumConfig struct {
 	// DockerConfig *Docker
 
 	// Server settings
-	IsNew hdconfig.BoolParameter
-}
-
-type LocalBeaconClientSettings struct {
-	CheckpointSyncProvider string `json:"checkpointSyncProvider"`
+	IsNew      hdconfig.BoolParameter
+	ExternalIp hdconfig.StringParameter
 }
 
 type HyperdriveEthereumConfigSettings struct {
@@ -89,11 +86,11 @@ type HyperdriveEthereumConfigSettings struct {
 	Network    sharedconfig.Network `json:"network"`
 	ClientMode ClientMode           `json:"clientMode"`
 
-	LocalBeaconClient    *LocalBeaconClientSettings                 `json:"localBeaconClient"`
-	ExternalBeaconClient *sharedconfig.ExternalBeaconConfigSettings `json:"externalBeaconClient"`
-
 	LocalExecutionClient    *sharedconfig.LocalExecutionConfigSettings    `json:"localExecutionClient"`
 	ExternalExecutionClient *sharedconfig.ExternalExecutionConfigSettings `json:"externalExecutionClient"`
+
+	LocalBeaconClient    *sharedconfig.LocalBeaconConfigSettings    `json:"localBeaconClient"`
+	ExternalBeaconClient *sharedconfig.ExternalBeaconConfigSettings `json:"externalBeaconClient"`
 
 	Fallback *sharedconfig.FallbackConfigSettings `json:"fallback"`
 
@@ -102,9 +99,10 @@ type HyperdriveEthereumConfigSettings struct {
 	Version string `json:"version"`
 
 	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
-	DockerConfig *DockerSettings       `json:"dockerConfig"`
+	// DockerConfig *DockerSettings       `json:"dockerConfig"`
 
-	IsNew bool `json:"isNew"`
+	IsNew      bool   `json:"isNew"`
+	ExternalIp string `json:"externalIp"`
 }
 
 func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
@@ -226,16 +224,16 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 	return changedServices, nil
 }
 
-func (c *HyperdriveEthereumConfigSettings) GetDockerArtifactName(moduleName string) string {
-	switch moduleName {
-	case "beacon-node":
-		return c.DockerConfig.BeaconNodeContainer
-	case "execution-client":
-		return c.DockerConfig.ExecutionClientContainer
-	default:
-		return ""
-	}
-}
+// func (c *HyperdriveEthereumConfigSettings) GetDockerArtifactName(moduleName string) string {
+// 	switch moduleName {
+// 	case "beacon-node":
+// 		return c.DockerConfig.BeaconNodeContainer
+// 	case "execution-client":
+// 		return c.DockerConfig.ExecutionClientContainer
+// 	default:
+// 		return ""
+// 	}
+// }
 
 func (c *HyperdriveEthereumConfigSettings) GetAllModuleConfigs() []any {
 	return []any{

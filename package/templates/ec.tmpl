@@ -1,14 +1,14 @@
 services:
-  beacon-node:
-    image: {{.GetValue "server/containerTag"}}_bn
-    container_name: {{.ModuleComposeProject}}_bn # Container names are provided by Hyperdrive to handle conflicts
+  execution-client:
+    image: {{.GetValue "server/containerTag"}}
+    container_name: {{.ModuleComposeProject}}_ec # Container names are provided by Hyperdrive to handle conflicts
     restart: unless-stopped
     ports:
       - "127.0.0.1:{{.GetValue "server/port"}}:{{.GetValue "server/port"}}/tcp" # Restricted to localhost outside of Docker
     volumes:
       - {{.ModuleConfigDir}}:{{.ModuleConfigDir}}:ro # The module's config directory
       - {{.ModuleLogDir}}:{{.ModuleLogDir}} # The module's log directory
-      - {{.ModuleDataDir}}:/ethclient
+      - {{.ModuleDataDir}}:/execution-data
     command:
       - "--config-file"
       - "{{.ModuleConfigDir}}/service-cfg.yaml" # The module's config directory

@@ -52,25 +52,25 @@ func RegisterCommands(app *cli.App) {
 					return resyncBeaconNode(c)
 				},
 			},
-			{
-				Name:    "start",
-				Aliases: []string{"s"},
-				Usage:   "Start the Hyperdrive service",
-				Flags: []cli.Flag{
-					ignoreSlashTimerFlag,
-					// nodeset.RegisterEmailFlag,
-					// wallet.PasswordFlag,
-					// wallet.SavePasswordFlag,
-					// utils.YesFlag,
-				},
-				Action: func(c *cli.Context) error {
-					// Validate args
-					utils.ValidateArgCount(c, 0)
+			// {
+			// 	Name:    "start",
+			// 	Aliases: []string{"s"},
+			// 	Usage:   "Start the Hyperdrive service",
+			// 	Flags: []cli.Flag{
+			// 		ignoreSlashTimerFlag,
+			// 		// nodeset.RegisterEmailFlag,
+			// 		// wallet.PasswordFlag,
+			// 		// wallet.SavePasswordFlag,
+			// 		// utils.YesFlag,
+			// 	},
+			// 	Action: func(c *cli.Context) error {
+			// 		// Validate args
+			// 		utils.ValidateArgCount(c, 0)
 
-					// Run command
-					return startService(c, false)
-				},
-			},
+			// 		// Run command
+			// 		return startService(c, false)
+			// 	},
+			// },
 		},
 	})
 }
