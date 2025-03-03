@@ -34,6 +34,12 @@ const (
 
 	// The path to the secret key file for authentication in project mode
 	KeyFileEnvVarName string = "HD_KEY_FILE"
+
+	// In project mode, the path to the instantiated compose file dir
+	ComposeDirEnvVarName string = "HD_COMPOSE_DIR"
+
+	// The name of the Docker Compose project for this module
+	ComposeProjectEnvVarName string = "HD_COMPOSE_PROJECT"
 )
 
 var (
@@ -143,4 +149,10 @@ var (
 
 	// The path to the secret key file for authentication in project mode
 	KeyFile string = os.Getenv(KeyFileEnvVarName)
+
+	// If in project mode, the path to the instantiated compose file dir
+	ComposeDir string = os.Getenv(ComposeDirEnvVarName)
+
+	// The name of the Docker Compose project for this module in project mode
+	ComposeProject string = os.Getenv(ComposeProjectEnvVarName)
 )

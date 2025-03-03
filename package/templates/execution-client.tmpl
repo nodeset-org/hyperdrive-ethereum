@@ -1,6 +1,6 @@
 services:
   execution-client:
-    image: {{.GetValue "server/containerTag"}})_ec
+    image: {{.GetValue "server/containerTag"}}_ec
     container_name: {{.ModuleComposeProject}}_ec # Container names are provided by Hyperdrive to handle conflicts
     restart: unless-stopped
     ports:

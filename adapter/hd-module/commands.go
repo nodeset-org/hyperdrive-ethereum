@@ -75,6 +75,19 @@ func RegisterCommands(app *cli.App) {
 				},
 			},
 			{
+				Name:    "start",
+				Aliases: []string{"s"},
+				Flags:   []cli.Flag{},
+				Usage:   "Start the module's services (stopping and restarting any that changed due to the new configuration).",
+				Action: func(c *cli.Context) error {
+					// Validate args
+					utils.ValidateArgCount(c, 0)
+
+					// Run
+					return startServices(c)
+				},
+			},
+			{
 				Name:    "run",
 				Aliases: []string{"r"},
 				Flags:   []cli.Flag{},
