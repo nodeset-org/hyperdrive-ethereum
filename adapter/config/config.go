@@ -43,6 +43,7 @@ type HyperdriveEthereumConfig struct {
 	AutoTxMaxFee       hdconfig.FloatParameter
 	MaxPriorityFee     hdconfig.FloatParameter
 	AutoTxGasThreshold hdconfig.FloatParameter
+	EnableIPv6         hdconfig.BoolParameter
 
 	Network    hdconfig.ChoiceParameter[sharedconfig.Network] // hdconfig.Parameter[config.Network]
 	ClientMode hdconfig.ChoiceParameter[ClientMode]           // hdconfig.Parameter[config.ClientMode]
@@ -82,6 +83,7 @@ type HyperdriveEthereumConfigSettings struct {
 	AutoTxMaxFee       float64 `json:"autoTxMaxFee"`
 	MaxPriorityFee     float64 `json:"maxPriorityFee"`
 	AutoTxGasThreshold float64 `json:"autoTxGasThreshold"`
+	EnableIPv6         bool    `json:"enableIPv6"`
 
 	Network    sharedconfig.Network `json:"network"`
 	ClientMode ClientMode           `json:"clientMode"`
