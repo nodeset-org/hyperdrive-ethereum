@@ -10,7 +10,7 @@ services:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"
       {{- if eq .GetValue "localBeaconClient/beaconNode" "lighthouse"}}
-      - "{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort}}:{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort}}/udp"
+      - "{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}:{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}/udp"
       {{- end}}
       {{- range $entry := .GetValueArrays "localBeaconConfig/openPorts" ","}}
       - "{{$entry}}"
@@ -29,8 +29,8 @@ services:
       - CLIENT={{.GetValue "localBeaconClient/beaconNode"}}
       - EC_HTTP_ENDPOINT={{.GetValue "externalExecutionClient/httpUrl"}}
       - EC_WS_ENDPOINT={{.GetValue "externalExecutionClient/wsUrl"}}
-      - EC_ENGINE_ENDPOINT=http://{{.GetValue "localExecutionClient/hostName"}}}:{{.GetValue "localExecutionClient/enginePort"}}
-      - EC_ENGINE_WS_ENDPOINT=ws://{{.GetValue "localExecutionClient/hostName"}}}:{{.GetValue "localExecutionClient/enginePort"}}
+      - EC_ENGINE_ENDPOINT=http://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
+      - EC_ENGINE_WS_ENDPOINT=ws://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
       - BN_P2P_PORT={{.GetValue "localBeaconConfig/p2pPort"}}
       - BN_API_PORT={{.GetValue "localBeaconConfig/httpPort"}}
 
@@ -47,7 +47,7 @@ services:
       {{- else if eq .GetValue "localBeaconClient/beaconNode" "nimbus"}}
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/nimbus/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/nimbus/additionalFlags"}}
-      - NIMBUS_PRUNING_MODE={{.GetValue "localBeaconClient/nimbus/pruningMode}}
+      - NIMBUS_PRUNING_MODE={{.GetValue "localBeaconClient/nimbus/pruningMode"}}
       {{- else if eq .GetValue "localBeaconClient/beaconNode" "lighthouse"}}
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/lighthouse/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/lighthouse/additionalFlags"}}
@@ -77,10 +77,10 @@ services:
       - no-new-privileges
 networks:
   net:
-    {{- if .GetValue "enableIPv6"  }}
+    {{- if .GetValue "enableIPv6" }}
     enable_ipv6: true
-    {{- end}}
-  {{- range $network := .GetValueArray "localBeaconConfig/additionalDockerNetworks", ""}}
+    {{- end }}
+  {{- range $network := .GetValueArrays "localBeaconConfig/additionalDockerNetworks" ","}}
   {{$network}}:
     external: true
   {{- end}}
