@@ -6,7 +6,13 @@ services:
     restart: unless-stopped
     stop_grace_period: 15m
     {{- $p2p := (or .GetValue "localExecutionClient/p2pPort" "30303")}}
-    ports: [ "{{$p2p}}:{{$p2p}}/udp", "{{$p2p}}:{{$p2p}}/tcp"{{.GetValue "localExecutionClient/openApiPorts"}} ]
+    ports:
+      - "{{$p2p}}:{{$p2p}}/udp"
+      - "{{$p2p}}:{{$p2p}}/tcp"
+      {{- range .GetValueArrays "localExecutionClient/openApiPorts" "," }}
+      - "{{ . }}"
+      {{- end }}
+
     volumes:
       - ecdata:/ethclient
       - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
@@ -23,7 +29,7 @@ services:
       - EC_HTTP_PORT={{.GetValue "localExecutionClient.httpPort"}}
       - EC_WS_PORT={{.GetValue "localExecutionClient.wsPort"}}
       - EC_ENGINE_PORT={{.GetValue "localExecutionClient.enginePort"}}
-      - EXTERNAL_IP={{.GetValue "enableIPv6"}}
+      - EXTERNAL_IP={{.GetValue "externalIp"}}
       - ENABLE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableMetrics}}
       - EC_METRICS_PORT=9100 # TODO: {{.Hyperdrive.Metrics.EcMetricsPort}}
 

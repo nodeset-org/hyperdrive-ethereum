@@ -11,7 +11,6 @@ require (
 	github.com/goccy/go-json v0.10.3
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/nodeset-org/hyperdrive v1.1.2-0.20250210082200-d068f870b4ae
-	github.com/nodeset-org/hyperdrive-daemon v1.1.2
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.5
@@ -22,32 +21,26 @@ require (
 require (
 	al.essio.dev/pkg/shellescape v1.5.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/alessio/shellescape v1.4.2 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
+	github.com/containerd/log v0.1.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
-	github.com/fatih/color v1.17.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/google/uuid v1.6.0 // indirect
-	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/holiman/uint256 v1.3.1 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/term v0.5.2 // indirect
+	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rocket-pool/node-manager-core v0.5.2-0.20250131084113-629a058ee7a6 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/sethvargo/go-password v0.3.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect
@@ -59,6 +52,6 @@ require (
 	golang.org/x/crypto v0.25.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/time v0.9.0 // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gotest.tools/v3 v3.5.1 // indirect
 )

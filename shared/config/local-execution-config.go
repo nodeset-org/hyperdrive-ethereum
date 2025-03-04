@@ -41,19 +41,18 @@ type LocalExecutionConfig struct {
 }
 
 type LocalExecutionConfigSettings struct {
-	ExecutionClient          ExecutionClient `json:"executionClient"`
-	HostName                 string          `json:"hostName"`
-	HttpPort                 uint64          `json:"httpPort"`
-	WebsocketPort            uint64          `json:"wsPort"`
-	EnginePort               uint64          `json:"enginePort"`
-	OpenApiPorts             RpcPortMode     `json:"openApiPorts"`
-	P2pPort                  uint64          `json:"p2pPort"`
-	AdditionalDockerNetworks string          `json:"additionalDockerNetworks"`
-
-	Geth       *GethConfigSettings       `json:"geth"`
-	Nethermind *NethermindConfigSettings `json:"nethermind"`
-	Besu       *BesuConfigSettings       `json:"besu"`
-	Reth       *RethConfigSettings       `json:"reth"`
+	ExecutionClient          ExecutionClient           `json:"executionClient"`
+	HostName                 string                    `json:"hostName"`
+	HttpPort                 uint64                    `json:"httpPort"`
+	WebsocketPort            uint64                    `json:"wsPort"`
+	EnginePort               uint64                    `json:"enginePort"`
+	OpenApiPorts             RpcPortMode               `json:"openApiPorts"`
+	P2pPort                  uint64                    `json:"p2pPort"`
+	AdditionalDockerNetworks string                    `json:"additionalDockerNetworks"`
+	Geth                     *GethConfigSettings       `json:"geth"`
+	Nethermind               *NethermindConfigSettings `json:"nethermind"`
+	Besu                     *BesuConfigSettings       `json:"besu"`
+	Reth                     *RethConfigSettings       `json:"reth"`
 }
 
 // Create a new LocalExecutionConfig struct
