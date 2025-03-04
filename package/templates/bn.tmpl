@@ -33,6 +33,15 @@ services:
       - EC_ENGINE_WS_ENDPOINT=ws://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
       - BN_P2P_PORT={{.GetValue "localBeaconConfig/p2pPort"}}
       - BN_API_PORT={{.GetValue "localBeaconConfig/httpPort"}}
+      - ENABLE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableMetrics}}
+      - BN_METRICS_PORT=9100 # TODO: {{.Hyperdrive.Metrics.BnMetricsPort}}
+      - EXTERNAL_IP={{.GetValue "externalIp"}} # TODO: {{.ExternalIP}}
+      - CHECKPOINT_SYNC_URL={{.GetValue "localBeaconClient/checkpointSyncProvider"}}
+      - ENABLE_BITFLY_NODE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableBitflyNodeMetrics}}
+      - BITFLY_NODE_METRICS_SECRET=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.BitflyNodeMetrics.Secret}}
+      - BITFLY_NODE_METRICS_ENDPOINT=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.BitflyNodeMetrics.Endpoint}}
+      - BITFLY_NODE_METRICS_MACHINE_NAME=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.BitflyNodeMetrics.MachineName}}
+      - MEV_BOOST_URL=http://0.0.0.0/ # TODO: Implement MevBoost {{.Hyperdrive.MevBoostUrl}}
 
       {{- /* Client-specific values */}}
       {{- if eq .GetValue "localBeaconClient/beaconNode" "teku"}}
@@ -56,16 +65,6 @@ services:
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/lodestar/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/lodestar/additionalFlags"}}
       {{- end}}
-
-      - ENABLE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableMetrics}}
-      - BN_METRICS_PORT=9100 # TODO: {{.Hyperdrive.Metrics.BnMetricsPort}}
-      - EXTERNAL_IP={{.GetValue "externalIp"}} # TODO: {{.ExternalIP}}
-      - CHECKPOINT_SYNC_URL={{.GetValue "localBeaconClient/checkpointSyncProvider"}}
-      - ENABLE_BITFLY_NODE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableBitflyNodeMetrics}}
-      - BITFLY_NODE_METRICS_SECRET=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.BitflyNodeMetrics.Secret}}
-      - BITFLY_NODE_METRICS_ENDPOINT=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.BitflyNodeMetrics.Endpoint}}
-      - BITFLY_NODE_METRICS_MACHINE_NAME=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.BitflyNodeMetrics.MachineName}}
-      - MEV_BOOST_URL=http://0.0.0.0/ # TODO: Implement MevBoost {{.Hyperdrive.MevBoostUrl}}
 
     entrypoint: sh
     command: "/usr/share/hyperdrive/scripts/start-bn.sh"

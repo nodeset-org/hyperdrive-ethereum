@@ -30,6 +30,9 @@ type LocalExecutionConfig struct {
 	// P2P traffic port
 	P2pPort hdconfig.UintParameter
 
+	//Comma separated
+	AdditionalDockerNetworks hdconfig.StringParameter
+
 	// Subconfigs
 	Geth       *GethConfig
 	Nethermind *NethermindConfig
@@ -38,13 +41,14 @@ type LocalExecutionConfig struct {
 }
 
 type LocalExecutionConfigSettings struct {
-	ExecutionClient ExecutionClient `json:"executionClient"`
-	HostName        string          `json:"hostName"`
-	HttpPort        uint64          `json:"httpPort"`
-	WebsocketPort   uint64          `json:"wsPort"`
-	EnginePort      uint64          `json:"enginePort"`
-	OpenApiPorts    RpcPortMode     `json:"openApiPorts"`
-	P2pPort         uint64          `json:"p2pPort"`
+	ExecutionClient          ExecutionClient `json:"executionClient"`
+	HostName                 string          `json:"hostName"`
+	HttpPort                 uint64          `json:"httpPort"`
+	WebsocketPort            uint64          `json:"wsPort"`
+	EnginePort               uint64          `json:"enginePort"`
+	OpenApiPorts             RpcPortMode     `json:"openApiPorts"`
+	P2pPort                  uint64          `json:"p2pPort"`
+	AdditionalDockerNetworks string          `json:"additionalDockerNetworks"`
 
 	Geth       *GethConfigSettings       `json:"geth"`
 	Nethermind *NethermindConfigSettings `json:"nethermind"`

@@ -44,8 +44,8 @@ type LocalBeaconConfigSettings struct {
 	P2pPort                  uint64      `json:"p2pPort"`
 	HttpPort                 uint64      `json:"httpPort"`
 	OpenHttpPort             RpcPortMode `json:"openHttpPort"`
-	OpenPorts                []uint64    `json:"openPorts"`
-	AdditionalDockerNetworks []string    `json:"additionalDockerNetworks"`
+	OpenPorts                uint64      `json:"openPorts"`
+	AdditionalDockerNetworks string      `json:"additionalDockerNetworks"`
 
 	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse"`
 	Lodestar   *LodestarBnConfigSettings   `json:"lodestar"`
