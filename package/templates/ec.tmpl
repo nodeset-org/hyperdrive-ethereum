@@ -9,8 +9,8 @@ services:
     ports:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"
-      {{- range .GetValueArrays "localExecutionClient/openApiPorts" "," }}
-      - "{{ . }}"
+      {{- range $entry := .GetValueArrays "localExecutionClient/openApiPorts" "," }}
+        - "{{$entry}}"
       {{- end }}
 
     volumes:
