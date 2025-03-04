@@ -24,6 +24,12 @@ type LocalBeaconConfig struct {
 	// Toggle for forwarding the HTTP API port outside of Docker
 	OpenHttpPort hdconfig.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
 
+	//Comma separated
+	OpenPorts hdconfig.StringParameter
+
+	//Comma separated
+	AdditionalDockerNetworks hdconfig.StringParameter
+
 	// Subconfigs
 	Lighthouse *LighthouseBnConfig
 	Lodestar   *LodestarBnConfig
@@ -33,11 +39,13 @@ type LocalBeaconConfig struct {
 }
 
 type LocalBeaconConfigSettings struct {
-	BeaconNode             BeaconNode  `json:"beaconNode"`
-	CheckpointSyncProvider string      `json:"checkpointSyncProvider"`
-	P2pPort                uint64      `json:"p2pPort"`
-	HttpPort               uint64      `json:"httpPort"`
-	OpenHttpPort           RpcPortMode `json:"openHttpPort"`
+	BeaconNode               BeaconNode  `json:"beaconNode"`
+	CheckpointSyncProvider   string      `json:"checkpointSyncProvider"`
+	P2pPort                  uint64      `json:"p2pPort"`
+	HttpPort                 uint64      `json:"httpPort"`
+	OpenHttpPort             RpcPortMode `json:"openHttpPort"`
+	OpenPorts                []uint64    `json:"openPorts"`
+	AdditionalDockerNetworks []string    `json:"additionalDockerNetworks"`
 
 	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse"`
 	Lodestar   *LodestarBnConfigSettings   `json:"lodestar"`
