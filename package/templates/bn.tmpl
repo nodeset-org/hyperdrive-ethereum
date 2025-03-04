@@ -5,14 +5,14 @@ services:
     container_name: {{.ModuleComposeProject}}_bn
     restart: unless-stopped
     stop_grace_period: 3m
-    {{- $p2p := (or .GetValue "localBeaconConfig/p2pPort" "9001")}}
+    {{- $p2p := (or (.GetValue "localBeaconClient/p2pPort") "9001")}}
     ports:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"
       {{- if eq .GetValue "localBeaconClient/beaconNode" "lighthouse"}}
       - "{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}:{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}/udp"
       {{- end}}
-      {{- range $entry := .GetValueArrays "localBeaconConfig/openPorts" ","}}
+      {{- range $entry := .GetValueArrays "localBeaconClient/openPorts" ","}}
       - "{{$entry}}"
       {{- end}}
     volumes:
@@ -21,7 +21,7 @@ services:
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets:ro
     networks:
       - net
-      {{- range $network := .GetValueArrays "localBeaconConfig/additionalDockerNetworks" ","}}
+      {{- range $network := .GetValueArrays "localBeaconClient/additionalDockerNetworks" ","}}
       - {{$network}}
       {{- end}}
     environment:
@@ -31,8 +31,8 @@ services:
       - EC_WS_ENDPOINT={{.GetValue "externalExecutionClient/wsUrl"}}
       - EC_ENGINE_ENDPOINT=http://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
       - EC_ENGINE_WS_ENDPOINT=ws://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
-      - BN_P2P_PORT={{.GetValue "localBeaconConfig/p2pPort"}}
-      - BN_API_PORT={{.GetValue "localBeaconConfig/httpPort"}}
+      - BN_P2P_PORT={{.GetValue "localBeaconClient/p2pPort"}}
+      - BN_API_PORT={{.GetValue "localBeaconClient/httpPort"}}
       - ENABLE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableMetrics}}
       - BN_METRICS_PORT=9100 # TODO: {{.Hyperdrive.Metrics.BnMetricsPort}}
       - EXTERNAL_IP={{.GetValue "externalIp"}} # TODO: {{.ExternalIP}}
@@ -79,7 +79,7 @@ networks:
     {{- if .GetValue "enableIPv6" }}
     enable_ipv6: true
     {{- end }}
-  {{- range $network := .GetValueArrays "localBeaconConfig/additionalDockerNetworks" ","}}
+  {{- range $network := .GetValueArrays "localBeaconClient/additionalDockerNetworks" ","}}
   {{$network}}:
     external: true
   {{- end}}

@@ -41,18 +41,18 @@ type LocalExecutionConfig struct {
 }
 
 type LocalExecutionConfigSettings struct {
-	ExecutionClient          ExecutionClient           `json:"executionClient"`
-	HostName                 string                    `json:"hostName"`
-	HttpPort                 uint64                    `json:"httpPort"`
-	WebsocketPort            uint64                    `json:"wsPort"`
-	EnginePort               uint64                    `json:"enginePort"`
-	OpenApiPorts             RpcPortMode               `json:"openApiPorts"`
-	P2pPort                  uint64                    `json:"p2pPort"`
-	AdditionalDockerNetworks string                    `json:"additionalDockerNetworks"`
-	Geth                     *GethConfigSettings       `json:"geth"`
-	Nethermind               *NethermindConfigSettings `json:"nethermind"`
-	Besu                     *BesuConfigSettings       `json:"besu"`
-	Reth                     *RethConfigSettings       `json:"reth"`
+	ExecutionClient          ExecutionClient           `json:"executionClient" yaml:"executionClient"`
+	HostName                 string                    `json:"hostName" yaml:"hostName"`
+	HttpPort                 uint64                    `json:"httpPort" yaml:"httpPort"`
+	WebsocketPort            uint64                    `json:"wsPort" yaml:"wsPort"`
+	EnginePort               uint64                    `json:"enginePort" yaml:"enginePort"`
+	OpenApiPorts             RpcPortMode               `json:"openApiPorts" yaml:"openApiPorts"`
+	P2pPort                  uint64                    `json:"p2pPort" yaml:"p2pPort"`
+	AdditionalDockerNetworks string                    `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
+	Geth                     *GethConfigSettings       `json:"geth" yaml:"geth"`
+	Nethermind               *NethermindConfigSettings `json:"nethermind" yaml:"nethermind"`
+	Besu                     *BesuConfigSettings       `json:"besu" yaml:"besu"`
+	Reth                     *RethConfigSettings       `json:"reth" yaml:"reth"`
 }
 
 // Create a new LocalExecutionConfig struct

@@ -18,9 +18,9 @@ type ExternalExecutionConfig struct {
 }
 
 type ExternalExecutionConfigSettings struct {
-	ExecutionClient ExecutionClient `json:"executionClient"`
-	HttpUrl         string          `json:"httpUrl"`
-	WebsocketUrl    string          `json:"wsUrl"`
+	ExecutionClient ExecutionClient `json:"executionClient" yaml:"executionClient"`
+	HttpUrl         string          `json:"httpUrl" yaml:"httpUrl"`
+	WebsocketUrl    string          `json:"wsUrl" yaml:"wsUrl"`
 }
 
 // Generates a new ExternalExecutionConfig configuration

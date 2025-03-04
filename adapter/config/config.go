@@ -78,33 +78,33 @@ type HyperdriveEthereumConfig struct {
 }
 
 type HyperdriveEthereumConfigSettings struct {
-	ProjectName        string  `json:"projectName"`
-	ApiPort            uint    `json:"apiPort"`
-	AutoTxMaxFee       float64 `json:"autoTxMaxFee"`
-	MaxPriorityFee     float64 `json:"maxPriorityFee"`
-	AutoTxGasThreshold float64 `json:"autoTxGasThreshold"`
-	EnableIPv6         bool    `json:"enableIPv6"`
+	ProjectName        string  `json:"projectName" yaml:"projectName"`
+	ApiPort            uint    `json:"apiPort" yaml:"apiPort"`
+	AutoTxMaxFee       float64 `json:"autoTxMaxFee" yaml:"autoTxMaxFee"`
+	MaxPriorityFee     float64 `json:"maxPriorityFee" yaml:"maxPriorityFee"`
+	AutoTxGasThreshold float64 `json:"autoTxGasThreshold" yaml:"autoTxGasThreshold"`
+	EnableIPv6         bool    `json:"enableIPv6" yaml:"enableIPv6"`
 
-	Network    sharedconfig.Network `json:"network"`
-	ClientMode ClientMode           `json:"clientMode"`
+	Network    sharedconfig.Network `json:"network" yaml:"network"`
+	ClientMode ClientMode           `json:"clientMode" yaml:"clientMode"`
 
-	LocalExecutionClient    *sharedconfig.LocalExecutionConfigSettings    `json:"localExecutionClient"`
-	ExternalExecutionClient *sharedconfig.ExternalExecutionConfigSettings `json:"externalExecutionClient"`
+	LocalExecutionClient    *sharedconfig.LocalExecutionConfigSettings    `json:"localExecutionClient" yaml:"localExecutionClient"`
+	ExternalExecutionClient *sharedconfig.ExternalExecutionConfigSettings `json:"externalExecutionClient" yaml:"externalExecutionClient"`
 
-	LocalBeaconClient    *sharedconfig.LocalBeaconConfigSettings    `json:"localBeaconClient"`
-	ExternalBeaconClient *sharedconfig.ExternalBeaconConfigSettings `json:"externalBeaconClient"`
+	LocalBeaconClient    *sharedconfig.LocalBeaconConfigSettings    `json:"localBeaconClient" yaml:"localBeaconClient"`
+	ExternalBeaconClient *sharedconfig.ExternalBeaconConfigSettings `json:"externalBeaconClient" yaml:"externalBeaconClient"`
 
-	Fallback *sharedconfig.FallbackConfigSettings `json:"fallback"`
+	Fallback *sharedconfig.FallbackConfigSettings `json:"fallback" yaml:"fallback"`
 
-	ContainerTag string `json:"containerTag"`
+	ContainerTag string `json:"containerTag" yaml:"containerTag"`
 
-	Version string `json:"version"`
+	Version string `json:"version" yaml:"version"`
 
 	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
 	// DockerConfig *DockerSettings       `json:"dockerConfig"`
 
-	IsNew      bool   `json:"isNew"`
-	ExternalIp string `json:"externalIp"`
+	IsNew      bool   `json:"isNew" yaml:"isNew"`
+	ExternalIp string `json:"externalIp" yaml:"externalIp"`
 }
 
 func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {

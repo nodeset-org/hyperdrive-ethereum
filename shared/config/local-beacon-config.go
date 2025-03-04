@@ -39,19 +39,19 @@ type LocalBeaconConfig struct {
 }
 
 type LocalBeaconConfigSettings struct {
-	BeaconNode               BeaconNode  `json:"beaconNode"`
-	CheckpointSyncProvider   string      `json:"checkpointSyncProvider"`
-	P2pPort                  uint64      `json:"p2pPort"`
-	HttpPort                 uint64      `json:"httpPort"`
-	OpenHttpPort             RpcPortMode `json:"openHttpPort"`
-	OpenPorts                uint64      `json:"openPorts"`
-	AdditionalDockerNetworks string      `json:"additionalDockerNetworks"`
+	BeaconNode               BeaconNode  `json:"beaconNode" yaml:"beaconNode"`
+	CheckpointSyncProvider   string      `json:"checkpointSyncProvider" yaml:"checkpointSyncProvider"`
+	P2pPort                  uint64      `json:"p2pPort" yaml:"p2pPort"`
+	HttpPort                 uint64      `json:"httpPort" yaml:"httpPort"`
+	OpenHttpPort             RpcPortMode `json:"openHttpPort" yaml:"openHttpPort"`
+	OpenPorts                uint64      `json:"openPorts" yaml:"openPorts"`
+	AdditionalDockerNetworks string      `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
 
-	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse"`
-	Lodestar   *LodestarBnConfigSettings   `json:"lodestar"`
-	Nimbus     *NimbusBnConfigSettings     `json:"nimbus"`
-	Prysm      *PrysmBnConfigSettings      `json:"prysm"`
-	Teku       *TekuBnConfigSettings       `json:"teku"`
+	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse" yaml:"lighthouse"`
+	Lodestar   *LodestarBnConfigSettings   `json:"lodestar" yaml:"lodestar"`
+	Nimbus     *NimbusBnConfigSettings     `json:"nimbus" yaml:"nimbus"`
+	Prysm      *PrysmBnConfigSettings      `json:"prysm" yaml:"prysm"`
+	Teku       *TekuBnConfigSettings       `json:"teku" yaml:"teku"`
 }
 
 // Create a new LocalBeaconConfig struct

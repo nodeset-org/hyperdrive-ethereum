@@ -37,14 +37,14 @@ type LoggingConfig struct {
 }
 
 type LoggingConfigSettings struct {
-	Level      logging.LogLevel  `json:"level"`
-	Format     logging.LogFormat `json:"format"`
-	AddSource  bool              `json:"addSource"`
-	MaxSize    uint64            `json:"maxSize"`
-	MaxBackups uint64            `json:"maxBackups"`
-	MaxAge     uint64            `json:"maxAge"`
-	LocalTime  bool              `json:"localTime"`
-	Compress   bool              `json:"compress"`
+	Level      logging.LogLevel  `json:"level" yaml:"level"`
+	Format     logging.LogFormat `json:"format" yaml:"format"`
+	AddSource  bool              `json:"addSource" yaml:"addSource"`
+	MaxSize    uint64            `json:"maxSize" yaml:"maxSize"`
+	MaxBackups uint64            `json:"maxBackups" yaml:"maxBackups"`
+	MaxAge     uint64            `json:"maxAge" yaml:"maxAge"`
+	LocalTime  bool              `json:"localTime" yaml:"localTime"`
+	Compress   bool              `json:"compress" yaml:"compress"`
 }
 
 // Generates a new Logger configuration

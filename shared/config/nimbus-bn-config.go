@@ -38,10 +38,10 @@ type NimbusBnConfig struct {
 }
 
 type NimbusBnConfigSettings struct {
-	MaxPeers        uint64 `json:"maxPeers"`
-	ContainerTag    string `json:"containerTag"`
-	PruningMode     string `json:"pruningMode"`
-	AdditionalFlags string `json:"additionalFlags"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	PruningMode     string `json:"pruningMode" yaml:"pruningMode"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Nimbus configuration

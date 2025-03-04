@@ -30,11 +30,11 @@ type TekuBnConfig struct {
 }
 
 type TekuBnConfigSettings struct {
-	JvmHeapSize     uint64 `json:"jvmHeapSize"`
-	MaxPeers        uint64 `json:"maxPeers"`
-	ArchiveMode     bool   `json:"archiveMode"`
-	ContainerTag    string `json:"containerTag"`
-	AdditionalFlags string `json:"additionalFlags"`
+	JvmHeapSize     uint64 `json:"jvmHeapSize" yaml:"jvmHeapSize"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	ArchiveMode     bool   `json:"archiveMode" yaml:"archiveMode"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Teku BN configuration

@@ -22,9 +22,9 @@ type LodestarBnConfig struct {
 }
 
 type LodestarBnConfigSettings struct {
-	MaxPeers        uint64 `json:"maxPeers"`
-	ContainerTag    string `json:"containerTag"`
-	AdditionalFlags string `json:"additionalFlags"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Lodestar BN configuration

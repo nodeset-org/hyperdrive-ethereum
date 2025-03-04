@@ -21,10 +21,10 @@ type FallbackConfig struct {
 }
 
 type FallbackConfigSettings struct {
-	UseFallbackClients bool   `json:"useFallbackClients"`
-	EcHttpUrl          string `json:"ecHttpUrl"`
-	BnHttpUrl          string `json:"bnHttpUrl"`
-	PrysmRpcUrl        string `json:"prysmRpcUrl"`
+	UseFallbackClients bool   `json:"useFallbackClients" yaml:"useFallbackClients"`
+	EcHttpUrl          string `json:"ecHttpUrl" yaml:"ecHttpUrl"`
+	BnHttpUrl          string `json:"bnHttpUrl" yaml:"bnHttpUrl"`
+	PrysmRpcUrl        string `json:"prysmRpcUrl" yaml:"prysmRpcUrl"`
 }
 
 // Generates a new FallbackConfig configuration

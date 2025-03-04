@@ -46,15 +46,15 @@ type NethermindConfig struct {
 }
 
 type NethermindConfigSettings struct {
-	CacheSize              uint64 `json:"cacheSize"`
-	MaxPeers               uint64 `json:"maxPeers"`
-	PruneMemSize           uint64 `json:"pruneMemSize"`
-	FullPruneMemoryBudget  uint64 `json:"fullPruneMemoryBudget"`
-	FullPruningThresholdMb uint64 `json:"fullPruningThresholdMb"`
-	AdditionalModules      string `json:"additionalModules"`
-	AdditionalUrls         string `json:"additionalUrls"`
-	ContainerTag           string `json:"containerTag"`
-	AdditionalFlags        string `json:"additionalFlags"`
+	CacheSize              uint64 `json:"cacheSize" yaml:"cacheSize"`
+	MaxPeers               uint64 `json:"maxPeers" yaml:"maxPeers"`
+	PruneMemSize           uint64 `json:"pruneMemSize" yaml:"pruneMemSize"`
+	FullPruneMemoryBudget  uint64 `json:"fullPruneMemoryBudget" yaml:"fullPruneMemoryBudget"`
+	FullPruningThresholdMb uint64 `json:"fullPruningThresholdMb" yaml:"fullPruningThresholdMb"`
+	AdditionalModules      string `json:"additionalModules" yaml:"additionalModules"`
+	AdditionalUrls         string `json:"additionalUrls" yaml:"additionalUrls"`
+	ContainerTag           string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags        string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Nethermind configuration

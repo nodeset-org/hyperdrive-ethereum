@@ -26,10 +26,10 @@ type LighthouseBnConfig struct {
 }
 
 type LighthouseBnConfigSettings struct {
-	P2pQuicPort     uint64 `json:"p2pQuicPort"`
-	MaxPeers        uint64 `json:"maxPeers"`
-	ContainerTag    string `json:"containerTag"`
-	AdditionalFlags string `json:"additionalFlags"`
+	P2pQuicPort     uint64 `json:"p2pQuicPort" yaml:"p2pQuicPort"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Lighthouse BN configuration

@@ -33,11 +33,11 @@ type GethConfig struct {
 }
 
 type GethConfigSettings struct {
-	MaxPeers        uint64 `json:"maxPeers"`
-	EvmTimeout      uint64 `json:"evmTimeout"`
-	ArchiveMode     bool   `json:"archiveMode"`
-	ContainerTag    string `json:"containerTag"`
-	AdditionalFlags string `json:"additionalFlags"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	EvmTimeout      uint64 `json:"evmTimeout" yaml:"evmTimeout"`
+	ArchiveMode     bool   `json:"archiveMode" yaml:"archiveMode"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Geth configuration

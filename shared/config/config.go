@@ -14,20 +14,20 @@ const (
 )
 
 type NativeHyperdriveEthereumSettings struct {
-	EnableIPv6               bool    `json:"enableIPv6"`
-	ProjectName              string  `json:"projectName"`
-	ApiPort                  uint    `json:"apiPort"`
-	UserDataPath             string  `json:"userDataPath"`
-	AutoTxMaxFee             float64 `json:"autoTxMaxFee"`
-	MaxPriorityFee           float64 `json:"maxPriorityFee"`
-	AutoTxGasThreshold       float64 `json:"autoTxGasThreshold"`
-	AdditionalDockerNetworks string  `json:"additionalDockerNetworks"`
-	ClientTimeout            uint    `json:"clientTimeout"`
+	EnableIPv6               bool    `json:"enableIPv6" yaml:"enableIPv6"`
+	ProjectName              string  `json:"projectName" yaml:"projectName"`
+	ApiPort                  uint    `json:"apiPort" yaml:"apiPort"`
+	UserDataPath             string  `json:"userDataPath" yaml:"userDataPath"`
+	AutoTxMaxFee             float64 `json:"autoTxMaxFee" yaml:"autoTxMaxFee"`
+	MaxPriorityFee           float64 `json:"maxPriorityFee" yaml:"maxPriorityFee"`
+	AutoTxGasThreshold       float64 `json:"autoTxGasThreshold" yaml:"autoTxGasThreshold"`
+	AdditionalDockerNetworks string  `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
+	ClientTimeout            uint    `json:"clientTimeout" yaml:"clientTimeout"`
 
-	Network    Network    `json:"network"`
-	ClientMode ClientMode `json:"clientMode"`
+	Network    Network    `json:"network" yaml:"network"`
+	ClientMode ClientMode `json:"clientMode" yaml:"clientMode"`
 
-	ContainerTag string `json:"containerTag"`
+	ContainerTag string `json:"containerTag" yaml:"containerTag"`
 }
 
 // Configuration manager

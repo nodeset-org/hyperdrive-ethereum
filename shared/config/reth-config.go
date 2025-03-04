@@ -32,11 +32,11 @@ type RethConfig struct {
 }
 
 type RethConfigSettings struct {
-	CacheSize        uint64 `json:"cacheSize"`
-	MaxInboundPeers  uint64 `json:"maxInboundPeers"`
-	MaxOutboundPeers uint64 `json:"maxOutboundPeers"`
-	ContainerTag     string `json:"containerTag"`
-	AdditionalFlags  string `json:"additionalFlags"`
+	CacheSize        uint64 `json:"cacheSize" yaml:"cacheSize"`
+	MaxInboundPeers  uint64 `json:"maxInboundPeers" yaml:"maxInboundPeers"`
+	MaxOutboundPeers uint64 `json:"maxOutboundPeers" yaml:"maxOutboundPeers"`
+	ContainerTag     string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags  string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Reth configuration

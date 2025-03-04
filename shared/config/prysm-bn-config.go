@@ -29,11 +29,11 @@ type PrysmBnConfig struct {
 }
 
 type PrysmBnConfigSettings struct {
-	MaxPeers        uint64 `json:"maxPeers"`
-	RpcPort         uint64 `json:"rpcPort"`
-	OpenRpcPort     string `json:"openRpcPort"`
-	ContainerTag    string `json:"containerTag"`
-	AdditionalFlags string `json:"additionalFlags"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	RpcPort         uint64 `json:"rpcPort" yaml:"rpcPort"`
+	OpenRpcPort     string `json:"openRpcPort" yaml:"openRpcPort"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Prysm BN configuration

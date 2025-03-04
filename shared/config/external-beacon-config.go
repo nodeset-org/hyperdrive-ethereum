@@ -18,9 +18,9 @@ type ExternalBeaconConfig struct {
 }
 
 type ExternalBeaconConfigSettings struct {
-	BeaconNode  BeaconNode `json:"beaconNode"`
-	HttpUrl     string     `json:"httpUrl"`
-	PrysmRpcUrl string     `json:"prysmRpcUrl"`
+	BeaconNode  BeaconNode `json:"beaconNode" yaml:"beaconNode"`
+	HttpUrl     string     `json:"httpUrl" yaml:"httpUrl"`
+	PrysmRpcUrl string     `json:"prysmRpcUrl" yaml:"prysmRpcUrl"`
 }
 
 // Generates a new ExternalBeaconConfig configuration

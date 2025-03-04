@@ -5,7 +5,7 @@ services:
     container_name: {{.ModuleComposeProject}}_ec
     restart: unless-stopped
     stop_grace_period: 15m
-    {{- $p2p := (or .GetValue "localExecutionClient/p2pPort" "30303")}}
+    {{- $p2p := (or (.GetValue "localExecutionClient/p2pPort") "30303")}}
     ports:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"

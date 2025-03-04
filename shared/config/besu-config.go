@@ -33,12 +33,12 @@ type BesuConfig struct {
 }
 
 type BesuConfigSettings struct {
-	JvmHeapSize     uint64 `json:"jvmHeapSize"`
-	MaxPeers        uint64 `json:"maxPeers"`
-	MaxBackLayers   uint64 `json:"maxBackLayers"`
-	ArchiveMode     bool   `json:"archiveMode"`
-	ContainerTag    string `json:"containerTag"`
-	AdditionalFlags string `json:"additionalFlags"`
+	JvmHeapSize     uint64 `json:"jvmHeapSize" yaml:"jvmHeapSize"`
+	MaxPeers        uint64 `json:"maxPeers" yaml:"maxPeers"`
+	MaxBackLayers   uint64 `json:"maxBackLayers" yaml:"maxBackLayers"`
+	ArchiveMode     bool   `json:"archiveMode" yaml:"archiveMode"`
+	ContainerTag    string `json:"containerTag" yaml:"containerTag"`
+	AdditionalFlags string `json:"additionalFlags" yaml:"additionalFlags"`
 }
 
 // Generates a new Besu configuration
