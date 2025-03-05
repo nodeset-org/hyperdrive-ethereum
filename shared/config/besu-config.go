@@ -13,6 +13,8 @@ const (
 
 // Configuration for Besu
 type BesuConfig struct {
+	hdconfig.SectionHeader
+
 	// Max number of P2P peers to connect to
 	JvmHeapSize hdconfig.UintParameter
 
@@ -44,6 +46,7 @@ type BesuConfigSettings struct {
 // Generates a new Besu configuration
 func NewBesuConfig() *BesuConfig {
 	cfg := &BesuConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalEcBesuID)
 
 	// TODO: Get these reviewed
 	cfg.JvmHeapSize.ID = hdconfig.Identifier(ids.BesuJvmHeapSizeID)
@@ -115,7 +118,7 @@ func (cfg *BesuConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *BesuConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalEcBesuID)
 }
 
 func (cfg *BesuConfig) GetName() string {

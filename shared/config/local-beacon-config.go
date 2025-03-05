@@ -9,6 +9,8 @@ import (
 
 // Common parameters shared by all of the Beacon Clients
 type LocalBeaconConfig struct {
+	hdconfig.SectionHeader
+
 	// The selected BN
 	BeaconNode hdconfig.ChoiceParameter[BeaconNode] //Parameter[BeaconNode]
 
@@ -57,6 +59,9 @@ type LocalBeaconConfigSettings struct {
 // Create a new LocalBeaconConfig struct
 func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg := &LocalBeaconConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalBnID)
+	cfg.Name = "Local Beacon Node"
+	cfg.Description.Default = "Configure your local Beacon Node settings here."
 
 	cfg.Lighthouse = NewLighthouseBnConfig()
 	cfg.Lodestar = NewLodestarBnConfig()
@@ -148,17 +153,6 @@ func (cfg *LocalBeaconConfig) GetParameters() []hdconfig.IParameter {
 	}
 }
 
-// Get the sections underneath this one
-func (cfg *LocalBeaconConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{
-		ids.LocalBnLighthouseID: cfg.Lighthouse,
-		ids.LocalBnLodestarID:   cfg.Lodestar,
-		ids.LocalBnNimbusID:     cfg.Nimbus,
-		ids.LocalBnPrysmID:      cfg.Prysm,
-		ids.LocalBnTekuID:       cfg.Teku,
-	}
-}
-
 // ==================
 // === Templating ===
 // ==================
@@ -236,5 +230,36 @@ func (cfg *LocalBeaconConfigSettings) GetAdditionalFlags() string {
 		return cfg.Teku.AdditionalFlags
 	default:
 		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
+	}
+}
+
+// TODO: Talk to Joe about these funcs required for ISection
+func (cfg *LocalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LocalBeaconConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalBeaconConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(ids.LocalBnID)
+}
+
+func (cfg *LocalBeaconConfig) GetName() string {
+	return "Local Beacon Node"
+}
+
+func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{
+		cfg.Lighthouse,
+		cfg.Lodestar,
+		cfg.Nimbus,
+		cfg.Prysm,
+		cfg.Teku,
 	}
 }

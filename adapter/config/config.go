@@ -168,6 +168,7 @@ func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{
 		cfg.ServerConfig,
+		cfg.LocalBeaconClient,
 	}
 }
 
@@ -178,9 +179,9 @@ func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereu
 		MaxPriorityFee:     native.MaxPriorityFee,
 		AutoTxGasThreshold: native.AutoTxGasThreshold,
 		Network:            native.Network,
-		// ClientMode:               native.ClientMode,
-		ContainerTag: native.ContainerTag,
-		ServerConfig: &ServerConfigSettings{},
+		ContainerTag:       native.ContainerTag,
+		ServerConfig:       &ServerConfigSettings{},
+		LocalBeaconClient:  &sharedconfig.LocalBeaconConfigSettings{},
 	}
 	return instance
 }

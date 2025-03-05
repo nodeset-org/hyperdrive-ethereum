@@ -15,6 +15,8 @@ const (
 
 // Configuration for Reth
 type RethConfig struct {
+	hdconfig.SectionHeader
+
 	// Size of Reth's Cache
 	CacheSize hdconfig.UintParameter
 
@@ -42,6 +44,7 @@ type RethConfigSettings struct {
 // Generates a new Reth configuration
 func NewRethConfig() *RethConfig {
 	cfg := &RethConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalEcRethID)
 
 	cfg.CacheSize.ID = hdconfig.Identifier(ids.CacheSizeID)
 	cfg.CacheSize.Name = "Cache Size"
@@ -135,9 +138,9 @@ func (cfg *RethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *RethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalEcRethID)
 }
 
 func (cfg *RethConfig) GetName() string {
-	return ""
+	return "Reth"
 }

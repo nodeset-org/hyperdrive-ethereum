@@ -12,6 +12,8 @@ const (
 
 // Configuration for the Prysm BN
 type PrysmBnConfig struct {
+	hdconfig.SectionHeader
+
 	// The max number of P2P peers to connect to
 	MaxPeers hdconfig.UintParameter
 
@@ -39,6 +41,7 @@ type PrysmBnConfigSettings struct {
 // Generates a new Prysm BN configuration
 func NewPrysmBnConfig() *PrysmBnConfig {
 	cfg := &PrysmBnConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalBnPrysmID)
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -118,9 +121,9 @@ func (cfg *PrysmBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *PrysmBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalBnPrysmID)
 }
 
 func (cfg *PrysmBnConfig) GetName() string {
-	return ""
+	return "Prysm"
 }

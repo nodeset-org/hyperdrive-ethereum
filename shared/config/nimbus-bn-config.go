@@ -24,6 +24,7 @@ const (
 
 // Configuration for Nimbus
 type NimbusBnConfig struct {
+	hdconfig.SectionHeader
 	// The max number of P2P peers to connect to
 	MaxPeers config.UintParameter
 
@@ -47,6 +48,7 @@ type NimbusBnConfigSettings struct {
 // Generates a new Nimbus configuration
 func NewNimbusBnConfig() *NimbusBnConfig {
 	cfg := &NimbusBnConfig{}
+	cfg.ID = config.Identifier(ids.LocalBnNimbusID)
 
 	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -122,9 +124,9 @@ func (cfg *NimbusBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *NimbusBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalBnNimbusID)
 }
 
 func (cfg *NimbusBnConfig) GetName() string {
-	return ""
+	return "Nimbus"
 }

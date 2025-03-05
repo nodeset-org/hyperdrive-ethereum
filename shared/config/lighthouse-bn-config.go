@@ -12,6 +12,8 @@ const (
 
 // Configuration for the Lighthouse BN
 type LighthouseBnConfig struct {
+	hdconfig.SectionHeader
+
 	// The port to use for gossip traffic using the QUIC protocol
 	P2pQuicPort hdconfig.UintParameter
 
@@ -35,6 +37,7 @@ type LighthouseBnConfigSettings struct {
 // Generates a new Lighthouse BN configuration
 func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg := &LighthouseBnConfig{}
+	cfg.ID = hdconfig.Identifier((ids.LocalBnLighthouseID))
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -93,11 +96,11 @@ func (cfg *LighthouseBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *LighthouseBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalBnLighthouseID)
 }
 
 func (cfg *LighthouseBnConfig) GetName() string {
-	return ""
+	return "Lighthouse"
 }
 
 func (cfg *LighthouseBnConfig) GetSections() []hdconfig.ISection {

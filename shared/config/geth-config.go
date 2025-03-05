@@ -16,6 +16,8 @@ const (
 
 // Configuration for Geth
 type GethConfig struct {
+	hdconfig.SectionHeader
+
 	// Max number of P2P peers to connect to
 	MaxPeers hdconfig.UintParameter
 
@@ -43,6 +45,7 @@ type GethConfigSettings struct {
 // Generates a new Geth configuration
 func NewGethConfig() *GethConfig {
 	cfg := &GethConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalEcGethID)
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -119,7 +122,7 @@ func (cfg *GethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *GethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalEcGethID)
 }
 
 func (cfg *GethConfig) GetName() string {

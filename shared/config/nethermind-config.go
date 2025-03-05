@@ -221,9 +221,9 @@ func (cfg *NethermindConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *NethermindConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalEcNethermindID)
 }
 
 func (cfg *NethermindConfig) GetName() string {
-	return ""
+	return "Nethermind"
 }

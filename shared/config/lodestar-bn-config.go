@@ -11,6 +11,8 @@ const (
 
 // Configuration for the Lodestar BN
 type LodestarBnConfig struct {
+	hdconfig.SectionHeader
+
 	// The max number of P2P peers to connect to
 	MaxPeers hdconfig.UintParameter
 
@@ -30,6 +32,7 @@ type LodestarBnConfigSettings struct {
 // Generates a new Lodestar BN configuration
 func NewLodestarBnConfig() *LodestarBnConfig {
 	cfg := &LodestarBnConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalBnLodestarID)
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
@@ -50,7 +53,7 @@ func NewLodestarBnConfig() *LodestarBnConfig {
 
 // The title for the config
 func (cfg *LodestarBnConfig) GetTitle() string {
-	return "Lodestar Beacon Node"
+	return "Lodestar"
 }
 
 // Get the parameters for this config
@@ -81,7 +84,7 @@ func (cfg *LodestarBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *LodestarBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalBnLodestarID)
 }
 
 func (cfg *LodestarBnConfig) GetName() string {

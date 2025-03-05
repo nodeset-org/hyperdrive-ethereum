@@ -50,6 +50,8 @@ type LoggingConfigSettings struct {
 // Generates a new Logger configuration
 func NewLoggingConfig() *LoggingConfig {
 	cfg := &LoggingConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LoggingSectionID)
+
 	cfg.SectionHeader.ID = hdconfig.Identifier(ids.LoggingSectionID)
 	cfg.SectionHeader.Name = "Logging"
 	cfg.SectionHeader.Description.Default = "Configure the logging options for the Hyperdrive sercive and any modules that support it."

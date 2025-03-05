@@ -30,8 +30,8 @@ services:
       - EC_WS_PORT={{.GetValue "localExecutionClient.wsPort"}}
       - EC_ENGINE_PORT={{.GetValue "localExecutionClient.enginePort"}}
       - EXTERNAL_IP={{.GetValue "externalIp"}}
-      - ENABLE_METRICS=FALSE # TODO: Implement Metrics {{.Hyperdrive.Metrics.EnableMetrics}}
-      - EC_METRICS_PORT=9100 # TODO: {{.Hyperdrive.Metrics.EcMetricsPort}}
+      - ENABLE_METRICS=FALSE
+      - EC_METRICS_PORT=9100
 
       {{- /* Client-specific values */}}
       {{- if eq .GetValue "localExecutionClient/executionClient" "besu"}}

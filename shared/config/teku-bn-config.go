@@ -13,6 +13,8 @@ const (
 
 // Configuration for Teku
 type TekuBnConfig struct {
+	hdconfig.SectionHeader
+
 	// Max number of P2P peers to connect to
 	JvmHeapSize hdconfig.UintParameter
 
@@ -40,6 +42,7 @@ type TekuBnConfigSettings struct {
 // Generates a new Teku BN configuration
 func NewTekuBnConfig() *TekuBnConfig {
 	cfg := &TekuBnConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalBnTekuID)
 
 	cfg.JvmHeapSize.ID = hdconfig.Identifier(ids.TekuJvmHeapSizeID)
 	cfg.JvmHeapSize.Name = "JVM Heap Size"
@@ -113,9 +116,9 @@ func (cfg *TekuBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *TekuBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier("")
+	return hdconfig.Identifier(ids.LocalBnTekuID)
 }
 
 func (cfg *TekuBnConfig) GetName() string {
-	return ""
+	return "Teku"
 }
