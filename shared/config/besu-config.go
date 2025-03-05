@@ -122,5 +122,5 @@ func (cfg *BesuConfig) GetID() hdconfig.Identifier {
 }
 
 func (cfg *BesuConfig) GetName() string {
-	return ""
+	return "Besu"
 }
