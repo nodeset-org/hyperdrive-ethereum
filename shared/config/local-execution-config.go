@@ -59,7 +59,7 @@ type LocalExecutionConfigSettings struct {
 // Create a new LocalExecutionConfig struct
 func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg := &LocalExecutionConfig{}
-	cfg.ID = hdconfig.Identifier(ids.LocalEcID)
+	cfg.ID = hdconfig.Identifier(ids.EcID)
 
 	//TODO: Confirm these
 
@@ -240,9 +240,9 @@ func (cfg *LocalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *LocalExecutionConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalEcID)
+	return hdconfig.Identifier(ids.EcID)
 }
 
 func (cfg *LocalExecutionConfig) GetName() string {
-	return "Local Execution Client"
+	return "Execution Client"
 }

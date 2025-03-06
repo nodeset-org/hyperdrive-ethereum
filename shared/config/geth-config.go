@@ -126,5 +126,5 @@ func (cfg *GethConfig) GetID() hdconfig.Identifier {
 }
 
 func (cfg *GethConfig) GetName() string {
-	return ""
+	return "Geth"
 }

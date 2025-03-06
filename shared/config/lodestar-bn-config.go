@@ -33,6 +33,9 @@ type LodestarBnConfigSettings struct {
 func NewLodestarBnConfig() *LodestarBnConfig {
 	cfg := &LodestarBnConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalBnLodestarID)
+	cfg.Hidden.Default = true
+	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lodestar\"}}false{{else}}true{{end}}"
+
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."

@@ -38,6 +38,8 @@ type LighthouseBnConfigSettings struct {
 func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg := &LighthouseBnConfig{}
 	cfg.ID = hdconfig.Identifier((ids.LocalBnLighthouseID))
+	cfg.Hidden.Default = true
+	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lighthouse\"}}false{{else}}true{{end}}"
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"

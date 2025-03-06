@@ -49,6 +49,8 @@ type NimbusBnConfigSettings struct {
 func NewNimbusBnConfig() *NimbusBnConfig {
 	cfg := &NimbusBnConfig{}
 	cfg.ID = config.Identifier(ids.LocalBnNimbusID)
+	cfg.Hidden.Default = true
+	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"nimbus\"}}false{{else}}true{{end}}"
 
 	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"

@@ -7,6 +7,11 @@ import (
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
+const (
+	defaultHttpPort = 5052
+	defaultP2pPort  = 9001
+)
+
 // Common parameters shared by all of the Beacon Clients
 type LocalBeaconConfig struct {
 	hdconfig.SectionHeader
@@ -59,7 +64,7 @@ type LocalBeaconConfigSettings struct {
 // Create a new LocalBeaconConfig struct
 func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg := &LocalBeaconConfig{}
-	cfg.ID = hdconfig.Identifier(ids.LocalBnID)
+	cfg.ID = hdconfig.Identifier(ids.BnID)
 	cfg.Name = "Local Beacon Node"
 	cfg.Description.Default = "Configure your local Beacon Node settings here."
 
@@ -74,17 +79,17 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
 		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
 		"Leave this blank if you want to sync normally from the start of the chain."
-	// cfg.CheckpointSyncProvider.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	cfg.CheckpointSyncProvider.Default = ""
 
 	cfg.P2pPort.ID = hdconfig.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
 	cfg.P2pPort.Description.Default = "The port to use for P2P (blockchain) traffic."
-	// cfg.P2pPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	cfg.P2pPort.Default = uint64(defaultP2pPort)
 
 	cfg.HttpPort.ID = hdconfig.Identifier(ids.HttpPortID)
 	cfg.HttpPort.Name = "HTTP API Port"
 	cfg.HttpPort.Description.Default = "The port your Beacon Node should run its HTTP API on."
-	// cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient), string(ContainerID_Prometheus)}
+	cfg.HttpPort.Default = uint64(defaultHttpPort)
 
 	// Options for OpenHttpPort
 	options := make([]hdconfig.ParameterOption[RpcPortMode], 3)
@@ -103,8 +108,8 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.OpenHttpPort.ID = hdconfig.Identifier(ids.OpenHttpPortsID)
 	cfg.OpenHttpPort.Name = "Expose API Port"
 	cfg.OpenHttpPort.Description.Default = "Select an option to expose your Beacon Node's API port to your localhost or external hosts on the network, so other machines can access it too."
-	// cfg.OpenHttpPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
 	cfg.OpenHttpPort.Options = options
+	cfg.OpenHttpPort.Default = RpcPortMode_Closed
 
 	// Options for BeaconNode
 	optionsBeaconNode := make([]hdconfig.ParameterOption[BeaconNode], 5)
@@ -131,15 +136,15 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BnID)
 	cfg.BeaconNode.Name = "Beacon Node"
 	cfg.BeaconNode.Description.Default = "Select which Beacon Node client you would like to use."
-	// cfg.BeaconNode.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_BeaconNode), string(ContainerID_ValidatorClient)}
 	cfg.BeaconNode.Options = optionsBeaconNode
+	cfg.BeaconNode.Default = BeaconNode_Nimbus
 
 	return cfg
 }
 
 // The title for the config
 func (cfg *LocalBeaconConfig) GetTitle() string {
-	return "Local Beacon Node"
+	return "Beacon Node"
 }
 
 // Get the parameters for this config
@@ -247,11 +252,11 @@ func (cfg *LocalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *LocalBeaconConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalBnID)
+	return hdconfig.Identifier(ids.BnID)
 }
 
 func (cfg *LocalBeaconConfig) GetName() string {
-	return "Local Beacon Node"
+	return "Beacon Node"
 }
 
 func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
