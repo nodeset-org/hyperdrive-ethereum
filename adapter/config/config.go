@@ -167,21 +167,23 @@ func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 
 func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{
-		cfg.ServerConfig,
+		// cfg.ServerConfig,
 		cfg.LocalBeaconClient,
+		cfg.LocalExecutionClient,
 	}
 }
 
 func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumSettings) *HyperdriveEthereumConfigSettings {
 	instance := &HyperdriveEthereumConfigSettings{
-		ApiPort:            native.ApiPort,
-		AutoTxMaxFee:       native.AutoTxMaxFee,
-		MaxPriorityFee:     native.MaxPriorityFee,
-		AutoTxGasThreshold: native.AutoTxGasThreshold,
-		Network:            native.Network,
-		ContainerTag:       native.ContainerTag,
-		ServerConfig:       &ServerConfigSettings{},
-		LocalBeaconClient:  &sharedconfig.LocalBeaconConfigSettings{},
+		ApiPort:              native.ApiPort,
+		AutoTxMaxFee:         native.AutoTxMaxFee,
+		MaxPriorityFee:       native.MaxPriorityFee,
+		AutoTxGasThreshold:   native.AutoTxGasThreshold,
+		Network:              native.Network,
+		ContainerTag:         native.ContainerTag,
+		ServerConfig:         &ServerConfigSettings{},
+		LocalBeaconClient:    &sharedconfig.LocalBeaconConfigSettings{},
+		LocalExecutionClient: &sharedconfig.LocalExecutionConfigSettings{},
 	}
 	return instance
 }
@@ -226,17 +228,6 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 	}
 	return changedServices, nil
 }
-
-// func (c *HyperdriveEthereumConfigSettings) GetDockerArtifactName(moduleName string) string {
-// 	switch moduleName {
-// 	case "beacon-node":
-// 		return c.DockerConfig.BeaconNodeContainer
-// 	case "execution-client":
-// 		return c.DockerConfig.ExecutionClientContainer
-// 	default:
-// 		return ""
-// 	}
-// }
 
 func (c *HyperdriveEthereumConfigSettings) GetAllModuleConfigs() []any {
 	return []any{

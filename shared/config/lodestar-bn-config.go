@@ -88,5 +88,5 @@ func (cfg *LodestarBnConfig) GetID() hdconfig.Identifier {
 }
 
 func (cfg *LodestarBnConfig) GetName() string {
-	return ""
+	return "Lodestar"
 }

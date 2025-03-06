@@ -9,6 +9,7 @@ import (
 
 // Configuration for the Execution client
 type LocalExecutionConfig struct {
+	hdconfig.SectionHeader
 	// The selected EC
 	ExecutionClient hdconfig.ChoiceParameter[ExecutionClient] //Parameter[ExecutionClient]
 
@@ -58,6 +59,7 @@ type LocalExecutionConfigSettings struct {
 // Create a new LocalExecutionConfig struct
 func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg := &LocalExecutionConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalEcID)
 
 	//TODO: Confirm these
 
@@ -135,9 +137,9 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 }
 
 // Get the title for the config
-func (cfg *LocalExecutionConfig) GetTitle() string {
-	return "Local Execution Client"
-}
+// func (cfg *LocalExecutionConfig) GetTitle() string {
+// 	return "Local Execution Client"
+// }
 
 // Get the parameters for this config
 func (cfg *LocalExecutionConfig) GetParameters() []hdconfig.IParameter {
@@ -152,12 +154,12 @@ func (cfg *LocalExecutionConfig) GetParameters() []hdconfig.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *LocalExecutionConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{
-		ids.LocalEcBesuID:       cfg.Besu,
-		ids.LocalEcGethID:       cfg.Geth,
-		ids.LocalEcNethermindID: cfg.Nethermind,
-		ids.LocalEcRethID:       cfg.Reth,
+func (cfg *LocalExecutionConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{
+		cfg.Besu,
+		cfg.Geth,
+		cfg.Nethermind,
+		cfg.Reth,
 	}
 }
 
@@ -223,4 +225,24 @@ func (cfg *LocalExecutionConfigSettings) GetAdditionalFlags() string {
 	default:
 		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient)))
 	}
+}
+
+func (cfg *LocalExecutionConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LocalExecutionConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalExecutionConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(ids.LocalEcID)
+}
+
+func (cfg *LocalExecutionConfig) GetName() string {
+	return "Local Execution Client"
 }

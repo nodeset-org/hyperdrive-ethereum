@@ -59,7 +59,7 @@ const (
 	LighthouseQuicPortID string = "p2pQuicPort"
 
 	// Local Beacon Node
-	LocalBnID                  string = "bnId"
+	LocalBnID                  string = "beaconNode"
 	LocalBnCheckpointSyncUrlID string = "checkpointSyncUrl"
 	LocalBnLighthouseID        string = "lighthouse"
 	LocalBnLodestarID          string = "lodestar"
@@ -68,6 +68,7 @@ const (
 	LocalBnTekuID              string = "teku"
 
 	// Local Execution Client
+	LocalEcID              string = "executionClient"
 	LocalEcWebsocketPortID string = "wsPort"
 	LocalEcEnginePortID    string = "enginePort"
 	LocalEcOpenApiPortsID  string = "openApiPorts"
