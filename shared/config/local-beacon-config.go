@@ -68,12 +68,6 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.Name = "Local Beacon Node"
 	cfg.Description.Default = "Configure your local Beacon Node settings here."
 
-	cfg.Lighthouse = NewLighthouseBnConfig()
-	cfg.Lodestar = NewLodestarBnConfig()
-	cfg.Nimbus = NewNimbusBnConfig()
-	cfg.Prysm = NewPrysmBnConfig()
-	cfg.Teku = NewTekuBnConfig()
-
 	cfg.CheckpointSyncProvider.ID = hdconfig.Identifier(ids.LocalBnCheckpointSyncUrlID)
 	cfg.CheckpointSyncProvider.Name = "Checkpoint Sync URL"
 	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
@@ -138,6 +132,12 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.BeaconNode.Description.Default = "Select which Beacon Node client you would like to use."
 	cfg.BeaconNode.Options = optionsBeaconNode
 	cfg.BeaconNode.Default = BeaconNode_Nimbus
+
+	cfg.Lighthouse = NewLighthouseBnConfig()
+	cfg.Lodestar = NewLodestarBnConfig()
+	cfg.Nimbus = NewNimbusBnConfig()
+	cfg.Prysm = NewPrysmBnConfig()
+	cfg.Teku = NewTekuBnConfig()
 
 	return cfg
 }

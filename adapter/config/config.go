@@ -141,14 +141,27 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg.AutoTxGasThreshold.Description.Default = "The threshold (in gwei) that the recommended network gas price must be under in order for automated transactions to be submitted when due. A value of 0 will disable non-essential automatic transactions.\n\nNOTE: If Auto TX Max Fee is set, this setting will be ignored."
 	cfg.AutoTxGasThreshold.Default = DefaultAutoTxGasThreshold
 
+	cfg.EnableIPv6.ID = hdconfig.Identifier(ids.EnableIPv6ID)
+	cfg.EnableIPv6.Name = "Enable IPv6"
+	cfg.EnableIPv6.Description.Default = "Enable IPv6 support for Hyperdrive. This will allow the service to be accessed via IPv6 addresses."
+	cfg.EnableIPv6.Default = DefaultEnableIPv6
+
+	cfg.Network.ID = hdconfig.Identifier(ids.NetworkID)
+	cfg.Network.Name = "Network"
+	cfg.Network.Description.Default = "The network that Hyperdrive should connect to."
+	cfg.Network.Default = sharedconfig.Network_Mainnet
+
+	cfg.ClientMode.ID = hdconfig.Identifier(ids.ClientModeID)
+	cfg.ClientMode.Name = "Client Mode"
+	cfg.ClientMode.Description.Default = "The mode that Hyperdrive should run in."
+	cfg.ClientMode.Default = ClientMode_Local
+
 	// Create the subconfigs
 	cfg.LocalBeaconClient = sharedconfig.NewLocalBeaconConfig()
 	cfg.LocalExecutionClient = sharedconfig.NewLocalExecutionConfig()
 	cfg.ExternalBeaconClient = sharedconfig.NewExternalBeaconConfig()
 	cfg.ExternalExecutionClient = sharedconfig.NewExternalExecutionConfig()
 	cfg.Fallback = sharedconfig.NewFallbackConfig()
-	// cfg.Metrics = NewMetricsConfig()
-	// cfg.MevBoost = NewMevBoostConfig(cfg)
 
 	cfg.ServerConfig = NewServerConfig()
 

@@ -49,18 +49,19 @@ type LocalExecutionConfig struct {
 }
 
 type LocalExecutionConfigSettings struct {
-	ExecutionClient          ExecutionClient           `json:"executionClient" yaml:"executionClient"`
-	HostName                 string                    `json:"hostName" yaml:"hostName"`
-	HttpPort                 uint64                    `json:"httpPort" yaml:"httpPort"`
-	WebsocketPort            uint64                    `json:"wsPort" yaml:"wsPort"`
-	EnginePort               uint64                    `json:"enginePort" yaml:"enginePort"`
-	OpenApiPorts             RpcPortMode               `json:"openApiPorts" yaml:"openApiPorts"`
-	P2pPort                  uint64                    `json:"p2pPort" yaml:"p2pPort"`
-	AdditionalDockerNetworks string                    `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
-	Geth                     *GethConfigSettings       `json:"geth" yaml:"geth"`
-	Nethermind               *NethermindConfigSettings `json:"nethermind" yaml:"nethermind"`
-	Besu                     *BesuConfigSettings       `json:"besu" yaml:"besu"`
-	Reth                     *RethConfigSettings       `json:"reth" yaml:"reth"`
+	ExecutionClient          ExecutionClient `json:"executionClient" yaml:"executionClient"`
+	HostName                 string          `json:"hostName" yaml:"hostName"`
+	HttpPort                 uint64          `json:"httpPort" yaml:"httpPort"`
+	WebsocketPort            uint64          `json:"wsPort" yaml:"wsPort"`
+	EnginePort               uint64          `json:"enginePort" yaml:"enginePort"`
+	OpenApiPorts             RpcPortMode     `json:"openApiPorts" yaml:"openApiPorts"`
+	P2pPort                  uint64          `json:"p2pPort" yaml:"p2pPort"`
+	AdditionalDockerNetworks string          `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
+
+	Geth       *GethConfigSettings       `json:"geth" yaml:"geth"`
+	Nethermind *NethermindConfigSettings `json:"nethermind" yaml:"nethermind"`
+	Besu       *BesuConfigSettings       `json:"besu" yaml:"besu"`
+	Reth       *RethConfigSettings       `json:"reth" yaml:"reth"`
 }
 
 // Create a new LocalExecutionConfig struct
@@ -133,6 +134,7 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.P2pPort.Name = "P2P Port"
 	cfg.P2pPort.Description.Default = "The port the Execution Client should use for P2P (blockchain) traffic to communicate with other nodes."
 	cfg.P2pPort.Default = defaultLocalExecutionP2pPort
+
 	// Create the subconfigs
 	cfg.Geth = NewGethConfig()
 	cfg.Nethermind = NewNethermindConfig()
@@ -141,11 +143,6 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 
 	return cfg
 }
-
-// Get the title for the config
-// func (cfg *LocalExecutionConfig) GetTitle() string {
-// 	return "Local Execution Client"
-// }
 
 // Get the parameters for this config
 func (cfg *LocalExecutionConfig) GetParameters() []hdconfig.IParameter {

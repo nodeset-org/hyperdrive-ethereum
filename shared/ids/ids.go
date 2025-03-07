@@ -122,4 +122,6 @@ const (
 	AutoTxMaxFeeID             string = "autoTxMaxFee"
 	MaxPriorityFeeID           string = "maxPriorityFee"
 	AutoTxGasThresholdID       string = "autoTxGasThreshold"
+	NetworkID                  string = "network"
+	ClientModeID               string = "clientMode"
 )
