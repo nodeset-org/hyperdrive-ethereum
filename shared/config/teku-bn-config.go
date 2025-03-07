@@ -50,26 +50,31 @@ func NewTekuBnConfig() *TekuBnConfig {
 	cfg.JvmHeapSize.Name = "JVM Heap Size"
 	// cfg.JvmHeapSize.Hidden.Default = true
 	cfg.JvmHeapSize.Description.Default = "The max amount of RAM, in MB, that Teku's JVM should limit itself to. Setting this lower will cause Teku to use less RAM, though it will always use more than this limit.\n\nUse 0 for automatic allocation."
+	cfg.JvmHeapSize.Default = getTekuHeapSize()
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	// cfg.MaxPeers.Hidden.Default = true
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
+	cfg.MaxPeers.Default = 100
 
 	cfg.ArchiveMode.ID = hdconfig.Identifier(ids.TekuArchiveModeID)
 	cfg.ArchiveMode.Name = "Enable Archive Mode"
 	// cfg.ArchiveMode.Hidden.Default = true
 	cfg.ArchiveMode.Description.Default = "When enabled, Teku will run in \"archive\" mode which means it can recreate the state of the Beacon chain for a previous block. This is required for manually generating the Merkle rewards tree.\n\nIf you are sure you will never be manually generating a tree, you can disable archive mode."
+	cfg.ArchiveMode.Default = false
 
 	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	// cfg.ContainerTag.Hidden.Default = true
 	cfg.ContainerTag.Description.Default = "The tag name of the Teku container on Docker Hub you want to use for the Beacon Node."
+	cfg.ContainerTag.Default = tekuBnTag
 
 	cfg.AdditionalFlags.ID = hdconfig.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	// cfg.AdditionalFlags.Hidden.Default = true
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Teku's Beacon Node, to take advantage of other settings that aren't covered here."
+	cfg.AdditionalFlags.Default = ""
 
 	return cfg
 }

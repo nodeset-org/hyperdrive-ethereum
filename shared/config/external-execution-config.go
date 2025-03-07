@@ -30,12 +30,12 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
 	cfg.HttpUrl.Description.Default = "The URL of the HTTP RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:8545'."
-	// cfg.HttpUrl.AffectedContainers = []string{string(ContainerID_Daemon)}
+	cfg.HttpUrl.Default = ""
 
 	cfg.WebsocketUrl.ID = hdconfig.Identifier(ids.ExternalEcWebsocketUrlID)
 	cfg.WebsocketUrl.Name = "Websocket URL"
 	cfg.WebsocketUrl.Description.Default = "The URL of the Websocket RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:8546'."
-	// cfg.WebsocketUrl.AffectedContainers = []string{}
+	cfg.WebsocketUrl.Default = ""
 
 	// Options for ExecutionClient
 	options := make([]hdconfig.ParameterOption[ExecutionClient], 4)
@@ -58,8 +58,8 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg.ExecutionClient.ID = hdconfig.Identifier(ids.EcID)
 	cfg.ExecutionClient.Name = "Execution Client"
 	cfg.ExecutionClient.Description.Default = "Select which Execution client your external client is."
-	// cfg.ExecutionClient.AffectedContainers = []string{string(ContainerID_ValidatorClient)}
 	cfg.ExecutionClient.Options = options
+	cfg.ExecutionClient.Default = ExecutionClient_Geth
 
 	return cfg
 }

@@ -8,6 +8,9 @@ import (
 const (
 	// Tags
 	lighthouseBnTag string = "sigp/lighthouse:v5.3.0"
+
+	lighthouseDefaultMaxPeers    uint = 100
+	lighthouseDefaultP2pQuicPort uint = 8001
 )
 
 // Configuration for the Lighthouse BN
@@ -44,23 +47,22 @@ func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
-	// cfg.MaxPeers.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	cfg.MaxPeers.Default = uint64(lighthouseDefaultMaxPeers)
 
 	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Lighthouse container from Docker Hub you want to use for the Beacon Node."
-	// cfg.ContainerTag.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	cfg.ContainerTag.Default = lighthouseBnTag
 
 	cfg.AdditionalFlags.ID = hdconfig.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Lighthouse's Beacon Node, to take advantage of other settings that aren't covered here."
-	// cfg.AdditionalFlags.AffectedContainers = []string{string(ContainerID_BeaconNode)}
+	cfg.AdditionalFlags.Default = ""
 
 	cfg.P2pQuicPort.ID = hdconfig.Identifier(ids.P2pQuicPortID)
 	cfg.P2pQuicPort.Name = "P2pQuicPort"
 	cfg.P2pQuicPort.Description.Default = "The port to use for P2P (blockchain) traffic using the QUIC protocol."
-	// cfg.P2pQuicPort.AffectedContainers = []string{string(ContainerID_BeaconNode)}
-
+	cfg.P2pQuicPort.Default = uint64(lighthouseDefaultP2pQuicPort)
 	return cfg
 }
 

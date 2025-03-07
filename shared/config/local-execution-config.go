@@ -7,6 +7,13 @@ import (
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
+const (
+	defaultLocalExecutionHttpPort      uint64 = 8545
+	defaultLocalExecutionWebsocketPort uint64 = 8546
+	defaultLocalExecutionEnginePort    uint64 = 8551
+	defaultLocalExecutionP2pPort       uint64 = 30303
+)
+
 // Configuration for the Execution client
 type LocalExecutionConfig struct {
 	hdconfig.SectionHeader
@@ -84,23 +91,23 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.ExecutionClient.ID = hdconfig.Identifier(ids.EcID)
 	cfg.ExecutionClient.Name = "Execution Client"
 	cfg.ExecutionClient.Description.Default = "Select which Execution client you would like to run."
-	// cfg.ExecutionClient.AffectedContainers = []string{string(ContainerID_ExecutionClient), string(ContainerID_ValidatorClient)}
 	cfg.ExecutionClient.Options = optionsEc
+	cfg.ExecutionClient.Default = ExecutionClient_Geth
 
 	cfg.HttpPort.ID = hdconfig.Identifier(ids.HttpPortID)
 	cfg.HttpPort.Name = "HTTP API Port"
 	cfg.HttpPort.Description.Default = "The port your Execution client should use for its HTTP API endpoint (also known as HTTP RPC API endpoint)."
-	// cfg.HttpPort.AffectedContainers = []string{string(ContainerID_Daemon), string(ContainerID_ExecutionClient), string(ContainerID_BeaconNode)}
+	cfg.HttpPort.Default = defaultLocalExecutionHttpPort
 
 	cfg.WebsocketPort.ID = hdconfig.Identifier(ids.LocalEcWebsocketPortID)
 	cfg.WebsocketPort.Name = "Websocket API Port"
 	cfg.WebsocketPort.Description.Default = "The port your Execution client should use for its Websocket API endpoint (also known as Websocket RPC API endpoint)."
-	// cfg.WebsocketPort.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
+	cfg.WebsocketPort.Default = defaultLocalExecutionWebsocketPort
 
 	cfg.EnginePort.ID = hdconfig.Identifier(ids.LocalEcEnginePortID)
 	cfg.EnginePort.Name = "Engine API Port"
 	cfg.EnginePort.Description.Default = "The port your Execution client should use for its Engine API endpoint (the endpoint the Beacon Node will connect to post-merge)."
-	// cfg.EnginePort.AffectedContainers = []string{string(ContainerID_ExecutionClient), string(ContainerID_BeaconNode)}
+	cfg.EnginePort.Default = defaultLocalExecutionEnginePort
 
 	// Options for OpenApiPorts
 	options := make([]hdconfig.ParameterOption[RpcPortMode], 3)
@@ -119,14 +126,13 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.OpenApiPorts.ID = hdconfig.Identifier(ids.LocalEcOpenApiPortsID)
 	cfg.OpenApiPorts.Name = "Expose API Ports"
 	cfg.OpenApiPorts.Description.Default = "Expose the HTTP and Websocket API ports to other processes on your machine, or to your local network so other machines can access your Execution Client's API endpoints."
-	// cfg.OpenApiPorts.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
 	cfg.OpenApiPorts.Options = options
+	cfg.OpenApiPorts.Default = RpcPortMode_Closed
 
 	cfg.P2pPort.ID = hdconfig.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
 	cfg.P2pPort.Description.Default = "The port the Execution Client should use for P2P (blockchain) traffic to communicate with other nodes."
-	// cfg.P2pPort.AffectedContainers = []string{string(ContainerID_ExecutionClient)}
-
+	cfg.P2pPort.Default = defaultLocalExecutionP2pPort
 	// Create the subconfigs
 	cfg.Geth = NewGethConfig()
 	cfg.Nethermind = NewNethermindConfig()

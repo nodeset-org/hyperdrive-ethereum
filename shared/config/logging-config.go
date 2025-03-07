@@ -117,27 +117,23 @@ func NewLoggingConfig() *LoggingConfig {
 	cfg.AddSource.Name = "Embed Source Location"
 	cfg.AddSource.Description.Default = "Enable this to add the source location of where the logger was called to each log message. This is mostly for development use only."
 	cfg.AddSource.Default = false
-	// cfg.AddSource.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// MaxSize
 	cfg.MaxSize.NumberParameter.ID = config.Identifier(ids.LoggerMaxSizeID)
 	cfg.MaxSize.NumberParameter.Name = "Max Log Size"
 	cfg.MaxSize.NumberParameter.Description.Default = "The max size (in megabytes) of a log file before it gets rotated out and archived."
-	// cfg.MaxSize.NumberParameter.AffectedContainers = []string{string(ContainerID_Daemon)}
 	cfg.MaxSize.Default = 20
 
 	// MaxBackups
 	cfg.MaxBackups.NumberParameter.ID = config.Identifier(ids.LoggerMaxBackupsID)
 	cfg.MaxBackups.NumberParameter.Name = "Max Archived Logs"
 	cfg.MaxBackups.NumberParameter.Description.Default = "The max number of archived logs to save before deleting old ones.\n\nUse 0 for no limit (preserve all archived logs)."
-	// cfg.MaxBackups.NumberParameter.AffectedContainers = []string{string(ContainerID_Daemon)}
 	cfg.MaxBackups.Default = 3
 
 	// MaxAge
 	cfg.MaxAge.NumberParameter.ID = config.Identifier(ids.LoggerMaxAgeID)
 	cfg.MaxAge.NumberParameter.Name = "Max Archive Age"
 	cfg.MaxAge.NumberParameter.Description.Default = "The max number of days an archive log should be preserved for before being deleted.\n\nUse 0 for no limit (preserve all logs regardless of age)."
-	// cfg.MaxAge.NumberParameter.AffectedContainers = []string{string(ContainerID_Daemon)}
 	cfg.MaxAge.Default = 90
 
 	// LocalTime
@@ -145,14 +141,12 @@ func NewLoggingConfig() *LoggingConfig {
 	cfg.LocalTime.Name = "Use Local Time"
 	cfg.LocalTime.Description.Default = "When a log needs to be archived, by default the system will append the time of archiving to its filename in UTC. Enable this to use your local system's time in the filename instead."
 	cfg.LocalTime.Default = false
-	// cfg.LocalTime.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	// Compress
 	cfg.Compress.ID = config.Identifier(ids.LoggerCompressID)
 	cfg.Compress.Name = "Compress Archives"
 	cfg.Compress.Description.Default = "Enable this to compress logs when they get archived to save space."
 	cfg.Compress.Default = true
-	// cfg.Compress.AffectedContainers = []string{string(ContainerID_Daemon)}
 
 	return cfg
 }
