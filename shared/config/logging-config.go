@@ -61,7 +61,6 @@ func NewLoggingConfig() *LoggingConfig {
 	cfg.Level.Name = "Log Level"
 	cfg.Level.Description.Default = "Select the minimum level for log messages. The lower it goes, the more verbose output the logs contain."
 	cfg.Level.Default = logging.LogLevel_Info
-	// cfg.Level.AffectedContainers = []string{string(ContainerID_Daemon)}
 	cfg.Level.Options = []hdconfig.ParameterOption[logging.LogLevel]{
 		{
 			Name: "Debug",
@@ -95,7 +94,6 @@ func NewLoggingConfig() *LoggingConfig {
 	cfg.Format.Name = "Format"
 	cfg.Format.Description.Default = "Choose which format log messages will be printed in."
 	cfg.Format.Default = logging.LogFormat_Logfmt
-	// cfg.Format.AffectedContainers = []string{string(ContainerID_Daemon)}
 	cfg.Format.Options = []config.ParameterOption[logging.LogFormat]{
 		{
 			Name: "Logfmt",

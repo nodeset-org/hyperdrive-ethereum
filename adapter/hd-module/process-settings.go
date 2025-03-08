@@ -60,7 +60,7 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 	oldModInstance, exists := oldHdSettings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		// Create an instance with the default settings
-		cfg := &config.HyperdriveEthereumConfig{}
+		cfg := config.NewHyperdriveEthereumConfig()
 		oldModSettings := modconfig.CreateModuleSettings(cfg)
 		err := oldModSettings.ConvertToKnownType(&oldSettings)
 		if err != nil {

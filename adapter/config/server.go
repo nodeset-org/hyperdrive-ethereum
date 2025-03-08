@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	containerTag string = "nodeset/hyperdrive-example-service:v" + shared.HyperdriveEthereumVersion
+	containerTag string = "nodeset/hyperdrive-ethereum-service:v" + shared.HyperdriveEthereumVersion
 )
 
 const (
@@ -49,7 +49,6 @@ func NewServerConfig() *ServerConfig {
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "This is the tag used for the service's Docker container image."
 	cfg.ContainerTag.Default = containerTag
-	cfg.ContainerTag.AffectedContainers = []string{ServiceContainerName}
 
 	// Port
 	cfg.Port.ID = ids.PortID
@@ -58,7 +57,6 @@ func NewServerConfig() *ServerConfig {
 	cfg.Port.Default = uint64(DefaultServerApiPort)
 	cfg.Port.MinValue = 0
 	cfg.Port.MaxValue = 65535
-	cfg.Port.AffectedContainers = []string{ServiceContainerName}
 
 	// Options for PortMode
 	options := make([]hdconfig.ParameterOption[PortMode], 3)
@@ -79,8 +77,7 @@ func NewServerConfig() *ServerConfig {
 	cfg.PortMode.Name = "Expose API Port"
 	cfg.PortMode.Description.Default = "Determine how the server's HTTP API restricts its access from various sources."
 	cfg.PortMode.Options = options
-	cfg.PortMode.Default = options[0].Value
-	cfg.PortMode.AffectedContainers = []string{ServiceContainerName}
+	cfg.PortMode.Default = PortMode_Closed
 
 	return cfg
 }
