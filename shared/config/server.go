@@ -6,6 +6,14 @@ import (
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
+type PortMode string
+
+const (
+	PortMode_Closed    PortMode = "closed"
+	PortMode_Localhost PortMode = "localhost"
+	PortMode_External  PortMode = "external"
+)
+
 const (
 	containerTag string = "nodeset/hyperdrive-ethereum-service:v" + shared.HyperdriveEthereumVersion
 )

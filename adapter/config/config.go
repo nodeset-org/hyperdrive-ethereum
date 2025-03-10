@@ -9,14 +9,6 @@ import (
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
-type PortMode string
-
-const (
-	PortMode_Closed    PortMode = "closed"
-	PortMode_Localhost PortMode = "localhost"
-	PortMode_External  PortMode = "external"
-)
-
 const (
 	// Tags
 	hyperdriveTag string = "nodeset/hyperdrive-ethereum:v" + shared.HyperdriveEthereumVersion
@@ -69,7 +61,7 @@ type HyperdriveEthereumConfig struct {
 	// Internal fields
 	Version hdconfig.StringParameter
 
-	ServerConfig *ServerConfig
+	ServerConfig *sharedconfig.ServerConfig
 	// DockerConfig *Docker
 
 	// Server settings
@@ -78,12 +70,12 @@ type HyperdriveEthereumConfig struct {
 }
 
 type HyperdriveEthereumConfigSettings struct {
+	EnableIPv6         bool    `json:"enableIPv6" yaml:"enableIPv6"`
 	ProjectName        string  `json:"projectName" yaml:"projectName"`
 	ApiPort            uint    `json:"apiPort" yaml:"apiPort"`
 	AutoTxMaxFee       float64 `json:"autoTxMaxFee" yaml:"autoTxMaxFee"`
 	MaxPriorityFee     float64 `json:"maxPriorityFee" yaml:"maxPriorityFee"`
 	AutoTxGasThreshold float64 `json:"autoTxGasThreshold" yaml:"autoTxGasThreshold"`
-	EnableIPv6         bool    `json:"enableIPv6" yaml:"enableIPv6"`
 
 	Network    sharedconfig.Network `json:"network" yaml:"network"`
 	ClientMode ClientMode           `json:"clientMode" yaml:"clientMode"`
@@ -100,7 +92,7 @@ type HyperdriveEthereumConfigSettings struct {
 
 	Version string `json:"version" yaml:"version"`
 
-	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
+	ServerConfig *sharedconfig.ServerConfigSettings `json:"server" yaml:"server"`
 	// DockerConfig *DockerSettings       `json:"dockerConfig"`
 
 	IsNew      bool   `json:"isNew" yaml:"isNew"`
@@ -163,7 +155,7 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg.ExternalExecutionClient = sharedconfig.NewExternalExecutionConfig()
 	cfg.Fallback = sharedconfig.NewFallbackConfig()
 
-	cfg.ServerConfig = NewServerConfig()
+	cfg.ServerConfig = sharedconfig.NewServerConfig()
 
 	return cfg
 }
@@ -175,12 +167,15 @@ func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.AutoTxMaxFee,
 		&cfg.MaxPriorityFee,
 		&cfg.AutoTxGasThreshold,
+		&cfg.EnableIPv6,
+		&cfg.Network,
+		&cfg.ClientMode,
 	}
 }
 
 func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{
-		// cfg.ServerConfig,
+		cfg.ServerConfig,
 		cfg.LocalBeaconClient,
 		cfg.LocalExecutionClient,
 	}
@@ -194,7 +189,7 @@ func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereu
 		AutoTxGasThreshold:   native.AutoTxGasThreshold,
 		Network:              native.Network,
 		ContainerTag:         native.ContainerTag,
-		ServerConfig:         &ServerConfigSettings{},
+		ServerConfig:         &sharedconfig.ServerConfigSettings{},
 		LocalBeaconClient:    &sharedconfig.LocalBeaconConfigSettings{},
 		LocalExecutionClient: &sharedconfig.LocalExecutionConfigSettings{},
 	}
@@ -204,12 +199,13 @@ func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereu
 func ConvertInstanceToNativeConfig(instance *HyperdriveEthereumConfigSettings) *sharedconfig.NativeHyperdriveEthereumSettings {
 	native := &sharedconfig.NativeHyperdriveEthereumSettings{
 		ApiPort:            instance.ApiPort,
+		ContainerTag:       instance.ContainerTag,
 		AutoTxMaxFee:       instance.AutoTxMaxFee,
 		MaxPriorityFee:     instance.MaxPriorityFee,
 		AutoTxGasThreshold: instance.AutoTxGasThreshold,
+		EnableIPv6:         instance.EnableIPv6,
 		Network:            instance.Network,
-		// ClientMode:               instance.ClientMode,
-		ContainerTag: instance.ContainerTag,
+		ClientMode:         sharedconfig.ClientMode(instance.ClientMode),
 	}
 	return native
 }
@@ -220,13 +216,13 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 	newModSettings := hdconfig.CreateModuleSettings(cfg)
 	err := newModSettings.CopySettingsFromKnownType(s)
 	if err != nil {
-		return nil, fmt.Errorf("error copying new settings: %w", err)
+		return nil, fmt.Errorf("error copying new settings (newModSettings: %+v) (oldModSettings: %+v): %w", newModSettings, oldSettings, err)
 	}
 
 	oldModSettings := hdconfig.CreateModuleSettings(cfg)
 	err = oldModSettings.CopySettingsFromKnownType(oldSettings)
 	if err != nil {
-		return nil, fmt.Errorf("error copying old settings: %w", err)
+		return nil, fmt.Errorf("error copying old settings (newModSettings: %+v) (oldModSettings: %+v): %w", newModSettings, oldSettings, err)
 	}
 
 	// Compare the settings - if there are no differences, return nil
@@ -243,8 +239,5 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 }
 
 func (c *HyperdriveEthereumConfigSettings) GetAllModuleConfigs() []any {
-	return []any{
-		c.LocalBeaconClient,
-		c.LocalExecutionClient,
-	}
+	return []any{}
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 	"github.com/urfave/cli/v2"
@@ -89,7 +90,7 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 
 	// Get the open ports
 	ports := map[string]uint16{}
-	if newSettings.ServerConfig.PortMode != config.PortMode_Closed {
+	if newSettings.ServerConfig.PortMode != sharedconfig.PortMode_Closed {
 		ports[ids.ServerConfigID.String()+"/"+ids.PortID.String()] = uint16(newSettings.ServerConfig.Port)
 	}
 
