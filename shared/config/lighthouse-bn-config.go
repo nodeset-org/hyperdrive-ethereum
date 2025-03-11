@@ -40,7 +40,7 @@ type LighthouseBnConfigSettings struct {
 // Generates a new Lighthouse BN configuration
 func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg := &LighthouseBnConfig{}
-	cfg.ID = hdconfig.Identifier((ids.LocalBnLighthouseID))
+	cfg.ID = hdconfig.Identifier(ids.LocalBnLighthouseID)
 	cfg.Name = "Lighthouse"
 	cfg.Description.Default = "Lighthouse"
 
