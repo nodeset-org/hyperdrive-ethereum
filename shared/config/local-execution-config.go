@@ -231,7 +231,7 @@ func (cfg *LocalExecutionConfigSettings) GetAdditionalFlags() string {
 }
 
 func (cfg *LocalExecutionConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *LocalExecutionConfig) GetName() string {

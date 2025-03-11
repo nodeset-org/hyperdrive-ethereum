@@ -249,7 +249,7 @@ func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *LocalBeaconConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *LocalBeaconConfig) GetName() string {

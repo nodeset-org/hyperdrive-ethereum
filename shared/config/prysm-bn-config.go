@@ -116,7 +116,7 @@ func (cfg *PrysmBnConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *PrysmBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *PrysmBnConfig) GetName() string {

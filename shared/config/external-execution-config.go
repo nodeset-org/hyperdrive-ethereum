@@ -83,7 +83,7 @@ func (cfg ExternalExecutionConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *ExternalExecutionConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *ExternalExecutionConfig) GetName() string {

@@ -103,7 +103,7 @@ func (cfg ServerConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *ServerConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *ServerConfig) GetName() string {

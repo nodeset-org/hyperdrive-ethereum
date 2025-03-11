@@ -114,7 +114,7 @@ func getNimbusDefaultPeers() uint16 {
 }
 
 func (cfg *NimbusBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *NimbusBnConfig) GetName() string {

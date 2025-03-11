@@ -102,7 +102,7 @@ func (cfg *BesuConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *BesuConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *BesuConfig) GetName() string {

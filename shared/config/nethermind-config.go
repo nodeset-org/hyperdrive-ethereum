@@ -215,7 +215,7 @@ func calculateNethermindPeers() uint16 {
 }
 
 func (cfg *NethermindConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *NethermindConfig) GetName() string {

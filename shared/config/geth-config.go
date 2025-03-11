@@ -106,7 +106,7 @@ func calculateGethPeers() uint16 {
 }
 
 func (cfg *GethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *GethConfig) GetName() string {

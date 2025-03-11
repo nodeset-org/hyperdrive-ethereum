@@ -75,7 +75,7 @@ func (cfg *FallbackConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *FallbackConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *FallbackConfig) GetName() string {

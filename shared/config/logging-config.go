@@ -184,7 +184,7 @@ func (cfg *LoggingConfigSettings) GetOptions() logging.LoggerOptions {
 }
 
 func (cfg *LoggingConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *LoggingConfig) GetName() string {

@@ -87,7 +87,7 @@ func (cfg ExternalBeaconConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *ExternalBeaconConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *ExternalBeaconConfig) GetName() string {

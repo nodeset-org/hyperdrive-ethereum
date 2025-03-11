@@ -73,7 +73,7 @@ func (cfg *LodestarBnConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *LodestarBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *LodestarBnConfig) GetName() string {

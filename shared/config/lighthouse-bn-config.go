@@ -89,7 +89,7 @@ func (cfg *LighthouseBnConfig) GetSections() []hdconfig.ISection {
 }
 
 func (cfg *LighthouseBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *LighthouseBnConfig) GetName() string {

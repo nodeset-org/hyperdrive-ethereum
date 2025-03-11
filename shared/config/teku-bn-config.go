@@ -111,7 +111,7 @@ func getTekuHeapSize() uint64 {
 	return 0
 }
 func (cfg *TekuBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *TekuBnConfig) GetName() string {

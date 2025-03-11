@@ -126,7 +126,7 @@ func calculateRethPeers() uint16 {
 	return 25
 }
 func (cfg *RethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
+	return cfg.ID
 }
 
 func (cfg *RethConfig) GetName() string {
