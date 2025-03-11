@@ -242,10 +242,6 @@ func (cfg *LocalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 	return hdconfig.DynamicProperty[bool]{}
 }
 
-func (cfg *LocalExecutionConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.EcID)
-}
-
 func (cfg *LocalExecutionConfig) GetName() string {
 	return "Execution Client"
 }

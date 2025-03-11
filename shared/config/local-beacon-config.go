@@ -251,10 +251,6 @@ func (cfg *LocalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 	return hdconfig.DynamicProperty[bool]{}
 }
 
-func (cfg *LocalBeaconConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.BnID)
-}
-
 func (cfg *LocalBeaconConfig) GetName() string {
 	return "Beacon Node"
 }

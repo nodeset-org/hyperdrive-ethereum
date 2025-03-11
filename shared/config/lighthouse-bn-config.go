@@ -41,6 +41,7 @@ type LighthouseBnConfigSettings struct {
 func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg := &LighthouseBnConfig{}
 	cfg.ID = hdconfig.Identifier((ids.LocalBnLighthouseID))
+
 	cfg.Hidden.Default = true
 	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lighthouse\"}}false{{else}}true{{end}}"
 
@@ -68,7 +69,7 @@ func NewLighthouseBnConfig() *LighthouseBnConfig {
 
 // The title for the config
 func (cfg *LighthouseBnConfig) GetTitle() string {
-	return "Lighthouse Beacon Node"
+	return "Lighthouse"
 }
 
 // Get the parameters for this config
@@ -100,7 +101,7 @@ func (cfg *LighthouseBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *LighthouseBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalBnLighthouseID)
+	return hdconfig.Identifier(cfg.ID)
 }
 
 func (cfg *LighthouseBnConfig) GetName() string {

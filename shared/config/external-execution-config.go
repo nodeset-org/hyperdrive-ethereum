@@ -7,6 +7,8 @@ import (
 
 // Configuration for external Execution clients
 type ExternalExecutionConfig struct {
+	hdconfig.SectionHeader
+
 	// The selected EC
 	ExecutionClient hdconfig.ChoiceParameter[ExecutionClient] //Parameter[ExecutionClient]
 
@@ -26,6 +28,7 @@ type ExternalExecutionConfigSettings struct {
 // Generates a new ExternalExecutionConfig configuration
 func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg := &ExternalExecutionConfig{}
+	cfg.ID = hdconfig.Identifier(ids.ExternalEcId)
 
 	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
@@ -91,7 +94,7 @@ func (cfg *ExternalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *ExternalExecutionConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.ExternalEcId)
+	return hdconfig.Identifier(cfg.ID)
 }
 
 func (cfg *ExternalExecutionConfig) GetName() string {

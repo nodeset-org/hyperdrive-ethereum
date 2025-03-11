@@ -88,10 +88,6 @@ func (cfg *LodestarBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 	return hdconfig.DynamicProperty[bool]{}
 }
 
-func (cfg *LodestarBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalBnLodestarID)
-}
-
 func (cfg *LodestarBnConfig) GetName() string {
 	return "Lodestar"
 }

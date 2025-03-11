@@ -7,6 +7,8 @@ import (
 
 // Configuration for external Beacon Nodes
 type ExternalBeaconConfig struct {
+	hdconfig.SectionHeader
+
 	// The selected BN
 	BeaconNode hdconfig.ChoiceParameter[BeaconNode] //Parameter[BeaconNode]
 
@@ -26,6 +28,7 @@ type ExternalBeaconConfigSettings struct {
 // Generates a new ExternalBeaconConfig configuration
 func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	cfg := &ExternalBeaconConfig{}
+	cfg.ID = hdconfig.Identifier(ids.ExternalBnId)
 
 	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
@@ -95,7 +98,7 @@ func (cfg *ExternalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *ExternalBeaconConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.ExternalBnId)
+	return hdconfig.Identifier(cfg.ID)
 }
 
 func (cfg *ExternalBeaconConfig) GetName() string {

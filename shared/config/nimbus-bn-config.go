@@ -5,7 +5,6 @@ import (
 	"runtime"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
-	"github.com/nodeset-org/hyperdrive/modules/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
@@ -26,16 +25,16 @@ const (
 type NimbusBnConfig struct {
 	hdconfig.SectionHeader
 	// The max number of P2P peers to connect to
-	MaxPeers config.UintParameter
+	MaxPeers hdconfig.UintParameter
 
 	// The Docker Hub tag for the BN
-	ContainerTag config.StringParameter
+	ContainerTag hdconfig.StringParameter
 
 	// The pruning mode to use in the BN
 	PruningMode hdconfig.ChoiceParameter[Nimbus_PruningMode]
 
 	// Custom command line flags for the BN
-	AdditionalFlags config.StringParameter
+	AdditionalFlags hdconfig.StringParameter
 }
 
 type NimbusBnConfigSettings struct {
@@ -48,11 +47,11 @@ type NimbusBnConfigSettings struct {
 // Generates a new Nimbus configuration
 func NewNimbusBnConfig() *NimbusBnConfig {
 	cfg := &NimbusBnConfig{}
-	cfg.ID = config.Identifier(ids.LocalBnNimbusID)
+	cfg.ID = hdconfig.Identifier(ids.LocalBnNimbusID)
 	cfg.Hidden.Default = true
 	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"nimbus\"}}false{{else}}true{{end}}"
 
-	cfg.MaxPeers.ID = config.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
 	cfg.MaxPeers.Description.Default = "The maximum number of peers your client should try to maintain. You can try lowering this if you have a low-resource system or a constrained network."
 	cfg.MaxPeers.Default = uint64(getNimbusDefaultPeers())
@@ -66,18 +65,18 @@ func NewNimbusBnConfig() *NimbusBnConfig {
 	options[1].Description.Default = "Prune mode stores only the most recent data, which can save disk space."
 	options[1].Value = Nimbus_PruningMode_Pruned
 
-	cfg.PruningMode.ID = config.Identifier(ids.NimbusPruningModeID)
+	cfg.PruningMode.ID = hdconfig.Identifier(ids.NimbusPruningModeID)
 	cfg.PruningMode.Name = "Pruning Mode"
 	cfg.PruningMode.Description.Default = "Choose how Nimbus will prune its database. Highlight each option to learn more about it."
 	cfg.PruningMode.Options = options
 	cfg.PruningMode.Default = Nimbus_PruningMode_Pruned
 
-	cfg.ContainerTag.ID = config.Identifier(ids.ContainerTagID)
+	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "The tag name of the Nimbus Beacon Node container you want to use on Docker Hub."
 	cfg.ContainerTag.Default = nimbusBnTag
 
-	cfg.AdditionalFlags.ID = config.Identifier(ids.AdditionalFlagsID)
+	cfg.AdditionalFlags.ID = hdconfig.Identifier(ids.AdditionalFlagsID)
 	cfg.AdditionalFlags.Name = "Additional Flags"
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that aren't covered here."
 	cfg.AdditionalFlags.Default = ""
@@ -91,8 +90,8 @@ func (cfg *NimbusBnConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *NimbusBnConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *NimbusBnConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
 		&cfg.MaxPeers,
 		&cfg.ContainerTag,
 		&cfg.PruningMode,

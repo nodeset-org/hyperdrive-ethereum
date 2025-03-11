@@ -19,6 +19,8 @@ const (
 
 // Configuration for Nethermind
 type NethermindConfig struct {
+	hdconfig.SectionHeader
+
 	// Nethermind's cache memory hint
 	CacheSize hdconfig.UintParameter
 
@@ -62,6 +64,7 @@ type NethermindConfigSettings struct {
 // Generates a new Nethermind configuration
 func NewNethermindConfig() *NethermindConfig {
 	cfg := &NethermindConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LocalEcNethermindID)
 
 	cfg.CacheSize.ID = hdconfig.Identifier(ids.CacheSizeID)
 	cfg.CacheSize.Name = "Cache (Memory Hint) Size"

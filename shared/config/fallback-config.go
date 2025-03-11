@@ -7,6 +7,8 @@ import (
 
 // Fallback configuration
 type FallbackConfig struct {
+	hdconfig.SectionHeader
+
 	// Flag for enabling fallback clients
 	UseFallbackClients hdconfig.BoolParameter
 
@@ -30,6 +32,7 @@ type FallbackConfigSettings struct {
 // Generates a new FallbackConfig configuration
 func NewFallbackConfig() *FallbackConfig {
 	cfg := &FallbackConfig{}
+	cfg.ID = hdconfig.Identifier(ids.FallbackID)
 
 	// Use Fallback Clients
 	cfg.UseFallbackClients.ID = hdconfig.Identifier(ids.FallbackUseFallbackClientsID)
@@ -83,7 +86,7 @@ func (cfg *FallbackConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *FallbackConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.FallbackID)
+	return hdconfig.Identifier(cfg.ID)
 }
 
 func (cfg *FallbackConfig) GetName() string {

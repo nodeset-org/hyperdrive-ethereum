@@ -81,7 +81,7 @@ func NewTekuBnConfig() *TekuBnConfig {
 
 // Get the title for the config
 func (cfg *TekuBnConfig) GetTitle() string {
-	return "Teku Beacon Node"
+	return "Teku"
 }
 
 // Get the parameters for this config

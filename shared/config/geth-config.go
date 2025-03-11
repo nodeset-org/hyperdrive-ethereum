@@ -122,7 +122,7 @@ func (cfg *GethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *GethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalEcGethID)
+	return hdconfig.Identifier(cfg.ID)
 }
 
 func (cfg *GethConfig) GetName() string {

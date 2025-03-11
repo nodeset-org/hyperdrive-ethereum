@@ -118,7 +118,7 @@ func (cfg *BesuConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 }
 
 func (cfg *BesuConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalEcBesuID)
+	return hdconfig.Identifier(cfg.ID)
 }
 
 func (cfg *BesuConfig) GetName() string {

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/nodeset-org/hyperdrive/modules/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	"github.com/nodeset-org/hyperdrive/shared/config/ids"
 	"github.com/nodeset-org/hyperdrive/shared/logging"
@@ -90,20 +89,20 @@ func NewLoggingConfig() *LoggingConfig {
 	}
 
 	// Format
-	cfg.Format.ID = config.Identifier(ids.LoggerFormatID)
+	cfg.Format.ID = hdconfig.Identifier(ids.LoggerFormatID)
 	cfg.Format.Name = "Format"
 	cfg.Format.Description.Default = "Choose which format log messages will be printed in."
 	cfg.Format.Default = logging.LogFormat_Logfmt
-	cfg.Format.Options = []config.ParameterOption[logging.LogFormat]{
+	cfg.Format.Options = []hdconfig.ParameterOption[logging.LogFormat]{
 		{
 			Name: "Logfmt",
-			Description: config.DynamicProperty[string]{
+			Description: hdconfig.DynamicProperty[string]{
 				Default: "Use the logfmt format, which offers a good balance of human readability and parsability. See https://www.brandur.org/logfmt for more information on this format.",
 			},
 			Value: logging.LogFormat_Logfmt,
 		}, {
 			Name: "JSON",
-			Description: config.DynamicProperty[string]{
+			Description: hdconfig.DynamicProperty[string]{
 				Default: "Log messages in JSON format. Useful if you want to process your logs through other tooling.",
 			},
 			Value: logging.LogFormat_Json,
@@ -111,37 +110,37 @@ func NewLoggingConfig() *LoggingConfig {
 	}
 
 	// AddSource
-	cfg.AddSource.ID = config.Identifier(ids.LoggerAddSourceID)
+	cfg.AddSource.ID = hdconfig.Identifier(ids.LoggerAddSourceID)
 	cfg.AddSource.Name = "Embed Source Location"
 	cfg.AddSource.Description.Default = "Enable this to add the source location of where the logger was called to each log message. This is mostly for development use only."
 	cfg.AddSource.Default = false
 
 	// MaxSize
-	cfg.MaxSize.NumberParameter.ID = config.Identifier(ids.LoggerMaxSizeID)
+	cfg.MaxSize.NumberParameter.ID = hdconfig.Identifier(ids.LoggerMaxSizeID)
 	cfg.MaxSize.NumberParameter.Name = "Max Log Size"
 	cfg.MaxSize.NumberParameter.Description.Default = "The max size (in megabytes) of a log file before it gets rotated out and archived."
 	cfg.MaxSize.Default = 20
 
 	// MaxBackups
-	cfg.MaxBackups.NumberParameter.ID = config.Identifier(ids.LoggerMaxBackupsID)
+	cfg.MaxBackups.NumberParameter.ID = hdconfig.Identifier(ids.LoggerMaxBackupsID)
 	cfg.MaxBackups.NumberParameter.Name = "Max Archived Logs"
 	cfg.MaxBackups.NumberParameter.Description.Default = "The max number of archived logs to save before deleting old ones.\n\nUse 0 for no limit (preserve all archived logs)."
 	cfg.MaxBackups.Default = 3
 
 	// MaxAge
-	cfg.MaxAge.NumberParameter.ID = config.Identifier(ids.LoggerMaxAgeID)
+	cfg.MaxAge.NumberParameter.ID = hdconfig.Identifier(ids.LoggerMaxAgeID)
 	cfg.MaxAge.NumberParameter.Name = "Max Archive Age"
 	cfg.MaxAge.NumberParameter.Description.Default = "The max number of days an archive log should be preserved for before being deleted.\n\nUse 0 for no limit (preserve all logs regardless of age)."
 	cfg.MaxAge.Default = 90
 
 	// LocalTime
-	cfg.LocalTime.ID = config.Identifier(ids.LoggerLocalTimeID)
+	cfg.LocalTime.ID = hdconfig.Identifier(ids.LoggerLocalTimeID)
 	cfg.LocalTime.Name = "Use Local Time"
 	cfg.LocalTime.Description.Default = "When a log needs to be archived, by default the system will append the time of archiving to its filename in UTC. Enable this to use your local system's time in the filename instead."
 	cfg.LocalTime.Default = false
 
 	// Compress
-	cfg.Compress.ID = config.Identifier(ids.LoggerCompressID)
+	cfg.Compress.ID = hdconfig.Identifier(ids.LoggerCompressID)
 	cfg.Compress.Name = "Compress Archives"
 	cfg.Compress.Description.Default = "Enable this to compress logs when they get archived to save space."
 	cfg.Compress.Default = true
@@ -155,8 +154,8 @@ func (cfg *LoggingConfig) GetTitle() string {
 }
 
 // Get the parameters for this config
-func (cfg *LoggingConfig) GetParameters() []config.IParameter {
-	return []config.IParameter{
+func (cfg *LoggingConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
 		&cfg.Level,
 		&cfg.Format,
 		&cfg.AddSource,
@@ -169,8 +168,8 @@ func (cfg *LoggingConfig) GetParameters() []config.IParameter {
 }
 
 // Get the sections underneath this one
-func (cfg *LoggingConfig) GetSections() []config.ISection {
-	return []config.ISection{}
+func (cfg *LoggingConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
 
 // Convert the config into a LoggerOptions struct
