@@ -81,26 +81,6 @@ func (cfg *ExternalExecutionConfig) GetParameters() []hdconfig.IParameter {
 	}
 }
 
-func (cfg *ExternalExecutionConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *ExternalExecutionConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *ExternalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *ExternalExecutionConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
-}
-
-func (cfg *ExternalExecutionConfig) GetName() string {
-	return "External EC"
-}
-
 func (cfg ExternalExecutionConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }

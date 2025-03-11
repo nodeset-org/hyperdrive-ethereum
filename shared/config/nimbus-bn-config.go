@@ -86,7 +86,7 @@ func NewNimbusBnConfig() *NimbusBnConfig {
 
 // Get the title for the config
 func (cfg *NimbusBnConfig) GetTitle() string {
-	return "Nimbus Beacon Node"
+	return "Nimbus"
 }
 
 // Get the parameters for this config
@@ -114,25 +114,4 @@ func getNimbusDefaultPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
-}
-
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *NimbusBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *NimbusBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *NimbusBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *NimbusBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalBnNimbusID)
-}
-
-func (cfg *NimbusBnConfig) GetName() string {
-	return "Nimbus"
 }

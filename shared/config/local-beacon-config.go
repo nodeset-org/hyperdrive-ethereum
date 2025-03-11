@@ -238,23 +238,6 @@ func (cfg *LocalBeaconConfigSettings) GetAdditionalFlags() string {
 	}
 }
 
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *LocalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *LocalBeaconConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *LocalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *LocalBeaconConfig) GetName() string {
-	return "Beacon Node"
-}
-
 func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{
 		cfg.Lighthouse,

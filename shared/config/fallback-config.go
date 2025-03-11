@@ -73,26 +73,6 @@ func (cfg *FallbackConfig) GetParameters() []hdconfig.IParameter {
 	}
 }
 
-func (cfg *FallbackConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *FallbackConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *FallbackConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *FallbackConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
-}
-
-func (cfg *FallbackConfig) GetName() string {
-	return "Fallback"
-}
-
 func (cfg *FallbackConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }

@@ -124,23 +124,6 @@ func calculateRethPeers() uint16 {
 	return 25
 }
 
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *RethConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *RethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *RethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *RethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalEcRethID)
-}
-
 func (cfg *RethConfig) GetName() string {
 	return "Reth"
 }

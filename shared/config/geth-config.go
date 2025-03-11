@@ -107,24 +107,3 @@ func calculateGethPeers() uint16 {
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
 }
-
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *GethConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *GethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *GethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *GethConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
-}
-
-func (cfg *GethConfig) GetName() string {
-	return "Geth"
-}

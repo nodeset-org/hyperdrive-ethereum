@@ -109,23 +109,6 @@ func getTekuHeapSize() uint64 {
 	return 0
 }
 
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *TekuBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *TekuBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *TekuBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *TekuBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalBnTekuID)
-}
-
 func (cfg *TekuBnConfig) GetName() string {
 	return "Teku"
 }

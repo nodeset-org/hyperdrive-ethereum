@@ -87,27 +87,6 @@ func (cfg *LighthouseBnConfig) GetSubconfigs() map[string]hdconfig.ISection {
 	return map[string]hdconfig.ISection{}
 }
 
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *LighthouseBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *LighthouseBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *LighthouseBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *LighthouseBnConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
-}
-
-func (cfg *LighthouseBnConfig) GetName() string {
-	return "Lighthouse"
-}
-
 func (cfg *LighthouseBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }

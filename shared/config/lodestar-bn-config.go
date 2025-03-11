@@ -74,20 +74,3 @@ func (cfg *LodestarBnConfig) GetParameters() []hdconfig.IParameter {
 func (cfg *LodestarBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
-
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *LodestarBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *LodestarBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *LodestarBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *LodestarBnConfig) GetName() string {
-	return "Lodestar"
-}

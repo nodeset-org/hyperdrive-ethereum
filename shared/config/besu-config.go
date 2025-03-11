@@ -103,24 +103,3 @@ func (cfg *BesuConfig) GetParameters() []hdconfig.IParameter {
 func (cfg *BesuConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
-
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *BesuConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *BesuConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *BesuConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *BesuConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(cfg.ID)
-}
-
-func (cfg *BesuConfig) GetName() string {
-	return "Besu"
-}

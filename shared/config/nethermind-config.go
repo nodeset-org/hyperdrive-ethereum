@@ -211,24 +211,3 @@ func calculateNethermindPeers() uint16 {
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
 }
-
-// TODO: Talk to Joe about these funcs required for ISection
-func (cfg *NethermindConfig) GetDescription() hdconfig.DynamicProperty[string] {
-	return hdconfig.DynamicProperty[string]{}
-}
-
-func (cfg *NethermindConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *NethermindConfig) GetHidden() hdconfig.DynamicProperty[bool] {
-	return hdconfig.DynamicProperty[bool]{}
-}
-
-func (cfg *NethermindConfig) GetID() hdconfig.Identifier {
-	return hdconfig.Identifier(ids.LocalEcNethermindID)
-}
-
-func (cfg *NethermindConfig) GetName() string {
-	return "Nethermind"
-}

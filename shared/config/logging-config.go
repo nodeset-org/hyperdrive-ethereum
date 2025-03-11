@@ -148,11 +148,6 @@ func NewLoggingConfig() *LoggingConfig {
 	return cfg
 }
 
-// Get the title for the config
-func (cfg *LoggingConfig) GetTitle() string {
-	return "Logging"
-}
-
 // Get the parameters for this config
 func (cfg *LoggingConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
