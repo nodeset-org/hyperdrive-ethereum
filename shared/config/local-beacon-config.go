@@ -65,7 +65,7 @@ type LocalBeaconConfigSettings struct {
 func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg := &LocalBeaconConfig{}
 	cfg.ID = hdconfig.Identifier(ids.BnID)
-	cfg.Name = "Local Beacon Node"
+	cfg.Name = "Local BN"
 	cfg.Description.Default = "Configure your local Beacon Node settings here."
 
 	cfg.CheckpointSyncProvider.ID = hdconfig.Identifier(ids.LocalBnCheckpointSyncUrlID)
@@ -140,11 +140,6 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.Teku = NewTekuBnConfig()
 
 	return cfg
-}
-
-// The title for the config
-func (cfg *LocalBeaconConfig) GetTitle() string {
-	return "Beacon Node"
 }
 
 // Get the parameters for this config
@@ -246,14 +241,6 @@ func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
 		cfg.Prysm,
 		cfg.Teku,
 	}
-}
-
-func (cfg *LocalBeaconConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *LocalBeaconConfig) GetName() string {
-	return "Local BN"
 }
 
 func (cfg *LocalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {

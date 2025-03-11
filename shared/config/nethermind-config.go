@@ -116,11 +116,6 @@ func NewNethermindConfig() *NethermindConfig {
 	return cfg
 }
 
-// Get the title for the config
-func (cfg *NethermindConfig) GetTitle() string {
-	return "Nethermind"
-}
-
 // Get the parameters for this config
 func (cfg *NethermindConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -212,14 +207,6 @@ func calculateNethermindPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
-}
-
-func (cfg *NethermindConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *NethermindConfig) GetName() string {
-	return "Nethermind"
 }
 
 func (cfg *NethermindConfig) GetDescription() hdconfig.DynamicProperty[string] {

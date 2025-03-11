@@ -76,11 +76,6 @@ func NewRethConfig() *RethConfig {
 	return cfg
 }
 
-// Get the title for the config
-func (cfg *RethConfig) GetTitle() string {
-	return "Reth"
-}
-
 // Get the config.Parameters for this config
 func (cfg *RethConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -124,13 +119,6 @@ func calculateRethPeers() uint16 {
 		return 12
 	}
 	return 25
-}
-func (cfg *RethConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *RethConfig) GetName() string {
-	return "Reth"
 }
 
 func (cfg *RethConfig) GetDescription() hdconfig.DynamicProperty[string] {

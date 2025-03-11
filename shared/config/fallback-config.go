@@ -74,14 +74,6 @@ func (cfg *FallbackConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *FallbackConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *FallbackConfig) GetName() string {
-	return "Fallback Clients"
-}
-
 func (cfg *FallbackConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

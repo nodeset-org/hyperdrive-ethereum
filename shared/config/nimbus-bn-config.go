@@ -113,14 +113,6 @@ func getNimbusDefaultPeers() uint16 {
 	}
 }
 
-func (cfg *NimbusBnConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *NimbusBnConfig) GetName() string {
-	return "Nimbus"
-}
-
 func (cfg *NimbusBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

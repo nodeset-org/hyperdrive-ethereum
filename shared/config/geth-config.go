@@ -105,14 +105,6 @@ func calculateGethPeers() uint16 {
 	}
 }
 
-func (cfg *GethConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *GethConfig) GetName() string {
-	return "Geth"
-}
-
 func (cfg *GethConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

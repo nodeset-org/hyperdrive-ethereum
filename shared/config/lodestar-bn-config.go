@@ -72,14 +72,6 @@ func (cfg *LodestarBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *LodestarBnConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *LodestarBnConfig) GetName() string {
-	return "Local EC"
-}
-
 func (cfg *LodestarBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

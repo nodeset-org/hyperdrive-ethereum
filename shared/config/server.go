@@ -102,14 +102,6 @@ func (cfg ServerConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *ServerConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *ServerConfig) GetName() string {
-	return "Server"
-}
-
 func (cfg *ServerConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

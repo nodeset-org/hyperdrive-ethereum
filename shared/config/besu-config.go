@@ -101,14 +101,6 @@ func (cfg *BesuConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *BesuConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *BesuConfig) GetName() string {
-	return "Besu"
-}
-
 func (cfg *BesuConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

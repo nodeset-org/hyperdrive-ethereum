@@ -230,14 +230,6 @@ func (cfg *LocalExecutionConfigSettings) GetAdditionalFlags() string {
 	}
 }
 
-func (cfg *LocalExecutionConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *LocalExecutionConfig) GetName() string {
-	return "Local EC"
-}
-
 func (cfg *LocalExecutionConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

@@ -82,14 +82,6 @@ func (cfg ExternalExecutionConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *ExternalExecutionConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *ExternalExecutionConfig) GetName() string {
-	return "External Execution Client"
-}
-
 func (cfg *ExternalExecutionConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

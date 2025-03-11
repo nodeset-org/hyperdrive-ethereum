@@ -94,11 +94,6 @@ func NewPrysmBnConfig() *PrysmBnConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *PrysmBnConfig) GetTitle() string {
-	return "Prysm"
-}
-
 // Get the parameters for this config
 func (cfg *PrysmBnConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -113,14 +108,6 @@ func (cfg *PrysmBnConfig) GetParameters() []hdconfig.IParameter {
 // Get the sections underneath this one
 func (cfg *PrysmBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
-}
-
-func (cfg *PrysmBnConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *PrysmBnConfig) GetName() string {
-	return "Prysm"
 }
 
 func (cfg *PrysmBnConfig) GetDescription() hdconfig.DynamicProperty[string] {

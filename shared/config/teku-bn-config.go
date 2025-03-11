@@ -81,11 +81,6 @@ func NewTekuBnConfig() *TekuBnConfig {
 	return cfg
 }
 
-// Get the title for the config
-func (cfg *TekuBnConfig) GetTitle() string {
-	return "Teku"
-}
-
 // Get the parameters for this config
 func (cfg *TekuBnConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -109,13 +104,6 @@ func getTekuHeapSize() uint64 {
 		return 2048
 	}
 	return 0
-}
-func (cfg *TekuBnConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *TekuBnConfig) GetName() string {
-	return "Teku"
 }
 
 func (cfg *TekuBnConfig) GetDescription() hdconfig.DynamicProperty[string] {

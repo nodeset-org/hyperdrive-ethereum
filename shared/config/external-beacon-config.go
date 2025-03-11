@@ -86,14 +86,6 @@ func (cfg ExternalBeaconConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *ExternalBeaconConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *ExternalBeaconConfig) GetName() string {
-	return "External Beacon Node"
-}
-
 func (cfg *ExternalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

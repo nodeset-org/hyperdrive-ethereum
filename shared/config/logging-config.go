@@ -183,14 +183,6 @@ func (cfg *LoggingConfigSettings) GetOptions() logging.LoggerOptions {
 	}
 }
 
-func (cfg *LoggingConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *LoggingConfig) GetName() string {
-	return "Logging"
-}
-
 func (cfg *LoggingConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }

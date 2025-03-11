@@ -88,14 +88,6 @@ func (cfg *LighthouseBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
-func (cfg *LighthouseBnConfig) GetID() hdconfig.Identifier {
-	return cfg.ID
-}
-
-func (cfg *LighthouseBnConfig) GetName() string {
-	return "Lighthouse"
-}
-
 func (cfg *LighthouseBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
 	return hdconfig.DynamicProperty[string]{}
 }
