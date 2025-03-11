@@ -19,6 +19,9 @@ const (
 	CacheSizeID             string = "cacheSize"
 	P2pQuicPortID           string = "p2pQuicPort"
 
+	ExternalBnId string = "externalBeaconNode"
+	FallbackID   string = "fallback"
+
 	// Logger
 	LoggerLevelID      string = "level"
 	LoggerFormatID     string = "format"
@@ -43,6 +46,7 @@ const (
 	ExporterEnableRootFsID string = "enableRootFs"
 
 	// External Execution
+	ExternalEcId             string = "externalExecutionClient"
 	ExternalEcWebsocketUrlID string = "wsUrl"
 
 	// Fallback

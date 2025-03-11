@@ -168,8 +168,8 @@ func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.MaxPriorityFee,
 		&cfg.AutoTxGasThreshold,
 		&cfg.EnableIPv6,
-		&cfg.Network,
-		&cfg.ClientMode,
+		// &cfg.Network,
+		// &cfg.ClientMode,
 	}
 }
 
@@ -178,20 +178,28 @@ func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 		cfg.ServerConfig,
 		cfg.LocalBeaconClient,
 		cfg.LocalExecutionClient,
+		cfg.ExternalBeaconClient,
+		cfg.ExternalExecutionClient,
+		cfg.Fallback,
 	}
 }
 
 func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumSettings) *HyperdriveEthereumConfigSettings {
 	instance := &HyperdriveEthereumConfigSettings{
-		ApiPort:              native.ApiPort,
-		AutoTxMaxFee:         native.AutoTxMaxFee,
-		MaxPriorityFee:       native.MaxPriorityFee,
-		AutoTxGasThreshold:   native.AutoTxGasThreshold,
-		Network:              native.Network,
-		ContainerTag:         native.ContainerTag,
-		ServerConfig:         &sharedconfig.ServerConfigSettings{},
-		LocalBeaconClient:    &sharedconfig.LocalBeaconConfigSettings{},
-		LocalExecutionClient: &sharedconfig.LocalExecutionConfigSettings{},
+		ApiPort:                 native.ApiPort,
+		ContainerTag:            native.ContainerTag,
+		AutoTxMaxFee:            native.AutoTxMaxFee,
+		MaxPriorityFee:          native.MaxPriorityFee,
+		AutoTxGasThreshold:      native.AutoTxGasThreshold,
+		EnableIPv6:              native.EnableIPv6,
+		Network:                 native.Network,
+		ClientMode:              ClientMode(native.ClientMode),
+		ServerConfig:            &sharedconfig.ServerConfigSettings{},
+		LocalBeaconClient:       &sharedconfig.LocalBeaconConfigSettings{},
+		LocalExecutionClient:    &sharedconfig.LocalExecutionConfigSettings{},
+		ExternalBeaconClient:    &sharedconfig.ExternalBeaconConfigSettings{},
+		ExternalExecutionClient: &sharedconfig.ExternalExecutionConfigSettings{},
+		Fallback:                &sharedconfig.FallbackConfigSettings{},
 	}
 	return instance
 }

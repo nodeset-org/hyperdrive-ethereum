@@ -70,7 +70,26 @@ func (cfg *FallbackConfig) GetParameters() []hdconfig.IParameter {
 	}
 }
 
-// Get the sections underneath this one
-func (cfg *FallbackConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *FallbackConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *FallbackConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *FallbackConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *FallbackConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(ids.FallbackID)
+}
+
+func (cfg *FallbackConfig) GetName() string {
+	return "Fallback"
+}
+
+func (cfg *FallbackConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }

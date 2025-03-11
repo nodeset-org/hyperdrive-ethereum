@@ -82,7 +82,26 @@ func (cfg *ExternalBeaconConfig) GetParameters() []hdconfig.IParameter {
 	}
 }
 
-// Get the sections underneath this one
-func (cfg *ExternalBeaconConfig) GetSections() map[string]hdconfig.ISection {
-	return map[string]hdconfig.ISection{}
+func (cfg *ExternalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *ExternalBeaconConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *ExternalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *ExternalBeaconConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(ids.ExternalBnId)
+}
+
+func (cfg *ExternalBeaconConfig) GetName() string {
+	return "External BN"
+}
+
+func (cfg ExternalBeaconConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
 }
