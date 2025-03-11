@@ -48,8 +48,10 @@ type NimbusBnConfigSettings struct {
 func NewNimbusBnConfig() *NimbusBnConfig {
 	cfg := &NimbusBnConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalBnNimbusID)
-	cfg.Hidden.Default = true
-	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"nimbus\"}}false{{else}}true{{end}}"
+	cfg.Name = "Nimbus"
+	cfg.Description.Default = ""
+	// cfg.Hidden.Default = true
+	// cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"nimbus\"}}false{{else}}true{{end}}"
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -84,11 +86,6 @@ func NewNimbusBnConfig() *NimbusBnConfig {
 	return cfg
 }
 
-// Get the title for the config
-func (cfg *NimbusBnConfig) GetTitle() string {
-	return "Nimbus"
-}
-
 // Get the parameters for this config
 func (cfg *NimbusBnConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -114,4 +111,24 @@ func getNimbusDefaultPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+func (cfg *NimbusBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *NimbusBnConfig) GetName() string {
+	return "Nimbus"
+}
+
+func (cfg *NimbusBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *NimbusBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *NimbusBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

@@ -33,6 +33,8 @@ type FallbackConfigSettings struct {
 func NewFallbackConfig() *FallbackConfig {
 	cfg := &FallbackConfig{}
 	cfg.ID = hdconfig.Identifier(ids.FallbackID)
+	cfg.Name = "Fallback Clients"
+	cfg.Description.Default = "Fallback Clients"
 
 	// Use Fallback Clients
 	cfg.UseFallbackClients.ID = hdconfig.Identifier(ids.FallbackUseFallbackClientsID)
@@ -58,11 +60,6 @@ func NewFallbackConfig() *FallbackConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *FallbackConfig) GetTitle() string {
-	return "Fallback Clients"
-}
-
 // Get the Parameters for this config
 func (cfg *FallbackConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -75,4 +72,24 @@ func (cfg *FallbackConfig) GetParameters() []hdconfig.IParameter {
 
 func (cfg *FallbackConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *FallbackConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *FallbackConfig) GetName() string {
+	return "Fallback Clients"
+}
+
+func (cfg *FallbackConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *FallbackConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *FallbackConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

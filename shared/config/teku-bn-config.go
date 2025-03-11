@@ -43,8 +43,10 @@ type TekuBnConfigSettings struct {
 func NewTekuBnConfig() *TekuBnConfig {
 	cfg := &TekuBnConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalBnTekuID)
-	cfg.Hidden.Default = true
-	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"teku\"}}false{{else}}true{{end}}"
+	cfg.Name = "Teku"
+	cfg.Description.Default = "Teku is a Java-based Ethereum 2.0 client developed by ConsenSys. It is known for its high performance and reliability."
+	// cfg.Hidden.Default = true
+	// cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"teku\"}}false{{else}}true{{end}}"
 
 	cfg.JvmHeapSize.ID = hdconfig.Identifier(ids.TekuJvmHeapSizeID)
 	cfg.JvmHeapSize.Name = "JVM Heap Size"
@@ -108,7 +110,22 @@ func getTekuHeapSize() uint64 {
 	}
 	return 0
 }
+func (cfg *TekuBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
 
 func (cfg *TekuBnConfig) GetName() string {
 	return "Teku"
+}
+
+func (cfg *TekuBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *TekuBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *TekuBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

@@ -29,6 +29,8 @@ type ExternalBeaconConfigSettings struct {
 func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	cfg := &ExternalBeaconConfig{}
 	cfg.ID = hdconfig.Identifier(ids.ExternalBnId)
+	cfg.Name = "External BN"
+	cfg.Description.Default = "External Beacon Node"
 
 	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
@@ -71,11 +73,6 @@ func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *ExternalBeaconConfig) GetTitle() string {
-	return "External Beacon Node"
-}
-
 // Get the parameters for this config
 func (cfg *ExternalBeaconConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -87,4 +84,24 @@ func (cfg *ExternalBeaconConfig) GetParameters() []hdconfig.IParameter {
 
 func (cfg ExternalBeaconConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *ExternalBeaconConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *ExternalBeaconConfig) GetName() string {
+	return "External Beacon Node"
+}
+
+func (cfg *ExternalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *ExternalBeaconConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *ExternalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

@@ -50,6 +50,8 @@ type LoggingConfigSettings struct {
 func NewLoggingConfig() *LoggingConfig {
 	cfg := &LoggingConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LoggingSectionID)
+	cfg.Name = "Logging"
+	cfg.Description.Default = "Configure the logging options for the Hyperdrive sercive and any modules that support it."
 
 	cfg.SectionHeader.ID = hdconfig.Identifier(ids.LoggingSectionID)
 	cfg.SectionHeader.Name = "Logging"
@@ -179,4 +181,24 @@ func (cfg *LoggingConfigSettings) GetOptions() logging.LoggerOptions {
 		Level:      cfg.Level,
 		AddSource:  cfg.AddSource,
 	}
+}
+
+func (cfg *LoggingConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *LoggingConfig) GetName() string {
+	return "Logging"
+}
+
+func (cfg *LoggingConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LoggingConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LoggingConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

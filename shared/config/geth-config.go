@@ -46,6 +46,8 @@ type GethConfigSettings struct {
 func NewGethConfig() *GethConfig {
 	cfg := &GethConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalEcGethID)
+	cfg.Name = "Geth"
+	cfg.Description.Default = "Geth is the official Go implementation of an Ethereum client. It is known for its high performance and reliability."
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -75,11 +77,6 @@ func NewGethConfig() *GethConfig {
 	return cfg
 }
 
-// Get the title for the config
-func (cfg *GethConfig) GetTitle() string {
-	return "Geth"
-}
-
 // Get the parameters for this config
 func (cfg *GethConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -106,4 +103,24 @@ func calculateGethPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+func (cfg *GethConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *GethConfig) GetName() string {
+	return "Geth"
+}
+
+func (cfg *GethConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *GethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *GethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

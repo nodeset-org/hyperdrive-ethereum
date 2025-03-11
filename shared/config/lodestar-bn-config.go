@@ -35,8 +35,10 @@ type LodestarBnConfigSettings struct {
 func NewLodestarBnConfig() *LodestarBnConfig {
 	cfg := &LodestarBnConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalBnLodestarID)
-	cfg.Hidden.Default = true
-	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lodestar\"}}false{{else}}true{{end}}"
+	cfg.Name = "Lodestar"
+	cfg.Description.Default = "Lodestar is a full-featured Ethereum 2.0 client written in TypeScript. It is known for its ease of use and high performance."
+	// cfg.Hidden.Default = true
+	// cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lodestar\"}}false{{else}}true{{end}}"
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -56,11 +58,6 @@ func NewLodestarBnConfig() *LodestarBnConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *LodestarBnConfig) GetTitle() string {
-	return "Lodestar"
-}
-
 // Get the parameters for this config
 func (cfg *LodestarBnConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -73,4 +70,24 @@ func (cfg *LodestarBnConfig) GetParameters() []hdconfig.IParameter {
 // Get the sections underneath this one
 func (cfg *LodestarBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *LodestarBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *LodestarBnConfig) GetName() string {
+	return "Local EC"
+}
+
+func (cfg *LodestarBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LodestarBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LodestarBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

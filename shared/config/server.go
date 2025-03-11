@@ -48,7 +48,7 @@ type ServerConfigSettings struct {
 
 func NewServerConfig() *ServerConfig {
 	cfg := &ServerConfig{}
-	cfg.ID = ids.ServerConfigID
+	cfg.ID = hdconfig.Identifier(ids.ServerConfigID)
 	cfg.Name = "Service Config"
 	cfg.Description.Default = "This is the configuration for the module's service. This isn't used by the service directly, but it is used by Hyperdrive itself in the service's Docker Compose file template to configure the service during its starting process."
 
@@ -100,4 +100,24 @@ func (cfg ServerConfig) GetParameters() []hdconfig.IParameter {
 
 func (cfg ServerConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *ServerConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *ServerConfig) GetName() string {
+	return "Server"
+}
+
+func (cfg *ServerConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *ServerConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *ServerConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

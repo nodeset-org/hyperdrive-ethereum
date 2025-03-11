@@ -47,6 +47,8 @@ type BesuConfigSettings struct {
 func NewBesuConfig() *BesuConfig {
 	cfg := &BesuConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalEcBesuID)
+	cfg.Name = "Besu"
+	cfg.Description.Default = "Besu is a Java-based Ethereum client developed by the Hyperledger project. It is known for its high performance and reliability."
 
 	// TODO: Get these reviewed
 	cfg.JvmHeapSize.ID = hdconfig.Identifier(ids.BesuJvmHeapSizeID)
@@ -82,11 +84,6 @@ func NewBesuConfig() *BesuConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *BesuConfig) GetTitle() string {
-	return "Besu"
-}
-
 // Get the parameters for this config
 func (cfg *BesuConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -102,4 +99,24 @@ func (cfg *BesuConfig) GetParameters() []hdconfig.IParameter {
 // Get the sections underneath this one
 func (cfg *BesuConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *BesuConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *BesuConfig) GetName() string {
+	return "Besu"
+}
+
+func (cfg *BesuConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *BesuConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *BesuConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

@@ -41,9 +41,11 @@ type LighthouseBnConfigSettings struct {
 func NewLighthouseBnConfig() *LighthouseBnConfig {
 	cfg := &LighthouseBnConfig{}
 	cfg.ID = hdconfig.Identifier((ids.LocalBnLighthouseID))
+	cfg.Name = "Lighthouse"
+	cfg.Description.Default = "Lighthouse"
 
-	cfg.Hidden.Default = true
-	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lighthouse\"}}false{{else}}true{{end}}"
+	// cfg.Hidden.Default = true
+	// cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"lighthouse\"}}false{{else}}true{{end}}"
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -67,11 +69,6 @@ func NewLighthouseBnConfig() *LighthouseBnConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *LighthouseBnConfig) GetTitle() string {
-	return "Lighthouse"
-}
-
 // Get the parameters for this config
 func (cfg *LighthouseBnConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -89,4 +86,24 @@ func (cfg *LighthouseBnConfig) GetSubconfigs() map[string]hdconfig.ISection {
 
 func (cfg *LighthouseBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *LighthouseBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *LighthouseBnConfig) GetName() string {
+	return "Lighthouse"
+}
+
+func (cfg *LighthouseBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LighthouseBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LighthouseBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

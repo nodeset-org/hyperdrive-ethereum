@@ -68,8 +68,8 @@ type LocalExecutionConfigSettings struct {
 func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg := &LocalExecutionConfig{}
 	cfg.ID = hdconfig.Identifier(ids.EcID)
-
-	//TODO: Confirm these
+	cfg.Name = "Local EC"
+	cfg.Description.Default = ""
 
 	// Options for ExecutionClient
 	optionsEc := make([]hdconfig.ParameterOption[ExecutionClient], 4)
@@ -228,4 +228,24 @@ func (cfg *LocalExecutionConfigSettings) GetAdditionalFlags() string {
 	default:
 		panic(fmt.Sprintf("Unknown Execution Client %s", string(cfg.ExecutionClient)))
 	}
+}
+
+func (cfg *LocalExecutionConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *LocalExecutionConfig) GetName() string {
+	return "Local EC"
+}
+
+func (cfg *LocalExecutionConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LocalExecutionConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

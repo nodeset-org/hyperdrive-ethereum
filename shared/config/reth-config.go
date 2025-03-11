@@ -45,6 +45,8 @@ type RethConfigSettings struct {
 func NewRethConfig() *RethConfig {
 	cfg := &RethConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalEcRethID)
+	cfg.Name = "Reth"
+	cfg.Description.Default = "Reth is a lightweight Ethereum client that is designed to be easy to run and maintain. It is a good choice for users who want to run a full Ethereum node without the resource requirements of other"
 
 	cfg.CacheSize.ID = hdconfig.Identifier(ids.CacheSizeID)
 	cfg.CacheSize.Name = "Cache Size"
@@ -123,7 +125,22 @@ func calculateRethPeers() uint16 {
 	}
 	return 25
 }
+func (cfg *RethConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
 
 func (cfg *RethConfig) GetName() string {
 	return "Reth"
+}
+
+func (cfg *RethConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *RethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *RethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

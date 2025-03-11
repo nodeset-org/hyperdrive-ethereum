@@ -47,8 +47,10 @@ type PrysmBnConfigSettings struct {
 func NewPrysmBnConfig() *PrysmBnConfig {
 	cfg := &PrysmBnConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalBnPrysmID)
-	cfg.Hidden.Default = true
-	cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"prysm\"}}false{{else}}true{{end}}"
+	cfg.Name = "Prysm"
+	cfg.Description.Default = "Prysm is a full-featured Ethereum 2.0 client written in Go. It is known for its ease of use and high performance."
+	// cfg.Hidden.Default = true
+	// cfg.Hidden.Template = "{{if eq .GetValue \"localBeaconClient/beaconNode\" \"prysm\"}}false{{else}}true{{end}}"
 
 	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
 	cfg.MaxPeers.Name = "Max Peers"
@@ -113,6 +115,22 @@ func (cfg *PrysmBnConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
 }
 
+func (cfg *PrysmBnConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
 func (cfg *PrysmBnConfig) GetName() string {
 	return "Prysm"
+}
+
+func (cfg *PrysmBnConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *PrysmBnConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *PrysmBnConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

@@ -247,3 +247,23 @@ func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
 		cfg.Teku,
 	}
 }
+
+func (cfg *LocalBeaconConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *LocalBeaconConfig) GetName() string {
+	return "Local BN"
+}
+
+func (cfg *LocalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LocalBeaconConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}

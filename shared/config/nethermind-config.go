@@ -65,6 +65,8 @@ type NethermindConfigSettings struct {
 func NewNethermindConfig() *NethermindConfig {
 	cfg := &NethermindConfig{}
 	cfg.ID = hdconfig.Identifier(ids.LocalEcNethermindID)
+	cfg.Name = "Nethermind"
+	cfg.Description.Default = ""
 
 	cfg.CacheSize.ID = hdconfig.Identifier(ids.CacheSizeID)
 	cfg.CacheSize.Name = "Cache (Memory Hint) Size"
@@ -210,4 +212,24 @@ func calculateNethermindPeers() uint16 {
 	default:
 		panic(fmt.Sprintf("unsupported architecture %s", runtime.GOARCH))
 	}
+}
+
+func (cfg *NethermindConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *NethermindConfig) GetName() string {
+	return "Nethermind"
+}
+
+func (cfg *NethermindConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *NethermindConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *NethermindConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }

@@ -29,6 +29,8 @@ type ExternalExecutionConfigSettings struct {
 func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg := &ExternalExecutionConfig{}
 	cfg.ID = hdconfig.Identifier(ids.ExternalEcId)
+	cfg.Name = "External EC"
+	cfg.Description.Default = "External Execution Client"
 
 	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
@@ -67,11 +69,6 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	return cfg
 }
 
-// The title for the config
-func (cfg *ExternalExecutionConfig) GetTitle() string {
-	return "External Execution Client"
-}
-
 // Get the parameters for this config
 func (cfg *ExternalExecutionConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
@@ -83,4 +80,24 @@ func (cfg *ExternalExecutionConfig) GetParameters() []hdconfig.IParameter {
 
 func (cfg ExternalExecutionConfig) GetSections() []hdconfig.ISection {
 	return []hdconfig.ISection{}
+}
+
+func (cfg *ExternalExecutionConfig) GetID() hdconfig.Identifier {
+	return hdconfig.Identifier(cfg.ID)
+}
+
+func (cfg *ExternalExecutionConfig) GetName() string {
+	return "External Execution Client"
+}
+
+func (cfg *ExternalExecutionConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *ExternalExecutionConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *ExternalExecutionConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
 }
