@@ -135,6 +135,11 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.P2pPort.Description.Default = "The port the Execution Client should use for P2P (blockchain) traffic to communicate with other nodes."
 	cfg.P2pPort.Default = defaultLocalExecutionP2pPort
 
+	cfg.AdditionalDockerNetworks.ID = hdconfig.Identifier(ids.AdditionalDockerNetworksID)
+	cfg.AdditionalDockerNetworks.Name = "Additional Docker Networks"
+	cfg.AdditionalDockerNetworks.Description.Default = "Comma-separated list of additional Docker networks to connect the Execution Client to."
+	cfg.AdditionalDockerNetworks.Default = ""
+
 	// Create the subconfigs
 	cfg.Geth = NewGethConfig()
 	cfg.Nethermind = NewNethermindConfig()
@@ -153,6 +158,7 @@ func (cfg *LocalExecutionConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.EnginePort,
 		&cfg.OpenApiPorts,
 		&cfg.P2pPort,
+		&cfg.AdditionalDockerNetworks,
 	}
 }
 

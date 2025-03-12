@@ -51,7 +51,7 @@ type LocalBeaconConfigSettings struct {
 	P2pPort                  uint64      `json:"p2pPort" yaml:"p2pPort"`
 	HttpPort                 uint64      `json:"httpPort" yaml:"httpPort"`
 	OpenHttpPort             RpcPortMode `json:"openHttpPort" yaml:"openHttpPort"`
-	OpenPorts                uint64      `json:"openPorts" yaml:"openPorts"`
+	OpenPorts                string      `json:"openPorts" yaml:"openPorts"`
 	AdditionalDockerNetworks string      `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
 
 	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse" yaml:"lighthouse"`
@@ -138,6 +138,11 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.BeaconNode.Options = optionsBeaconNode
 	cfg.BeaconNode.Default = BeaconNode_Nimbus
 
+	cfg.AdditionalDockerNetworks.ID = hdconfig.Identifier(ids.AdditionalDockerNetworksID)
+	cfg.AdditionalDockerNetworks.Name = "Additional Docker Networks"
+	cfg.AdditionalDockerNetworks.Description.Default = "Comma-separated list of additional Docker networks to connect to."
+	cfg.AdditionalDockerNetworks.Default = ""
+
 	cfg.Lighthouse = NewLighthouseBnConfig()
 	cfg.Lodestar = NewLodestarBnConfig()
 	cfg.Nimbus = NewNimbusBnConfig()
@@ -156,6 +161,7 @@ func (cfg *LocalBeaconConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.HttpPort,
 		&cfg.OpenHttpPort,
 		&cfg.OpenPorts,
+		&cfg.AdditionalDockerNetworks,
 	}
 }
 
