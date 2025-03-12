@@ -105,6 +105,11 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.OpenHttpPort.Options = options
 	cfg.OpenHttpPort.Default = RpcPortMode_Closed
 
+	cfg.OpenPorts.ID = hdconfig.Identifier(ids.OpenPortsID)
+	cfg.OpenPorts.Name = "Open Ports"
+	cfg.OpenPorts.Description.Default = "Comma-separated list of ports to open in the Docker container."
+	cfg.OpenPorts.Default = ""
+
 	// Options for BeaconNode
 	optionsBeaconNode := make([]hdconfig.ParameterOption[BeaconNode], 5)
 	optionsBeaconNode[0].Name = "Lighthouse"
@@ -150,6 +155,7 @@ func (cfg *LocalBeaconConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.P2pPort,
 		&cfg.HttpPort,
 		&cfg.OpenHttpPort,
+		&cfg.OpenPorts,
 	}
 }
 

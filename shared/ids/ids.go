@@ -11,7 +11,7 @@ const (
 	P2pPortID               string = "p2pPort"
 	PortID                  string = "port"
 	PortModeID              string = "portMode"
-	OpenPortID              string = "openPort"
+	OpenPortsID             string = "openPorts"
 	HttpUrlID               string = "httpUrl"
 	EcID                    string = "localExecutionClient"
 	BnID                    string = "localBeaconClient"

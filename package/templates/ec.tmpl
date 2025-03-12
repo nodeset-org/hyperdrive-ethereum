@@ -9,7 +9,7 @@ services:
     ports:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"
-      {{- range $entry := .GetValueArrays "localExecutionClient/openApiPorts" "," }}
+      {{- range $entry := (.GetValueArray "localExecutionClient/openApiPorts" ",") }}
         - "{{$entry}}"
       {{- end }}
 
@@ -19,7 +19,7 @@ services:
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets
     networks:
       - net
-      {{- range $network := .GetValueArrays "localExecutionClient/additionalDockerNetworks" ","}}
+      {{- range $network := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
       - {{$network}}
       {{- end}}
     environment:
@@ -34,13 +34,13 @@ services:
       - EC_METRICS_PORT=9100
 
       {{- /* Client-specific values */}}
-      {{- if eq .GetValue "localExecutionClient/executionClient" "besu"}}
+      {{- if eq (.GetValue "localExecutionClient/executionClient") "besu"}}
       - BESU_MAX_BACK_LAYERS={{.GetValue "localExecutionClient/besu/maxBackLayers"}}
       - BESU_JVM_HEAP_SIZE={{.GetValue "localExecutionClient/besu/jvmHeapSize"}}
       - BESU_ARCHIVE_MODE={{.GetValue "localExecutionClient/besu/archiveMode"}}
       - EC_MAX_PEERS={{.GetValue "localExecutionClient/besu/maxPeers"}}
       - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/besu/additionalFlags"}}
-      {{- else if eq .GetValue "localExecutionClient/executionClient" "nethermind"}}
+      {{- else if eq (.GetValue "localExecutionClient/executionClient") "nethermind"}}
       - EC_CACHE_SIZE={{.GetValue "localExecutionClient/nethermind/cacheSize"}}
       - HD_NETHERMIND_PRUNE_MEM_SIZE={{.GetValue "localExecutionClient/nethermind/pruneMemSize"}}
       - HD_NETHERMIND_ADDITIONAL_MODULES={{.GetValue "localExecutionClient/nethermind/additionalModules"}}
@@ -49,7 +49,7 @@ services:
       - HD_NETHERMIND_FULL_PRUNING_THRESHOLD_MB={{.GetValue "localExecutionClient/nethermind/fullPruningThresholdMb"}}
       - EC_MAX_PEERS={{.GetValue "localExecutionClient/nethermind/maxPeers"}}
       - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/nethermind/additionalFlags"}}
-      {{- else if eq .GetValue "localExecutionClient/executionClient" "geth"}}
+      {{- else if eq (.GetValue "localExecutionClient/executionClient") "geth"}}
       - HD_GETH_EVM_TIMEOUT={{.GetValue "localExecutionClient/geth/evmTimeout"}}
       - HD_GETH_ARCHIVE_MODE={{.GetValue "localExecutionClient/geth/archiveMode"}}
       - EC_MAX_PEERS={{.GetValue "localExecutionClient/geth/maxPeers"}}
@@ -75,7 +75,7 @@ networks:
     {{- if .GetValue "enableIPv6" }}
     enable_ipv6: true
     {{- end}}
-  {{- range $network := .GetValueArrays "localExecutionClient/additionalDockerNetworks" ","}}
+  {{- range $network := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
   {{$network}}:
     external: true
   {{- end}}

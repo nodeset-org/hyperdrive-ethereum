@@ -9,10 +9,10 @@ services:
     ports:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"
-      {{- if eq .GetValue "localBeaconClient/beaconNode" "lighthouse"}}
+      {{- if eq (.GetValue "localBeaconClient/beaconNode") "lighthouse"}}
       - "{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}:{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}/udp"
       {{- end}}
-      {{- range $entry := .GetValueArrays "localBeaconClient/openPorts" ","}}
+      {{- range $entry := (.GetValueArray "localBeaconClient/openPorts" ",")}}
       - "{{$entry}}"
       {{- end}}
     volumes:
@@ -21,7 +21,7 @@ services:
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets:ro
     networks:
       - net
-      {{- range $network := .GetValueArrays "localBeaconClient/additionalDockerNetworks" ","}}
+      {{- range $network := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",")}}
       - {{$network}}
       {{- end}}
     environment:
@@ -44,20 +44,20 @@ services:
       - MEV_BOOST_URL=http://0.0.0.0/
 
       {{- /* Client-specific values */}}
-      {{- if eq .GetValue "localBeaconClient/beaconNode" "teku"}}
+      {{- if eq (.GetValue "localBeaconClient/beaconNode") "teku"}}
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/teku/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/teku/additionalFlags"}}
       - TEKU_JVM_HEAP_SIZE={{.GetValue "localBeaconClient/teku/jvmHeapSize"}}
       - TEKU_ARCHIVE_MODE={{.GetValue "localBeaconClient/teku/archiveMode"}}
-      {{- else if eq .GetValue "localBeaconClient/beaconNode" "prysm"}}
+      {{- else if eq (.GetValue "localBeaconClient/beaconNode") "prysm"}}
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/prysm/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/prysm/additionalFlags"}}
       - BN_RPC_PORT={{.GetValue "localBeaconClient/prysm/rpcPort"}}
-      {{- else if eq .GetValue "localBeaconClient/beaconNode" "nimbus"}}
+      {{- else if eq (.GetValue "localBeaconClient/beaconNode") "nimbus"}}
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/nimbus/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/nimbus/additionalFlags"}}
       - NIMBUS_PRUNING_MODE={{.GetValue "localBeaconClient/nimbus/pruningMode"}}
-      {{- else if eq .GetValue "localBeaconClient/beaconNode" "lighthouse"}}
+      {{- else if eq (.GetValue "localBeaconClient/beaconNode") "lighthouse"}}
       - BN_MAX_PEERS={{.GetValue "localBeaconClient/lighthouse/maxPeers"}}
       - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/lighthouse/additionalFlags"}}
       - BN_P2P_QUIC_PORT={{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}
@@ -79,7 +79,7 @@ networks:
     {{- if .GetValue "enableIPv6" }}
     enable_ipv6: true
     {{- end }}
-  {{- range $network := .GetValueArrays "localBeaconClient/additionalDockerNetworks" ","}}
+  {{- range $network := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",")}}
   {{$network}}:
     external: true
   {{- end}}
