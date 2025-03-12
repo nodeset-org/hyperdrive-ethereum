@@ -68,8 +68,8 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.Name = "Local BN"
 	cfg.Description.Default = "Configure your local Beacon Node settings here."
 
-	cfg.CheckpointSyncProvider.ID = hdconfig.Identifier(ids.LocalBnCheckpointSyncUrlID)
-	cfg.CheckpointSyncProvider.Name = "Checkpoint Sync URL"
+	cfg.CheckpointSyncProvider.ID = hdconfig.Identifier(ids.LocalBnCheckpointSyncProviderID)
+	cfg.CheckpointSyncProvider.Name = "Checkpoint Sync Provider"
 	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
 		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
 		"Leave this blank if you want to sync normally from the start of the chain."
@@ -127,7 +127,7 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	optionsBeaconNode[4].Description.Default = "PegaSys Teku (formerly known as Artemis) is a Java-based Ethereum 2.0 client designed & built to meet institutional needs and security requirements. PegaSys is an arm of ConsenSys dedicated to building enterprise-ready clients and tools for interacting with the core Ethereum platform. Teku is Apache 2 licensed and written in Java, a language notable for its maturity & ubiquity."
 	optionsBeaconNode[4].Value = BeaconNode_Teku
 
-	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BnID)
+	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BeaconNodeID)
 	cfg.BeaconNode.Name = "Beacon Node"
 	cfg.BeaconNode.Description.Default = "Select which Beacon Node client you would like to use."
 	cfg.BeaconNode.Options = optionsBeaconNode

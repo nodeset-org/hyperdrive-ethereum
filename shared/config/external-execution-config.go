@@ -60,7 +60,7 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	options[3].Description.Default = "Select if your external client is Reth."
 	options[3].Value = ExecutionClient_Reth
 
-	cfg.ExecutionClient.ID = hdconfig.Identifier(ids.EcID)
+	cfg.ExecutionClient.ID = hdconfig.Identifier(ids.ExecutionClientID)
 	cfg.ExecutionClient.Name = "Execution Client"
 	cfg.ExecutionClient.Description.Default = "Select which Execution client your external client is."
 	cfg.ExecutionClient.Options = options

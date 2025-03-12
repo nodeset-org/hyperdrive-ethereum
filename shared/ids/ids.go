@@ -20,6 +20,8 @@ const (
 	MetricsPortID           string = "metricsPort"
 	CacheSizeID             string = "cacheSize"
 	P2pQuicPortID           string = "p2pQuicPort"
+	BeaconNodeID            string = "beaconNode"
+	ExecutionClientID       string = "executionClient"
 
 	ExternalBnId string = "externalBeaconClient"
 	FallbackID   string = "fallback"
@@ -65,12 +67,12 @@ const (
 	LighthouseQuicPortID string = "p2pQuicPort"
 
 	// Local Beacon Node
-	LocalBnCheckpointSyncUrlID string = "checkpointSyncUrl"
-	LocalBnLighthouseID        string = "lighthouse"
-	LocalBnLodestarID          string = "lodestar"
-	LocalBnNimbusID            string = "nimbus"
-	LocalBnPrysmID             string = "prysm"
-	LocalBnTekuID              string = "teku"
+	LocalBnCheckpointSyncProviderID string = "checkpointSyncProvider"
+	LocalBnLighthouseID             string = "lighthouse"
+	LocalBnLodestarID               string = "lodestar"
+	LocalBnNimbusID                 string = "nimbus"
+	LocalBnPrysmID                  string = "prysm"
+	LocalBnTekuID                   string = "teku"
 
 	// Local Execution Client
 	LocalEcWebsocketPortID string = "wsPort"

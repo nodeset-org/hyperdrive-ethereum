@@ -64,7 +64,7 @@ func NewExternalBeaconConfig() *ExternalBeaconConfig {
 	options[4].Description.Default = "Select if your external client is Teku."
 	options[4].Value = BeaconNode_Teku
 
-	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BnID)
+	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BeaconNodeID)
 	cfg.BeaconNode.Name = "Beacon Node"
 	cfg.BeaconNode.Description.Default = "Select which Beacon Node your external client is."
 	cfg.BeaconNode.Options = options
