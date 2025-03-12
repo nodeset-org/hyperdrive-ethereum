@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
-	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/config"
 	"github.com/urfave/cli/v2"
 )
 

@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/nodeset-org/hyperdrive/config/ids"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
-	"github.com/nodeset-org/hyperdrive/shared/config/ids"
 	"github.com/nodeset-org/hyperdrive/shared/logging"
 )
 

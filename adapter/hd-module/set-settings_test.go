@@ -9,8 +9,8 @@ import (
 	"github.com/goccy/go-json"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	hdconfig "github.com/nodeset-org/hyperdrive/config"
 	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
-	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )

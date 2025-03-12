@@ -9,7 +9,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/nodeset-org/hyperdrive/hyperdrive-cli/utils/terminal"
+	"github.com/nodeset-org/hyperdrive/cli/utils/terminal"
 	"golang.org/x/term"
 )
 

@@ -63,9 +63,6 @@ const (
 	GethEvmTimeoutID  string = "evmTimeout"
 	GethArchiveModeID string = "archiveMode"
 
-	// Lighthouse
-	LighthouseQuicPortID string = "p2pQuicPort"
-
 	// Local Beacon Node
 	LocalBnCheckpointSyncProviderID string = "checkpointSyncProvider"
 	LocalBnLighthouseID             string = "lighthouse"

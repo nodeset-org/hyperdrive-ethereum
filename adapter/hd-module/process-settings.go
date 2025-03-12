@@ -9,8 +9,8 @@ import (
 	sharedIds "github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 
 	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
+	hdconfig "github.com/nodeset-org/hyperdrive/config"
 	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
-	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
 	"github.com/urfave/cli/v2"
 )
 
@@ -58,7 +58,7 @@ func processSettings(c *cli.Context) error {
 // Process the settings
 func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettings *hdconfig.HyperdriveSettings) (*ProcessSettingsResponse, error) {
 	// Construct the old (current) module settings from the Hyperdrive config
-	var oldSettings config.HyperdriveEthereumConfigSettings
+	var oldSettings = config.NewHyperdriveEthereumConfigSettings()
 	oldModInstance, exists := oldHdSettings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		// Create an instance with the default settings
@@ -76,14 +76,7 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 	}
 
 	// Construct the new (proposed) module settings from the Hyperdrive config
-	var newSettings = config.HyperdriveEthereumConfigSettings{
-		ServerConfig:            &sharedconfig.ServerConfigSettings{},
-		LocalBeaconClient:       &sharedconfig.LocalBeaconConfigSettings{},
-		LocalExecutionClient:    &sharedconfig.LocalExecutionConfigSettings{},
-		ExternalBeaconClient:    &sharedconfig.ExternalBeaconConfigSettings{},
-		ExternalExecutionClient: &sharedconfig.ExternalExecutionConfigSettings{},
-		Fallback:                &sharedconfig.FallbackConfigSettings{},
-	}
+	var newSettings = config.NewHyperdriveEthereumConfigSettings()
 
 	newModInstance, exists := newHdSettings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
@@ -105,7 +98,7 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 	}
 
 	// Get the list of services that need to be restarted
-	servicesToRestart, err := newSettings.GetChangedServices(&oldSettings)
+	servicesToRestart, err := newSettings.GetChangedServices(oldSettings)
 	if err != nil {
 		return nil, fmt.Errorf("error getting changed services: %w", err)
 	}

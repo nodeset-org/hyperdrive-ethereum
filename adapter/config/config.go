@@ -100,6 +100,29 @@ type HyperdriveEthereumConfigSettings struct {
 	ExternalIp string `json:"externalIp" yaml:"externalIp"`
 }
 
+func NewHyperdriveEthereumConfigSettings() *HyperdriveEthereumConfigSettings {
+	// TODO: Create constructor functions for all the subsections
+	return &HyperdriveEthereumConfigSettings{
+		ServerConfig: &sharedconfig.ServerConfigSettings{},
+		LocalBeaconClient: &sharedconfig.LocalBeaconConfigSettings{
+			Lighthouse: &sharedconfig.LighthouseBnConfigSettings{},
+			Lodestar:   &sharedconfig.LodestarBnConfigSettings{},
+			Nimbus:     &sharedconfig.NimbusBnConfigSettings{},
+			Prysm:      &sharedconfig.PrysmBnConfigSettings{},
+			Teku:       &sharedconfig.TekuBnConfigSettings{},
+		},
+		LocalExecutionClient: &sharedconfig.LocalExecutionConfigSettings{
+			Geth:       &sharedconfig.GethConfigSettings{},
+			Nethermind: &sharedconfig.NethermindConfigSettings{},
+			Besu:       &sharedconfig.BesuConfigSettings{},
+			Reth:       &sharedconfig.RethConfigSettings{},
+		},
+		ExternalBeaconClient:    &sharedconfig.ExternalBeaconConfigSettings{},
+		ExternalExecutionClient: &sharedconfig.ExternalExecutionConfigSettings{},
+		Fallback:                &sharedconfig.FallbackConfigSettings{},
+	}
+}
+
 func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg := &HyperdriveEthereumConfig{}
 
@@ -155,7 +178,6 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg.ExternalBeaconClient = sharedconfig.NewExternalBeaconConfig()
 	cfg.ExternalExecutionClient = sharedconfig.NewExternalExecutionConfig()
 	cfg.Fallback = sharedconfig.NewFallbackConfig()
-
 	cfg.ServerConfig = sharedconfig.NewServerConfig()
 
 	return cfg
@@ -240,7 +262,12 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 	oldModSettings := hdconfig.CreateModuleSettings(cfg)
 	err = oldModSettings.CopySettingsFromKnownType(oldSettings)
 	if err != nil {
-		return nil, fmt.Errorf("error copying old settings (newModSettings: %+v) (oldModSettings: %+v): %w", newModSettings, oldSettings, err)
+		debugString, _ := json.Marshal(oldSettings)
+		return nil, fmt.Errorf(
+			"error copying old settings (oldSettings: %s): %w",
+			debugString,
+			err,
+		)
 	}
 
 	// Compare the settings - if there are no differences, return nil
@@ -254,8 +281,4 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 		shared.ServiceContainerName,
 	}
 	return changedServices, nil
-}
-
-func (c *HyperdriveEthereumConfigSettings) GetAllModuleConfigs() []any {
-	return []any{}
 }
