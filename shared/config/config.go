@@ -36,7 +36,7 @@ type NativeHyperdriveEthereumSettings struct {
 
 	Version string `json:"version" yaml:"version"`
 
-	ServerConfig *ServerConfigSettings `json:"server" yaml:"server"`
+	ServerConfig *ServerConfigSettings `json:"serverConfig" yaml:"serverConfig"`
 	// DockerConfig *DockerSettings       `json:"dockerConfig"`
 
 	IsNew      bool   `json:"isNew" yaml:"isNew"`

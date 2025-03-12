@@ -2,6 +2,7 @@ package ids
 
 const (
 	// Shared
+	LocalServerConfigID     string = "serverConfig"
 	MaxPeersID              string = "maxPeers"
 	ContainerTagID          string = "containerTag"
 	AdditionalFlagsID       string = "additionalFlags"
@@ -9,17 +10,18 @@ const (
 	OpenHttpPortsID         string = "openHttpPort"
 	P2pPortID               string = "p2pPort"
 	PortID                  string = "port"
+	PortModeID              string = "portMode"
 	OpenPortID              string = "openPort"
 	HttpUrlID               string = "httpUrl"
-	EcID                    string = "executionClient"
-	BnID                    string = "beaconNode"
+	EcID                    string = "localExecutionClient"
+	BnID                    string = "localBeaconClient"
 	GraffitiID              string = "graffiti"
 	DoppelgangerDetectionID string = "doppelgangerDetection"
 	MetricsPortID           string = "metricsPort"
 	CacheSizeID             string = "cacheSize"
 	P2pQuicPortID           string = "p2pQuicPort"
 
-	ExternalBnId string = "externalBeaconNode"
+	ExternalBnId string = "externalBeaconClient"
 	FallbackID   string = "fallback"
 
 	// Logger

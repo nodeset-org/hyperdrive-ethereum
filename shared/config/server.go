@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
 )
 
@@ -48,18 +48,18 @@ type ServerConfigSettings struct {
 
 func NewServerConfig() *ServerConfig {
 	cfg := &ServerConfig{}
-	cfg.ID = hdconfig.Identifier(ids.ServerConfigID)
+	cfg.ID = hdconfig.Identifier(ids.LocalServerConfigID)
 	cfg.Name = "Service Config"
 	cfg.Description.Default = "This is the configuration for the module's service. This isn't used by the service directly, but it is used by Hyperdrive itself in the service's Docker Compose file template to configure the service during its starting process."
 
 	// Container Tag
-	cfg.ContainerTag.ID = ids.ContainerTagID
+	cfg.ContainerTag.ID = hdconfig.Identifier(ids.ContainerTagID)
 	cfg.ContainerTag.Name = "Container Tag"
 	cfg.ContainerTag.Description.Default = "This is the tag used for the service's Docker container image."
 	cfg.ContainerTag.Default = containerTag
 
 	// Port
-	cfg.Port.ID = ids.PortID
+	cfg.Port.ID = hdconfig.Identifier(ids.PortID)
 	cfg.Port.Name = "API Port"
 	cfg.Port.Description.Default = "This is the API port the server should run on."
 	cfg.Port.Default = uint64(DefaultServerApiPort)
@@ -81,7 +81,7 @@ func NewServerConfig() *ServerConfig {
 	options[2].Value = PortMode_External
 
 	// PortMode
-	cfg.PortMode.ID = ids.PortModeID
+	cfg.PortMode.ID = hdconfig.Identifier(ids.PortModeID)
 	cfg.PortMode.Name = "Expose API Port"
 	cfg.PortMode.Description.Default = "Determine how the server's HTTP API restricts its access from various sources."
 	cfg.PortMode.Options = options

@@ -5,8 +5,9 @@ import (
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
-	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config/ids"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
+	sharedIds "github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+
 	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	modconfig "github.com/nodeset-org/hyperdrive/modules/config"
 	hdconfig "github.com/nodeset-org/hyperdrive/shared/config"
@@ -75,7 +76,15 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 	}
 
 	// Construct the new (proposed) module settings from the Hyperdrive config
-	var newSettings config.HyperdriveEthereumConfigSettings
+	var newSettings = config.HyperdriveEthereumConfigSettings{
+		ServerConfig:            &sharedconfig.ServerConfigSettings{},
+		LocalBeaconClient:       &sharedconfig.LocalBeaconConfigSettings{},
+		LocalExecutionClient:    &sharedconfig.LocalExecutionConfigSettings{},
+		ExternalBeaconClient:    &sharedconfig.ExternalBeaconConfigSettings{},
+		ExternalExecutionClient: &sharedconfig.ExternalExecutionConfigSettings{},
+		Fallback:                &sharedconfig.FallbackConfigSettings{},
+	}
+
 	newModInstance, exists := newHdSettings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		return nil, fmt.Errorf("could not find new settings for %s", utils.FullyQualifiedModuleName)
@@ -90,8 +99,9 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 
 	// Get the open ports
 	ports := map[string]uint16{}
-	if newSettings.ServerConfig.PortMode != sharedconfig.PortMode_Closed {
-		ports[ids.ServerConfigID.String()+"/"+ids.PortID.String()] = uint16(newSettings.ServerConfig.Port)
+	// TODO: Verify with Joe
+	if newSettings.ServerConfig != nil && newSettings.ServerConfig.PortMode != sharedconfig.PortMode_Closed {
+		ports[sharedIds.LocalServerConfigID+"/"+sharedIds.PortID] = uint16(newSettings.ServerConfig.Port)
 	}
 
 	// Get the list of services that need to be restarted

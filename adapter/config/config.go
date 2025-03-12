@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
@@ -92,7 +93,7 @@ type HyperdriveEthereumConfigSettings struct {
 
 	Version string `json:"version" yaml:"version"`
 
-	ServerConfig *sharedconfig.ServerConfigSettings `json:"server" yaml:"server"`
+	ServerConfig *sharedconfig.ServerConfigSettings `json:"serverConfig" yaml:"serverConfig"`
 	// DockerConfig *DockerSettings       `json:"dockerConfig"`
 
 	IsNew      bool   `json:"isNew" yaml:"isNew"`
@@ -223,8 +224,17 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 	cfg := NewHyperdriveEthereumConfig()
 	newModSettings := hdconfig.CreateModuleSettings(cfg)
 	err := newModSettings.CopySettingsFromKnownType(s)
+
+	jsonNewModSettings, _ := json.Marshal(newModSettings)
+	jsonOldModSettings, _ := json.Marshal(oldSettings)
+
 	if err != nil {
-		return nil, fmt.Errorf("error copying new settings (newModSettings: %+v) (oldModSettings: %+v): %w", newModSettings, oldSettings, err)
+		return nil, fmt.Errorf(
+			"error copying new settings (newModSettings: %s) (oldModSettings: %s): %w",
+			string(jsonNewModSettings),
+			string(jsonOldModSettings),
+			err,
+		)
 	}
 
 	oldModSettings := hdconfig.CreateModuleSettings(cfg)

@@ -1,6 +1,6 @@
 services:
   ec:
-    image: {{.GetValue "server/containerTag"}}
+    image: {{.GetValue "serverConfig/containerTag"}}
     user: root
     container_name: {{.ModuleComposeProject}}_ec
     restart: unless-stopped
@@ -23,7 +23,7 @@ services:
       - {{$network}}
       {{- end}}
     environment:
-      - ETH_NETWORK={{.GetValue "server/network"}}
+      - ETH_NETWORK={{.GetValue "serverConfig/network"}}
       - CLIENT={{.GetValue "localExecutionClient.executionClient"}}
       - EC_P2P_PORT={{$p2p}}
       - EC_HTTP_PORT={{.GetValue "localExecutionClient.httpPort"}}

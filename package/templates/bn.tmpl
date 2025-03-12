@@ -1,6 +1,6 @@
 services:
   bn:
-    image: {{.GetValue "server/containerTag"}}
+    image: {{.GetValue "serverConfig/containerTag"}}
     user: root
     container_name: {{.ModuleComposeProject}}_bn
     restart: unless-stopped
@@ -25,7 +25,7 @@ services:
       - {{$network}}
       {{- end}}
     environment:
-      - ETH_NETWORK={{.GetValue "server/network"}}
+      - ETH_NETWORK={{.GetValue "serverConfig/network"}}
       - CLIENT={{.GetValue "localBeaconClient/beaconNode"}}
       - EC_HTTP_ENDPOINT={{.GetValue "externalExecutionClient/httpUrl"}}
       - EC_WS_ENDPOINT={{.GetValue "externalExecutionClient/wsUrl"}}
