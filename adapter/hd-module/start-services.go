@@ -36,8 +36,8 @@ func startServices(c *cli.Context) error {
 	}
 
 	// Correctly reference the actual compose files
-	beaconNodeFile := filepath.Join(utils.ComposeDir, "beacon-node.yml")
-	executionClientFile := filepath.Join(utils.ComposeDir, "execution-client.yml")
+	beaconNodeFile := filepath.Join(utils.ComposeDir, "bn.yml")
+	executionClientFile := filepath.Join(utils.ComposeDir, "ec.yml")
 
 	// Verify that the files exist before running the command
 	for _, file := range []string{beaconNodeFile, executionClientFile} {

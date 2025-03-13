@@ -12,17 +12,23 @@ services:
       {{- if eq (.GetValue "localBeaconClient/beaconNode") "lighthouse"}}
       - "{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}:{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}/udp"
       {{- end}}
-      {{- range $entry := (.GetValueArray "localBeaconClient/openPorts" ",")}}
-      - "{{$entry}}"
-      {{- end}}
+
+      {{- $openPorts := (.GetValueArray "localBeaconClient/openPorts" ",")}}
+      {{- if $openPorts }}
+        {{- range $entry := $openPorts }}
+        - "{{$entry}}"
+        {{- end }}
+      {{- end }}
     volumes:
       - bndata:/ethclient
       - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets:ro
     networks:
+    {{- $additionalNetworks := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",") }}
+    {{- if $additionalNetworks }}
       - net
-      {{- range $network := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",")}}
-      - {{$network}}
+      {{- range $network := $additionalNetworks }}
+        - {{$network}}
       {{- end}}
     environment:
       - ETH_NETWORK={{.GetValue "network"}}
@@ -79,9 +85,9 @@ networks:
     {{- if .GetValue "enableIPv6" }}
     enable_ipv6: true
     {{- end }}
-  {{- range $network := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",")}}
+  {{- $additionalNetworks := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",") }}
+  {{- if $additionalNetworks }}
+  {{- range $network := $additionalNetworks }}
   {{$network}}:
     external: true
   {{- end}}
-volumes:
-  bndata:

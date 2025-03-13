@@ -9,18 +9,22 @@ services:
     ports:
       - "{{$p2p}}:{{$p2p}}/udp"
       - "{{$p2p}}:{{$p2p}}/tcp"
-      {{- range $entry := (.GetValueArray "localExecutionClient/openApiPorts" ",") }}
-        - "{{$entry}}"
-      {{- end }}
 
+      {{- $openPorts := (.GetValueArray "localExecutionClient/openPorts" ",")}}
+      {{- if $openPorts }}
+        {{- range $entry := $openPorts }}
+        - "{{$entry}}"
+        {{- end }}
     volumes:
       - ecdata:/ethclient
       - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets
     networks:
+    {{- $additionalNetworks := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
+    {{- if $additionalNetworks }}
       - net
-      {{- range $network := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
-      - {{$network}}
+      {{- range $network := $additionalNetworks }}
+        - {{$network}}
       {{- end}}
     environment:
       - ETH_NETWORK={{.GetValue "network"}}
@@ -74,10 +78,10 @@ networks:
   net:
     {{- if .GetValue "enableIPv6" }}
     enable_ipv6: true
-    {{- end}}
-  {{- range $network := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
+    {{- end }}
+  {{- $additionalNetworks := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",") }}
+  {{- if $additionalNetworks }}
+  {{- range $network := $additionalNetworks }}
   {{$network}}:
     external: true
   {{- end}}
-volumes:
-  ecdata:
