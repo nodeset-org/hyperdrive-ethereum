@@ -33,7 +33,7 @@ type LocalExecutionConfig struct {
 	EnginePort hdconfig.UintParameter
 
 	// Toggle for forwarding the HTTP API port outside of Docker
-	OpenApiPorts hdconfig.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
+	OpenPorts hdconfig.StringParameter
 
 	// P2P traffic port
 	P2pPort hdconfig.UintParameter
@@ -54,7 +54,7 @@ type LocalExecutionConfigSettings struct {
 	HttpPort                 uint64          `json:"httpPort" yaml:"httpPort"`
 	WebsocketPort            uint64          `json:"wsPort" yaml:"wsPort"`
 	EnginePort               uint64          `json:"enginePort" yaml:"enginePort"`
-	OpenApiPorts             RpcPortMode     `json:"openApiPorts" yaml:"openApiPorts"`
+	OpenPorts                string          `json:"openPorts" yaml:"openPorts"`
 	P2pPort                  uint64          `json:"p2pPort" yaml:"p2pPort"`
 	AdditionalDockerNetworks string          `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
 
@@ -124,11 +124,10 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	options[2].Description.Default = "Expose the RPC port to other machines on your local network."
 	options[2].Value = RpcPortMode_OpenExternal
 
-	cfg.OpenApiPorts.ID = hdconfig.Identifier(ids.LocalEcOpenApiPortsID)
-	cfg.OpenApiPorts.Name = "Expose API Ports"
-	cfg.OpenApiPorts.Description.Default = "Expose the HTTP and Websocket API ports to other processes on your machine, or to your local network so other machines can access your Execution Client's API endpoints."
-	cfg.OpenApiPorts.Options = options
-	cfg.OpenApiPorts.Default = RpcPortMode_Closed
+	cfg.OpenPorts.ID = hdconfig.Identifier(ids.OpenPortsID)
+	cfg.OpenPorts.Name = "Expose API Ports"
+	cfg.OpenPorts.Description.Default = "Expose the HTTP and Websocket API ports to other processes on your machine, or to your local network so other machines can access your Execution Client's API endpoints."
+	cfg.OpenPorts.Default = ""
 
 	cfg.P2pPort.ID = hdconfig.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
@@ -161,7 +160,7 @@ func (cfg *LocalExecutionConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.HttpPort,
 		&cfg.WebsocketPort,
 		&cfg.EnginePort,
-		&cfg.OpenApiPorts,
+		&cfg.OpenPorts,
 		&cfg.P2pPort,
 		&cfg.AdditionalDockerNetworks,
 		&cfg.HostName,
@@ -184,7 +183,7 @@ func (cfg *LocalExecutionConfig) GetSections() []hdconfig.ISection {
 
 // Get the Docker mapping for the selected API port mode
 func (cfg *LocalExecutionConfigSettings) GetOpenApiPortMapping() string {
-	rpcMode := RpcPortMode(cfg.OpenApiPorts)
+	rpcMode := RpcPortMode(cfg.OpenPorts)
 	if !rpcMode.IsOpen() {
 		return ""
 	}

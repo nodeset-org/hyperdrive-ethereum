@@ -12,9 +12,12 @@ services:
 
       {{- $openPorts := (.GetValueArray "localExecutionClient/openPorts" ",")}}
       {{- if $openPorts }}
-        {{- range $entry := $openPorts }}
-        - "{{$entry}}"
-        {{- end }}
+      {{- range $entry := $openPorts }}
+      {{- if $entry}}
+      - "{{$entry}}"
+      {{- end }}
+      {{- end }}
+      {{- end }}
     volumes:
       - ecdata:/ethclient
       - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
@@ -24,8 +27,11 @@ services:
     {{- if $additionalNetworks }}
       - net
       {{- range $network := $additionalNetworks }}
-        - {{$network}}
+      {{- if $network}}
+      - {{$network}}
       {{- end}}
+      {{- end}}
+    {{- end}}
     environment:
       - ETH_NETWORK={{.GetValue "network"}}
       - CLIENT={{.GetValue "localExecutionClient/executionClient"}}
@@ -82,6 +88,11 @@ networks:
   {{- $additionalNetworks := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",") }}
   {{- if $additionalNetworks }}
   {{- range $network := $additionalNetworks }}
+  {{- if $network}}
   {{$network}}:
     external: true
   {{- end}}
+  {{- end}}
+  {{- end}}
+volumes:
+  ecdata:
