@@ -23,12 +23,12 @@ services:
       - {{$network}}
       {{- end}}
     environment:
-      - ETH_NETWORK={{.GetValue "serverConfig/network"}}
-      - CLIENT={{.GetValue "localExecutionClient.executionClient"}}
+      - ETH_NETWORK={{.GetValue "network"}}
+      - CLIENT={{.GetValue "localExecutionClient/executionClient"}}
       - EC_P2P_PORT={{$p2p}}
-      - EC_HTTP_PORT={{.GetValue "localExecutionClient.httpPort"}}
-      - EC_WS_PORT={{.GetValue "localExecutionClient.wsPort"}}
-      - EC_ENGINE_PORT={{.GetValue "localExecutionClient.enginePort"}}
+      - EC_HTTP_PORT={{.GetValue "localExecutionClient/httpPort"}}
+      - EC_WS_PORT={{.GetValue "localExecutionClient/wsPort"}}
+      - EC_ENGINE_PORT={{.GetValue "localExecutionClient/enginePort"}}
       - EXTERNAL_IP={{.GetValue "externalIp"}}
       - ENABLE_METRICS=FALSE
       - EC_METRICS_PORT=9100

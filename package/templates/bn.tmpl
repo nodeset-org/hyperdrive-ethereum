@@ -25,7 +25,7 @@ services:
       - {{$network}}
       {{- end}}
     environment:
-      - ETH_NETWORK={{.GetValue "serverConfig/network"}}
+      - ETH_NETWORK={{.GetValue "network"}}
       - CLIENT={{.GetValue "localBeaconClient/beaconNode"}}
       - EC_HTTP_ENDPOINT={{.GetValue "externalExecutionClient/httpUrl"}}
       - EC_WS_ENDPOINT={{.GetValue "externalExecutionClient/wsUrl"}}

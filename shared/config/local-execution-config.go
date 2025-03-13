@@ -140,6 +140,11 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.AdditionalDockerNetworks.Description.Default = "Comma-separated list of additional Docker networks to connect the Execution Client to."
 	cfg.AdditionalDockerNetworks.Default = ""
 
+	cfg.HostName.ID = hdconfig.Identifier(ids.HostNameID)
+	cfg.HostName.Name = "Hostname"
+	cfg.HostName.Description.Default = "The hostname of the Execution Client."
+	cfg.HostName.Default = ""
+
 	// Create the subconfigs
 	cfg.Geth = NewGethConfig()
 	cfg.Nethermind = NewNethermindConfig()
@@ -159,6 +164,7 @@ func (cfg *LocalExecutionConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.OpenApiPorts,
 		&cfg.P2pPort,
 		&cfg.AdditionalDockerNetworks,
+		&cfg.HostName,
 	}
 }
 

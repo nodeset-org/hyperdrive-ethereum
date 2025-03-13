@@ -22,6 +22,8 @@ const (
 	P2pQuicPortID           string = "p2pQuicPort"
 	BeaconNodeID            string = "beaconNode"
 	ExecutionClientID       string = "executionClient"
+	HostNameID              string = "hostName"
+	ExternalIpID            string = "externalIp"
 
 	ExternalBnId string = "externalBeaconClient"
 	FallbackID   string = "fallback"

@@ -126,6 +126,12 @@ func NewHyperdriveEthereumConfigSettings() *HyperdriveEthereumConfigSettings {
 func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg := &HyperdriveEthereumConfig{}
 
+	// Project Name
+	cfg.ProjectName.ID = hdconfig.Identifier(ids.ProjectNameID)
+	cfg.ProjectName.Name = "Project Name"
+	cfg.ProjectName.Description.Default = "The name of the project that Hyperdrive is running for."
+	cfg.ProjectName.Default = DefaultProjectName
+
 	// API Port
 	cfg.ApiPort.ID = hdconfig.Identifier(ids.ApiPortID)
 	cfg.ApiPort.Name = "Service API Port"
@@ -162,15 +168,30 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 	cfg.EnableIPv6.Description.Default = "Enable IPv6 support for Hyperdrive. This will allow the service to be accessed via IPv6 addresses."
 	cfg.EnableIPv6.Default = DefaultEnableIPv6
 
+	networkOptions := make([]hdconfig.ParameterOption[sharedconfig.Network], 2)
+	networkOptions[0].Name = string(sharedconfig.EthNetwork_Holesky)
+	networkOptions[0].Description.Default = "Holesky"
+	networkOptions[0].Value = sharedconfig.Network(sharedconfig.EthNetwork_Holesky)
+
+	networkOptions[1].Name = string(sharedconfig.EthNetwork_Mainnet)
+	networkOptions[1].Description.Default = "Mainnet"
+	networkOptions[1].Value = sharedconfig.Network(sharedconfig.EthNetwork_Mainnet)
+
 	cfg.Network.ID = hdconfig.Identifier(ids.NetworkID)
 	cfg.Network.Name = "Network"
 	cfg.Network.Description.Default = "The network that Hyperdrive should connect to."
-	cfg.Network.Default = sharedconfig.Network_Mainnet
+	cfg.Network.Default = sharedconfig.Network(sharedconfig.EthNetwork_Holesky)
+	cfg.Network.Options = networkOptions
 
 	cfg.ClientMode.ID = hdconfig.Identifier(ids.ClientModeID)
 	cfg.ClientMode.Name = "Client Mode"
 	cfg.ClientMode.Description.Default = "The mode that Hyperdrive should run in."
 	cfg.ClientMode.Default = ClientMode_Local
+
+	cfg.ExternalIp.ID = hdconfig.Identifier(ids.ExternalIpID)
+	cfg.ExternalIp.Name = "External IP"
+	cfg.ExternalIp.Description.Default = "The external IP address that Hyperdrive should use for external communication. This is used for the API server and for the external clients to connect to."
+	cfg.ExternalIp.Default = ""
 
 	// Create the subconfigs
 	cfg.LocalBeaconClient = sharedconfig.NewLocalBeaconConfig()
@@ -185,13 +206,15 @@ func NewHyperdriveEthereumConfig() *HyperdriveEthereumConfig {
 
 func (cfg HyperdriveEthereumConfig) GetParameters() []hdconfig.IParameter {
 	return []hdconfig.IParameter{
+		&cfg.ProjectName,
 		&cfg.ApiPort,
 		&cfg.ContainerTag,
 		&cfg.AutoTxMaxFee,
 		&cfg.MaxPriorityFee,
 		&cfg.AutoTxGasThreshold,
 		&cfg.EnableIPv6,
-		// &cfg.Network,
+		&cfg.Network,
+		&cfg.ExternalIp,
 		// &cfg.ClientMode,
 	}
 }
@@ -209,6 +232,7 @@ func (cfg HyperdriveEthereumConfig) GetSections() []hdconfig.ISection {
 
 func CreateInstanceFromNativeConfig(native *sharedconfig.NativeHyperdriveEthereumSettings) *HyperdriveEthereumConfigSettings {
 	instance := &HyperdriveEthereumConfigSettings{
+		ProjectName:             native.ProjectName,
 		ApiPort:                 native.ApiPort,
 		ContainerTag:            native.ContainerTag,
 		AutoTxMaxFee:            native.AutoTxMaxFee,
