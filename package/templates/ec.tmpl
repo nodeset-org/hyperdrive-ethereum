@@ -1,6 +1,15 @@
 services:
   ec:
-    image: {{.GetValue "serverConfig/containerTag"}}
+    {{- $selectedEc := .GetValue "localExecutionClient/executionClient"}}
+    {{- if eq $selectedEc "besu"}}
+    image: {{.GetValue "localExecutionClient/besu/containerTag"}}
+    {{- else if eq $selectedEc "nethermind"}}
+    image: {{.GetValue "localExecutionClient/nethermind/containerTag"}}
+    {{- else if eq $selectedEc "geth"}}
+    image: {{.GetValue "localExecutionClient/geth/containerTag"}}
+    {{- else}}
+    image: {{.GetValue "localExecutionClient/reth/containerTag"}}
+    {{- end}}
     user: root
     container_name: {{.ModuleComposeProject}}_ec
     restart: unless-stopped
@@ -73,7 +82,6 @@ services:
 
 
     entrypoint: sh
-    command: "/usr/share/hyperdrive/scripts/start-ec.sh"
     cap_drop:
       - all
     cap_add:

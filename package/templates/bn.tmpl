@@ -1,6 +1,17 @@
 services:
   bn:
-    image: {{.GetValue "serverConfig/containerTag"}}
+    {{- $selectedBn := .GetValue "localBeaconClient/beaconNode"}}
+    {{- if eq $selectedBn "teku"}}
+    image: {{.GetValue "localBeaconClient/teku/containerTag"}}
+    {{- else if eq $selectedBn "prysm"}}
+    image: {{.GetValue "localBeaconClient/prysm/containerTag"}}
+    {{- else if eq $selectedBn "nimbus"}}
+    image: {{.GetValue "localBeaconClient/nimbus/containerTag"}}
+    {{- else if eq $selectedBn "lighthouse"}}
+    image: {{.GetValue "localBeaconClient/lighthouse/containerTag"}}
+    {{- else}}
+    image: {{.GetValue "localBeaconClient/lodestar/containerTag"}}
+    {{- end}}
     user: root
     container_name: {{.ModuleComposeProject}}_bn
     restart: unless-stopped
@@ -78,7 +89,6 @@ services:
       {{- end}}
 
     entrypoint: sh
-    command: "/usr/share/hyperdrive/scripts/start-bn.sh"
     cap_drop:
       - all
     cap_add:
