@@ -29,7 +29,7 @@ services:
       {{- end }}
     volumes:
       - ecdata:/ethclient
-      - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
+      - /usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts:/usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts:ro
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets
     networks:
     {{- $additionalNetworks := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
@@ -82,6 +82,7 @@ services:
 
 
     entrypoint: sh
+    command: "/usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts/start-ec.sh"
     cap_drop:
       - all
     cap_add:

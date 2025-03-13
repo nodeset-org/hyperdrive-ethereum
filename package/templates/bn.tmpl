@@ -34,7 +34,7 @@ services:
       {{- end }}
     volumes:
       - bndata:/ethclient
-      - /usr/share/hyperdrive/scripts:/usr/share/hyperdrive/scripts:ro
+      - /usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts:/usr/share/hyperdrive/modules/hyperdrive-ethereum/scripts:ro
       - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets:ro
     networks:
     {{- $additionalNetworks := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",") }}
@@ -89,6 +89,7 @@ services:
       {{- end}}
 
     entrypoint: sh
+    command: "/usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts/start-bn.sh"
     cap_drop:
       - all
     cap_add:
