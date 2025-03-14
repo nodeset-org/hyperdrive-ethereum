@@ -35,7 +35,7 @@ func NewExternalExecutionConfig() *ExternalExecutionConfig {
 	cfg.HttpUrl.ID = hdconfig.Identifier(ids.HttpUrlID)
 	cfg.HttpUrl.Name = "HTTP URL"
 	cfg.HttpUrl.Description.Default = "The URL of the HTTP RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as this node, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead, for example 'http://192.168.1.100:8545'."
-	cfg.HttpUrl.Default = ""
+	cfg.HttpUrl.Default = "http://ec:8545"
 
 	cfg.WebsocketUrl.ID = hdconfig.Identifier(ids.ExternalEcWebsocketUrlID)
 	cfg.WebsocketUrl.Name = "Websocket URL"

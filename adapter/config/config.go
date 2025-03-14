@@ -302,7 +302,8 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 
 	// Any parameter changes will affect the service, so just return it
 	changedServices := []string{
-		shared.ServiceContainerName,
+		"ec",
+		"bn",
 	}
 	return changedServices, nil
 }
