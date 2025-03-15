@@ -142,7 +142,7 @@ func NewLocalExecutionConfig() *LocalExecutionConfig {
 	cfg.HostName.ID = hdconfig.Identifier(ids.HostNameID)
 	cfg.HostName.Name = "Hostname"
 	cfg.HostName.Description.Default = "The hostname of the Execution Client."
-	cfg.HostName.Default = ""
+	cfg.HostName.Default = "hyperdrive-he_ec"
 
 	// Create the subconfigs
 	cfg.Geth = NewGethConfig()
