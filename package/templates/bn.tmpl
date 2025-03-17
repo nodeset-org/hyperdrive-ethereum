@@ -63,7 +63,6 @@ services:
       - BITFLY_NODE_METRICS_SECRET=FALSE
       - BITFLY_NODE_METRICS_ENDPOINT=FALSE
       - BITFLY_NODE_METRICS_MACHINE_NAME=FALSE
-      - MEV_BOOST_URL=http://0.0.0.0/
 
       {{- /* Client-specific values */}}
       {{- if eq (.GetValue "localBeaconClient/beaconNode") "teku"}}

@@ -73,7 +73,7 @@ func NewLocalBeaconConfig() *LocalBeaconConfig {
 	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
 		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
 		"Leave this blank if you want to sync normally from the start of the chain."
-	cfg.CheckpointSyncProvider.Default = ""
+	cfg.CheckpointSyncProvider.Default = "https://checkpoint-sync.holesky.ethpandaops.io"
 
 	cfg.P2pPort.ID = hdconfig.Identifier(ids.P2pPortID)
 	cfg.P2pPort.Name = "P2P Port"
