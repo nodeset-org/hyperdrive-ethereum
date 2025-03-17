@@ -10,7 +10,7 @@ require (
 	github.com/glendc/go-external-ip v0.1.0
 	github.com/goccy/go-json v0.10.3
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/nodeset-org/hyperdrive v1.1.4-0.20250312203343-6cb23592c90c
+	github.com/nodeset-org/hyperdrive v1.1.4-0.20250317171735-1426034d0b50
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.5
