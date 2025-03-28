@@ -76,7 +76,7 @@ services:
       {{- else}}
       - RETH_INBOUND_MAX_PEERS={{.GetValue "localExecutionClient/reth/maxInboundPeers"}}
       - RETH_OUTBOUND_MAX_PEERS={{.GetValue "localExecutionClient/reth/maxOutboundPeers"}}
-      - EC_MAX_PEERS={{ (.GetValue "localExecutionClient/reth/maxInboundPeers") + (.GetValue "localExecutionClient/reth/maxOutboundPeers")}}
+      - EC_MAX_PEERS={{ .GetValue "localExecutionClient/reth/maxInboundPeers"}}
       - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/reth/additionalFlags"}}
       {{- end}}
 
