@@ -1,11 +1,10 @@
 package config
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
+	"path/filepath"
 
 	hdconfig "github.com/nodeset-org/hyperdrive/config"
 
@@ -66,9 +65,41 @@ func resyncBeaconNode(
 	}
 	// 4. Restart services
 	fmt.Println("Restarting services...")
-	// if err := startServices(c); err != nil {
-	// 	return fmt.Errorf("error restarting services: %w", err)
-	// }
+
+	if utils.ComposeDir == "" {
+		return fmt.Errorf("%s not set", utils.ComposeDirEnvVarName)
+	}
+	if utils.ComposeProject == "" {
+		return fmt.Errorf("%s not set", utils.ComposeProjectEnvVarName)
+	}
+
+	beaconNodeFile := filepath.Join(utils.ComposeDir, "bn.yml")
+	executionClientFile := filepath.Join(utils.ComposeDir, "ec.yml")
+
+	for _, file := range []string{beaconNodeFile, executionClientFile} {
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			return fmt.Errorf("required compose file missing: %s", file)
+		}
+	}
+
+	args := []string{
+		"compose",
+		"-p", utils.ComposeProject,
+		"-f", beaconNodeFile,
+		"-f", executionClientFile,
+		"up",
+		"-d",
+		"--quiet-pull",
+	}
+
+	cmd := exec.Command("docker", args...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("error starting services: %w", err)
+	}
+
 	fmt.Printf("\nDone! Your Beacon Node is now resyncing. You can follow its progress with `hyperdrive service logs bn`.\n")
 	return nil
 }
@@ -80,13 +111,13 @@ func runDockerCommand(args ...string) error {
 	return cmd.Run()
 }
 
-func confirmPrompt(message string) bool {
-	fmt.Printf("%s [y/N]: ", message)
-	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
-	text = strings.ToLower(strings.TrimSpace(text))
-	return text == "y" || text == "yes"
-}
+// func confirmPrompt(message string) bool {
+// 	fmt.Printf("%s [y/N]: ", message)
+// 	reader := bufio.NewReader(os.Stdin)
+// 	text, _ := reader.ReadString('\n')
+// 	text = strings.ToLower(strings.TrimSpace(text))
+// 	return text == "y" || text == "yes"
+// }
 
 // // Get the merged config
 // cfg, isNew, err := hd.LoadConfig()
