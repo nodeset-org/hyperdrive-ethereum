@@ -74,9 +74,9 @@ func resyncBeaconNode(
 	}
 
 	beaconNodeFile := filepath.Join(utils.ComposeDir, "bn.yml")
-	executionClientFile := filepath.Join(utils.ComposeDir, "ec.yml")
+	// executionClientFile := filepath.Join(utils.ComposeDir, "ec.yml")
 
-	for _, file := range []string{beaconNodeFile, executionClientFile} {
+	for _, file := range []string{beaconNodeFile} {
 		if _, err := os.Stat(file); os.IsNotExist(err) {
 			return fmt.Errorf("required compose file missing: %s", file)
 		}
@@ -86,7 +86,7 @@ func resyncBeaconNode(
 		"compose",
 		"-p", utils.ComposeProject,
 		"-f", beaconNodeFile,
-		"-f", executionClientFile,
+		// "-f", executionClientFile,
 		"up",
 		"-d",
 		"--quiet-pull",
