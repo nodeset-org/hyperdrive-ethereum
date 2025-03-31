@@ -47,9 +47,10 @@ func RegisterCommands(app *cli.App) {
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
+					handler := utils.DefaultKeyedRequestHandler[*ResyncBeaconNodeRequest]{}
 
 					// Run command
-					return resyncBeaconNode(c)
+					return resyncBeaconNode(c, handler)
 				},
 			},
 			// {
