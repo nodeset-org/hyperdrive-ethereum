@@ -31,6 +31,9 @@ type RethConfig struct {
 
 	// Custom command line flags
 	AdditionalFlags hdconfig.StringParameter
+
+	// Computed Max Peers (sum of MaxInbound and MaxOutbound)
+	MaxPeers hdconfig.UintParameter
 }
 
 type RethConfigSettings struct {
@@ -39,6 +42,7 @@ type RethConfigSettings struct {
 	MaxOutboundPeers uint64 `json:"maxOutboundPeers" yaml:"maxOutboundPeers"`
 	ContainerTag     string `json:"containerTag" yaml:"containerTag"`
 	AdditionalFlags  string `json:"additionalFlags" yaml:"additionalFlags"`
+	MaxPeers         uint64 `json:"maxPeers" yaml:"maxPeers"`
 }
 
 // Generates a new Reth configuration
@@ -73,6 +77,11 @@ func NewRethConfig() *RethConfig {
 	cfg.AdditionalFlags.Description.Default = "Additional custom command line flags you want to pass to Reth, to take advantage of other settings that aren't covered here."
 	cfg.AdditionalFlags.Default = ""
 
+	cfg.MaxPeers.ID = hdconfig.Identifier(ids.MaxPeersID)
+	cfg.MaxPeers.Name = "Max Peers"
+	cfg.MaxPeers.Description.Default = "The maximum number of peers that Reth should connect to. This is the sum of the max inbound and outbound peers. This is automatically calculated based on the other two settings."
+	cfg.MaxPeers.Hidden.Default = true
+
 	return cfg
 }
 
@@ -84,6 +93,7 @@ func (cfg *RethConfig) GetParameters() []hdconfig.IParameter {
 		&cfg.MaxOutboundPeers,
 		&cfg.ContainerTag,
 		&cfg.AdditionalFlags,
+		&cfg.MaxPeers,
 	}
 }
 
@@ -131,4 +141,8 @@ func (cfg *RethConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
 
 func (cfg *RethConfig) GetHidden() hdconfig.DynamicProperty[bool] {
 	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (s *RethConfigSettings) GetMaxPeers() uint64 {
+	return s.MaxInboundPeers + s.MaxOutboundPeers
 }

@@ -84,8 +84,7 @@ func processSettingsImpl(oldHdSettings *hdconfig.HyperdriveSettings, newHdSettin
 	}
 	err := newModInstance.DeserializeSettingsIntoKnownType(&newSettings)
 	if err != nil {
-		blah, _ := json.Marshal(newSettings)
-		return nil, fmt.Errorf("error loading new settings (blah: %s): %w", blah, err)
+		return nil, fmt.Errorf("error loading new settings: %w", err)
 	}
 
 	// This is where any examples of validation will go when added
