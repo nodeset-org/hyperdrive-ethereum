@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/goccy/go-json"
-	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	hdconfig "github.com/nodeset-org/hyperdrive/config"
 	hdtemplate "github.com/nodeset-org/hyperdrive/shared/templates"
@@ -29,7 +29,7 @@ func callConfigFunction(c *cli.Context) error {
 		return fmt.Errorf("could not find settings for module %s", utils.FullyQualifiedModuleName)
 	}
 
-	var settings sharedconfig.RethConfigSettings
+	var settings config.HyperdriveEthereumConfigSettings
 	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
 	if err != nil {
 		return fmt.Errorf("error loading settings: %w", err)
@@ -38,7 +38,7 @@ func callConfigFunction(c *cli.Context) error {
 	switch request.FuncName {
 	case "GetMaxPeers":
 		response := hdtemplate.CallConfigFunctionResponse{
-			Result: fmt.Sprintf("%d", settings.GetMaxPeers()),
+			Result: fmt.Sprintf("%d", settings.LocalExecutionClient.Reth.GetMaxPeers()),
 		}
 		bytes, err := json.Marshal(response)
 		if err != nil {

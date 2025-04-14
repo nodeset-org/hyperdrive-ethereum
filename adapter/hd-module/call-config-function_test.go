@@ -18,8 +18,12 @@ const ExampleSettingsJson = `{
 			"enabled": true,
 			"version": "0.1.0",
 			"settings": {
-				"maxInboundPeers": 30,
-				"maxOutboundPeers": 50
+				"localExecutionClient": {
+					"reth": {
+						"maxInboundPeers": 30,
+						"maxOutboundPeers": 50
+					}
+				}
 			}
 		}
 	}
