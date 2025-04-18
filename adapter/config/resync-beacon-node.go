@@ -16,27 +16,11 @@ type ResyncBeaconNodeRequest struct {
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
 
-// TODO (HN)
 // Destroy and resync the Beacon Node from scratch
 func resyncBeaconNode(
 	c *cli.Context,
 
 ) error {
-	request, err := utils.HandleRequest[*ResyncBeaconNodeRequest](c)
-	if err != nil {
-		return fmt.Errorf("error reading set-settings request: %w", err)
-	}
-
-	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
-	if !exists {
-		return fmt.Errorf("could not find config for %s", utils.FullyQualifiedModuleName)
-	}
-
-	var settings HyperdriveEthereumConfigSettings
-	err = modInstance.DeserializeSettingsIntoKnownType(&settings)
-	if err != nil {
-		return fmt.Errorf("error loading settings: %w", err)
-	}
 	containerName := fmt.Sprintf("%s_bn", utils.ComposeProject)
 	volumeName := "bndata"
 
@@ -71,7 +55,6 @@ func resyncBeaconNode(
 	}
 
 	beaconNodeFile := filepath.Join(utils.ComposeDir, "bn.yml")
-	// executionClientFile := filepath.Join(utils.ComposeDir, "ec.yml")
 
 	for _, file := range []string{beaconNodeFile} {
 		if _, err := os.Stat(file); os.IsNotExist(err) {
@@ -83,7 +66,6 @@ func resyncBeaconNode(
 		"compose",
 		"-p", utils.ComposeProject,
 		"-f", beaconNodeFile,
-		// "-f", executionClientFile,
 		"up",
 		"-d",
 		"--quiet-pull",
