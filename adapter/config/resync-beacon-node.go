@@ -13,8 +13,6 @@ import (
 )
 
 type ResyncBeaconNodeRequest struct {
-	utils.KeyedRequest
-
 	Settings *hdconfig.HyperdriveSettings `json:"settings"`
 }
 
@@ -22,10 +20,9 @@ type ResyncBeaconNodeRequest struct {
 // Destroy and resync the Beacon Node from scratch
 func resyncBeaconNode(
 	c *cli.Context,
-	handler utils.KeyedRequestHandler[*ResyncBeaconNodeRequest],
 
 ) error {
-	request, err := handler.HandleKeyedRequest(c)
+	request, err := utils.HandleRequest[*ResyncBeaconNodeRequest](c)
 	if err != nil {
 		return fmt.Errorf("error reading set-settings request: %w", err)
 	}

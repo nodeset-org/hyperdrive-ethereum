@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/goccy/go-json"
-
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	hdconfig "github.com/nodeset-org/hyperdrive/config"
@@ -23,7 +22,6 @@ func callConfigFunction(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
 	modInstance, exists := request.Settings.Modules[utils.FullyQualifiedModuleName]
 	if !exists {
 		return fmt.Errorf("could not find settings for module %s", utils.FullyQualifiedModuleName)

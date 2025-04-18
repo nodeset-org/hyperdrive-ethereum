@@ -73,9 +73,9 @@ func (a *Authenticator) Authenticate(key string) error {
 // Handles an incoming request by reading the input and parsing it
 func HandleRequest[RequestType any](c *cli.Context) (RequestType, error) {
 	var data RequestType
-
 	// Read the input
-	reader := bufio.NewReader(c.App.Reader)
+	// reader := bufio.NewReader(c.App.Reader)
+	reader := bufio.NewReader(os.Stdin)
 	input, err := reader.ReadString('\n')
 	if err != nil {
 		return data, fmt.Errorf("error reading input: %w", err)

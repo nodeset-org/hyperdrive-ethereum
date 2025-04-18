@@ -30,7 +30,7 @@ func RegisterCommands(app *cli.App) {
 		Subcommands: []*cli.Command{
 			{
 				Name:    "resync-ec",
-				Aliases: []string{"resync-eth1"},
+				Aliases: []string{"rs-ec"},
 				Usage:   fmt.Sprintf("%sDeletes the main Execution client's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
 				Action: func(c *cli.Context) error {
 					// Validate args
@@ -42,15 +42,14 @@ func RegisterCommands(app *cli.App) {
 			},
 			{
 				Name:    "resync-bn",
-				Aliases: []string{"resync-eth2"},
+				Aliases: []string{"rs-bn"},
 				Usage:   fmt.Sprintf("%sDeletes the Beacon Node's chain data and resyncs it from scratch. Only use this as a last resort!%s", terminal.ColorRed, terminal.ColorReset),
 				Action: func(c *cli.Context) error {
 					// Validate args
 					utils.ValidateArgCount(c, 0)
-					handler := utils.DefaultKeyedRequestHandler[*ResyncBeaconNodeRequest]{}
 
 					// Run command
-					return resyncBeaconNode(c, handler)
+					return resyncBeaconNode(c)
 				},
 			},
 			// {
