@@ -18,6 +18,7 @@ import (
 type AdapterConfigManagerInterface interface {
 	SaveConfigToDisk() error
 	SetAdapterConfig(*HyperdriveEthereumConfigSettings) error
+	LoadConfigFromDisk() (*HyperdriveEthereumConfigSettings, error)
 }
 
 // Configuration manager
