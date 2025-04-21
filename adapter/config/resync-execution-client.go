@@ -12,6 +12,11 @@ import (
 
 // Destroy and resync the Execution client from scratch
 func resyncExecutionClient(c *cli.Context) error {
+	if !confirmPrompt(c, "Are you SURE you want to delete and resync your execution client from scratch? This cannot be undone!") {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	containerName := fmt.Sprintf("%s_ec", utils.ComposeProject)
 	volumeName := fmt.Sprintf("%sdata", containerName)
 

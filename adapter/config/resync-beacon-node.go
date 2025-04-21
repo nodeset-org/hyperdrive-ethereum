@@ -1,10 +1,12 @@
 package config
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	hdconfig "github.com/nodeset-org/hyperdrive/config"
 
@@ -18,6 +20,11 @@ type ResyncBeaconNodeRequest struct {
 
 // Destroy and resync the Beacon Node from scratch
 func resyncBeaconNode(c *cli.Context) error {
+	if !confirmPrompt(c, "Are you SURE you want to delete and resync your beacon node from scratch? This cannot be undone!") {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	containerName := fmt.Sprintf("%s_bn", utils.ComposeProject)
 	volumeName := fmt.Sprintf("%sdata", containerName)
 
@@ -87,13 +94,13 @@ func runDockerCommand(args ...string) error {
 	return cmd.Run()
 }
 
-// func confirmPrompt(message string) bool {
-// 	fmt.Printf("%s [y/N]: ", message)
-// 	reader := bufio.NewReader(os.Stdin)
-// 	text, _ := reader.ReadString('\n')
-// 	text = strings.ToLower(strings.TrimSpace(text))
-// 	return text == "y" || text == "yes"
-// }
+func confirmPrompt(c *cli.Context, message string) bool {
+	fmt.Printf("%s [y/N]: ", message)
+	reader := bufio.NewReader(c.App.Reader)
+	text, _ := reader.ReadString('\n')
+	text = strings.ToLower(strings.TrimSpace(text))
+	return text == "y" || text == "yes"
+}
 
 // // Get the merged config
 // cfg, isNew, err := hd.LoadConfig()
