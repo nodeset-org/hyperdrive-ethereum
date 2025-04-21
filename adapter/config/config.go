@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	sharedconfig "github.com/nodeset-org/hyperdrive-ethereum/shared/config"
 	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
 	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
@@ -306,4 +307,8 @@ func (s *HyperdriveEthereumConfigSettings) GetChangedServices(oldSettings *Hyper
 		"bn",
 	}
 	return changedServices, nil
+}
+
+func (cfg *HyperdriveEthereumConfigSettings) IsLocalMode() bool {
+	return sharedconfig.ClientMode(cfg.ClientMode) == config.ClientMode_Local
 }

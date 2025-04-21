@@ -12,6 +12,21 @@ import (
 
 // Destroy and resync the Execution client from scratch
 func resyncExecutionClient(c *cli.Context) error {
+	cfgMgr, err := NewAdapterConfigManager(c)
+	if err != nil {
+		return fmt.Errorf("error creating config manager: %w", err)
+	}
+	cfg, err := cfgMgr.LoadConfigFromDisk()
+	if err != nil {
+		return fmt.Errorf("error loading config: %w", err)
+	}
+
+	// Check the client mode
+	if !cfg.IsLocalMode() {
+		fmt.Println("You use an externally-managed Execution Client. Hyperdrive cannot resync it for you.")
+		return nil
+	}
+
 	if !confirmPrompt(c, "Are you SURE you want to delete and resync your execution client from scratch? This cannot be undone!") {
 		fmt.Println("Cancelled.")
 		return nil
