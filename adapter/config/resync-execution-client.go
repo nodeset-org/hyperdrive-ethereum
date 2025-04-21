@@ -1,77 +1,76 @@
 package config
 
 import (
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/adapter/utils"
 	"github.com/urfave/cli/v2"
 )
 
-// TODO (HN)
 // Destroy and resync the Execution client from scratch
 func resyncExecutionClient(c *cli.Context) error {
-	// Get Hyperdrive client
-	// hd, err := client.NewHyperdriveClientFromCtx(c)
-	// if err != nil {
-	// 	return err
-	// }
+	containerName := fmt.Sprintf("%s_ec", utils.ComposeProject)
+	volumeName := fmt.Sprintf("%sdata", containerName)
 
-	// // Get the config
-	// cfg, isNew, err := hd.LoadConfig()
-	// if err != nil {
-	// 	return err
-	// }
-	// if isNew {
-	// 	return fmt.Errorf("Settings file not found. Please run `hyperdrive service config` to set up Hyperdrive.")
-	// }
+	fmt.Printf("Preparing to resync Execution Client: %s\n", containerName)
+	fmt.Printf("This will DELETE volume %s and force a full resync.\n\n", volumeName)
 
-	// // Check the client mode
-	// if !cfg.Hyperdrive.IsLocalMode() {
-	// 	fmt.Println("You use an externally-managed Execution Client. Hyperdrive cannot resync it for you.")
-	// 	return nil
-	// }
+	// 1. Stop the Execution Client container
+	fmt.Printf("Stopping container %s...\n", containerName)
+	if err := runDockerCommand("stop", containerName); err != nil {
+		fmt.Printf("Warning: stop failed or container not running (%v)\n", err)
+	}
 
-	// fmt.Println("This will delete the chain data of your primary Execution client and resync it from scratch.")
-	// fmt.Printf("%sYou should only do this if your Execution client has failed and can no longer start or sync properly.\nThis is meant to be a last resort.%s\n", terminal.ColorYellow, terminal.ColorReset)
+	// 2. Remove the container
+	fmt.Printf("Removing container %s...\n", containerName)
+	if err := runDockerCommand("rm", containerName); err != nil {
+		fmt.Printf("Warning: container may not exist (%v)\n", err)
+	}
 
-	// // Prompt for confirmation
-	// if !(c.Bool(utils.YesFlag.Name) || utils.Confirm(fmt.Sprintf("%sAre you SURE you want to delete and resync your main Execution client from scratch? This cannot be undone!%s", terminal.ColorRed, terminal.ColorReset))) {
-	// 	fmt.Println("Cancelled.")
-	// 	return nil
-	// }
+	// 3. Remove the volume
+	fmt.Printf("Deleting volume %s...\n", volumeName)
+	if err := runDockerCommand("volume", "rm", volumeName); err != nil {
+		fmt.Printf("Warning: volume may not exist (%v)\n", err)
+	}
 
-	// // Stop Execution
-	// executionContainerName := cfg.Hyperdrive.GetDockerArtifactName(string(ContainerID_ExecutionClient))
-	// fmt.Printf("Stopping %s...\n", executionContainerName)
-	// err = hd.StopContainer(executionContainerName)
-	// if err != nil {
-	// 	fmt.Printf("%sWARNING: Stopping main Execution client container failed: %s%s\n", terminal.ColorYellow, err.Error(), terminal.ColorReset)
-	// }
+	// 4. Restart services
+	fmt.Println("Restarting services...")
 
-	// // Get Execution volume name
-	// volume, err := hd.GetClientVolumeName(executionContainerName, clientDataVolumeName)
-	// if err != nil {
-	// 	return fmt.Errorf("Error getting Execution client volume name: %w", err)
-	// }
+	if utils.ComposeDir == "" {
+		return fmt.Errorf("%s not set", utils.ComposeDirEnvVarName)
+	}
+	if utils.ComposeProject == "" {
+		return fmt.Errorf("%s not set", utils.ComposeProjectEnvVarName)
+	}
 
-	// // Remove the EC
-	// fmt.Printf("Deleting %s...\n", executionContainerName)
-	// err = hd.RemoveContainer(executionContainerName)
-	// if err != nil {
-	// 	return fmt.Errorf("Error deleting main Execution client container: %w", err)
-	// }
+	executionClientFile := filepath.Join(utils.ComposeDir, "ec.yml")
 
-	// // Delete the EC volume
-	// fmt.Printf("Deleting volume %s...\n", volume)
-	// err = hd.DeleteVolume(volume)
-	// if err != nil {
-	// 	return fmt.Errorf("Error deleting volume: %w", err)
-	// }
+	for _, file := range []string{executionClientFile} {
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			return fmt.Errorf("required compose file missing: %s", file)
+		}
+	}
 
-	// // Restart Hyperdrive
-	// fmt.Printf("Rebuilding %s and restarting Hyperdrive...\n", executionContainerName)
-	// err = startService(c, true)
-	// if err != nil {
-	// 	return fmt.Errorf("Error starting Hyperdrive: %s", err)
-	// }
+	args := []string{
+		"compose",
+		"-p", utils.ComposeProject,
+		"-f", executionClientFile,
+		"up",
+		"-d",
+		"--quiet-pull",
+	}
 
-	// fmt.Printf("\nDone! Your main Execution client is now resyncing. You can follow its progress with `hyperdrive service logs ec`.\n")
+	cmd := exec.Command("docker", args...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("error starting services: %w", err)
+	}
+
+	fmt.Printf("\nDone! Your Execution Client is now resyncing. You can follow its progress with `hyperdrive service logs el`.\n")
 	return nil
 }

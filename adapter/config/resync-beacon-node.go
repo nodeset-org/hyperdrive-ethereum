@@ -17,12 +17,9 @@ type ResyncBeaconNodeRequest struct {
 }
 
 // Destroy and resync the Beacon Node from scratch
-func resyncBeaconNode(
-	c *cli.Context,
-
-) error {
+func resyncBeaconNode(c *cli.Context) error {
 	containerName := fmt.Sprintf("%s_bn", utils.ComposeProject)
-	volumeName := "bndata"
+	volumeName := fmt.Sprintf("%sdata", containerName)
 
 	fmt.Printf("Preparing to resync Beacon Node: %s\n", containerName)
 	fmt.Printf("This will DELETE volume %s and force a full resync.\n\n", volumeName)
