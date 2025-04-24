@@ -1,0 +1,38 @@
+package hdmodule
+
+import (
+	"bytes"
+	"encoding/json"
+	"os"
+	"testing"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/shared"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestVersion(t *testing.T) {
+	r, w, _ := os.Pipe()
+	oldStdout := os.Stdout
+	defer func() {
+		os.Stdout = oldStdout // Restore original stdout
+		r.Close()
+	}()
+
+	os.Stdout = w
+
+	err := version()
+	assert.NoError(t, err, "version() returned an error:: %v", err)
+
+	w.Close()
+	var buf bytes.Buffer
+	_, err = buf.ReadFrom(r)
+
+	assert.NoError(t, err, "Failed to read from pipe: %v", err)
+
+	var response versionResponse
+	err = json.Unmarshal(buf.Bytes(), &response)
+	assert.NoError(t, err, "Failed to parse JSON output: %v", err)
+
+	expectedVersion := shared.HyperdriveEthereumVersion
+	assert.Equal(t, expectedVersion, response.Version, "Expected version %q, got %q", expectedVersion, response.Version)
+}

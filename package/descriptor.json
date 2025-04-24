@@ -1,0 +1,10 @@
+{
+    "name": "hyperdrive-ethereum",
+    "shortcut": "he",
+    "description": "Ethereum node module",
+    "version": "0.1.0",
+    "author": "NodeSet",
+    "url": "https://github.com/nodeset-org/hyperdrive-ethereum",
+    "email": "info@nodeset.io",
+    "dependencies": []
+}

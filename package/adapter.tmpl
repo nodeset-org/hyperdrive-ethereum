@@ -1,0 +1,35 @@
+# This is the Docker Compose file for the ethereum module's adapter.
+# You can make yours as simple or as complex as you need, as long as you follow the adapter specification.
+
+services:
+  adapter:
+    image: nodeset/hyperdrive-ethereum-adapter:v0.1.0
+    container_name: {{.AdapterContainerName}}
+    restart: unless-stopped
+    entrypoint: /usr/bin/hd-adapter # This is the path to the adapter binary
+    command:
+      - idle
+    environment: {{if eq (len .AdapterEnvironmentVariables) 0}}[]{{else}}
+    {{- range $var := .AdapterEnvironmentVariables}}
+      - {{$var}}
+    {{- end}}
+    {{- end}}
+    volumes: {{if eq (len .AdapterVolumes) 0}}[]{{else}}
+    {{- range $vol := .AdapterVolumes}}
+      - {{$vol}}
+    {{- end}}
+    {{- end}}
+    {{- if .ModuleNetwork}}
+    networks:
+      - net
+    {{- end}}
+    cap_drop:
+      - all
+    cap_add:
+      - dac_override
+    security_opt:
+      - no-new-privileges
+{{- if .ModuleNetwork}}
+networks:
+  net:
+{{- end}}

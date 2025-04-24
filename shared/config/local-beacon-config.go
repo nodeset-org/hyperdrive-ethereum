@@ -1,0 +1,268 @@
+package config
+
+import (
+	"fmt"
+
+	"github.com/nodeset-org/hyperdrive-ethereum/shared/ids"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
+)
+
+const (
+	defaultHttpPort = 5052
+	defaultP2pPort  = 9001
+)
+
+// Common parameters shared by all of the Beacon Clients
+type LocalBeaconConfig struct {
+	hdconfig.SectionHeader
+
+	// The selected BN
+	BeaconNode hdconfig.ChoiceParameter[BeaconNode] //Parameter[BeaconNode]
+
+	// The checkpoint sync URL if used
+	CheckpointSyncProvider hdconfig.StringParameter
+
+	// The port to use for gossip traffic
+	P2pPort hdconfig.UintParameter
+
+	// The port to expose the HTTP API on
+	HttpPort hdconfig.UintParameter
+
+	// Toggle for forwarding the HTTP API port outside of Docker
+	OpenHttpPort hdconfig.ChoiceParameter[RpcPortMode] //Parameter[RpcPortMode]
+
+	//Comma separated
+	OpenPorts hdconfig.StringParameter
+
+	//Comma separated
+	AdditionalDockerNetworks hdconfig.StringParameter
+
+	// Subconfigs
+	Lighthouse *LighthouseBnConfig
+	Lodestar   *LodestarBnConfig
+	Nimbus     *NimbusBnConfig
+	Prysm      *PrysmBnConfig
+	Teku       *TekuBnConfig
+}
+
+type LocalBeaconConfigSettings struct {
+	BeaconNode               BeaconNode  `json:"beaconNode" yaml:"beaconNode"`
+	CheckpointSyncProvider   string      `json:"checkpointSyncProvider" yaml:"checkpointSyncProvider"`
+	P2pPort                  uint64      `json:"p2pPort" yaml:"p2pPort"`
+	HttpPort                 uint64      `json:"httpPort" yaml:"httpPort"`
+	OpenHttpPort             RpcPortMode `json:"openHttpPort" yaml:"openHttpPort"`
+	OpenPorts                string      `json:"openPorts" yaml:"openPorts"`
+	AdditionalDockerNetworks string      `json:"additionalDockerNetworks" yaml:"additionalDockerNetworks"`
+
+	Lighthouse *LighthouseBnConfigSettings `json:"lighthouse" yaml:"lighthouse"`
+	Lodestar   *LodestarBnConfigSettings   `json:"lodestar" yaml:"lodestar"`
+	Nimbus     *NimbusBnConfigSettings     `json:"nimbus" yaml:"nimbus"`
+	Prysm      *PrysmBnConfigSettings      `json:"prysm" yaml:"prysm"`
+	Teku       *TekuBnConfigSettings       `json:"teku" yaml:"teku"`
+}
+
+// Create a new LocalBeaconConfig struct
+func NewLocalBeaconConfig() *LocalBeaconConfig {
+	cfg := &LocalBeaconConfig{}
+	cfg.ID = hdconfig.Identifier(ids.BnID)
+	cfg.Name = "Local BN"
+	cfg.Description.Default = "Configure your local Beacon Node settings here."
+
+	cfg.CheckpointSyncProvider.ID = hdconfig.Identifier(ids.LocalBnCheckpointSyncProviderID)
+	cfg.CheckpointSyncProvider.Name = "Checkpoint Sync Provider"
+	cfg.CheckpointSyncProvider.Description.Default = "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
+		"Example:  	https://checkpoint-sync.holesky.ethpandaops.io (for the Holesky Testnet).\n" +
+		"Leave this blank if you want to sync normally from the start of the chain."
+	cfg.CheckpointSyncProvider.Default = ""
+
+	cfg.P2pPort.ID = hdconfig.Identifier(ids.P2pPortID)
+	cfg.P2pPort.Name = "P2P Port"
+	cfg.P2pPort.Description.Default = "The port to use for P2P (blockchain) traffic."
+	cfg.P2pPort.Default = uint64(defaultP2pPort)
+
+	cfg.HttpPort.ID = hdconfig.Identifier(ids.HttpPortID)
+	cfg.HttpPort.Name = "HTTP API Port"
+	cfg.HttpPort.Description.Default = "The port your Beacon Node should run its HTTP API on."
+	cfg.HttpPort.Default = uint64(defaultHttpPort)
+
+	// Options for OpenHttpPort
+	options := make([]hdconfig.ParameterOption[RpcPortMode], 3)
+	options[0].Name = string(RpcPortMode_Closed)
+	options[0].Description.Default = "Do not expose the RPC port outside of the Docker container."
+	options[0].Value = RpcPortMode_Closed
+
+	options[1].Name = string(RpcPortMode_OpenLocalhost)
+	options[1].Description.Default = "Expose the RPC port to other processes on your machine."
+	options[1].Value = RpcPortMode_OpenLocalhost
+
+	options[2].Name = string(RpcPortMode_OpenExternal)
+	options[2].Description.Default = "Expose the RPC port to other machines on your local network."
+	options[2].Value = RpcPortMode_OpenExternal
+
+	cfg.OpenHttpPort.ID = hdconfig.Identifier(ids.OpenHttpPortsID)
+	cfg.OpenHttpPort.Name = "Expose API Port"
+	cfg.OpenHttpPort.Description.Default = "Select an option to expose your Beacon Node's API port to your localhost or external hosts on the network, so other machines can access it too."
+	cfg.OpenHttpPort.Options = options
+	cfg.OpenHttpPort.Default = RpcPortMode_Closed
+
+	cfg.OpenPorts.ID = hdconfig.Identifier(ids.OpenPortsID)
+	cfg.OpenPorts.Name = "Open Ports"
+	cfg.OpenPorts.Description.Default = "Comma-separated list of ports to open in the Docker container."
+	cfg.OpenPorts.Default = ""
+
+	// Options for BeaconNode
+	optionsBeaconNode := make([]hdconfig.ParameterOption[BeaconNode], 5)
+	optionsBeaconNode[0].Name = "Lighthouse"
+	optionsBeaconNode[0].Description.Default = "Lighthouse is a Beacon Node with a heavy focus on speed and security. The team behind it, Sigma Prime, is an information security and software engineering firm who have funded Lighthouse along with the Ethereum Foundation, Consensys, and private individuals. Lighthouse is built in Rust and offered under an Apache 2.0 License."
+	optionsBeaconNode[0].Value = BeaconNode_Lighthouse
+
+	optionsBeaconNode[1].Name = "Lodestar"
+	optionsBeaconNode[1].Description.Default = "Lodestar is the fifth open-source Ethereum Beacon Node. It is written in Typescript maintained by ChainSafe Systems. Lodestar, their flagship product, is a production-capable Beacon Chain and Validator Client uniquely situated as the go-to for researchers and developers for rapid prototyping and browser usage."
+	optionsBeaconNode[1].Value = BeaconNode_Lodestar
+
+	optionsBeaconNode[2].Name = "Nimbus"
+	optionsBeaconNode[2].Description.Default = "Nimbus is a Beacon Node implementation that strives to be as lightweight as possible in terms of resources used. This allows it to perform well on embedded systems, resource-restricted devices -- including Raspberry Pis and mobile devices -- and multi-purpose servers."
+	optionsBeaconNode[2].Value = BeaconNode_Nimbus
+
+	optionsBeaconNode[3].Name = "Prysm"
+	optionsBeaconNode[3].Description.Default = "Prysm is a Go implementation of Ethereum Consensus protocol with a focus on usability, security, and reliability. Prysm is developed by Prysmatic Labs, a company with the sole focus on the development of their client. Prysm is written in Go and released under a GPL-3.0 license."
+	optionsBeaconNode[3].Value = BeaconNode_Prysm
+
+	optionsBeaconNode[4].Name = "Teku"
+	optionsBeaconNode[4].Description.Default = "PegaSys Teku (formerly known as Artemis) is a Java-based Ethereum 2.0 client designed & built to meet institutional needs and security requirements. PegaSys is an arm of ConsenSys dedicated to building enterprise-ready clients and tools for interacting with the core Ethereum platform. Teku is Apache 2 licensed and written in Java, a language notable for its maturity & ubiquity."
+	optionsBeaconNode[4].Value = BeaconNode_Teku
+
+	cfg.BeaconNode.ID = hdconfig.Identifier(ids.BeaconNodeID)
+	cfg.BeaconNode.Name = "Beacon Node"
+	cfg.BeaconNode.Description.Default = "Select which Beacon Node client you would like to use."
+	cfg.BeaconNode.Options = optionsBeaconNode
+	cfg.BeaconNode.Default = BeaconNode_Nimbus
+
+	cfg.AdditionalDockerNetworks.ID = hdconfig.Identifier(ids.AdditionalDockerNetworksID)
+	cfg.AdditionalDockerNetworks.Name = "Additional Docker Networks"
+	cfg.AdditionalDockerNetworks.Description.Default = "Comma-separated list of additional Docker networks to connect to."
+	cfg.AdditionalDockerNetworks.Default = ""
+
+	cfg.Lighthouse = NewLighthouseBnConfig()
+	cfg.Lodestar = NewLodestarBnConfig()
+	cfg.Nimbus = NewNimbusBnConfig()
+	cfg.Prysm = NewPrysmBnConfig()
+	cfg.Teku = NewTekuBnConfig()
+
+	return cfg
+}
+
+// Get the parameters for this config
+func (cfg *LocalBeaconConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
+		&cfg.BeaconNode,
+		&cfg.CheckpointSyncProvider,
+		&cfg.P2pPort,
+		&cfg.HttpPort,
+		&cfg.OpenHttpPort,
+		&cfg.OpenPorts,
+		&cfg.AdditionalDockerNetworks,
+	}
+}
+
+// ==================
+// === Templating ===
+// ==================
+
+// Get the Docker mapping for the selected API port mode
+func (cfg *LocalBeaconConfigSettings) GetOpenApiPortMapping() []string {
+	bnOpenPorts := make([]string, 0)
+
+	// Handle the standard HTTP API port
+	apiPortMode := RpcPortMode(cfg.OpenHttpPort)
+	if apiPortMode.IsOpen() {
+		apiPort := uint64(cfg.HttpPort)
+		bnOpenPorts = append(bnOpenPorts, apiPortMode.DockerPortMapping(apiPort))
+	}
+
+	// Handle Prysm's RPC port
+	if cfg.BeaconNode == BeaconNode_Prysm {
+		prysmRpcPortMode := RpcPortMode(cfg.Prysm.OpenRpcPort)
+		if prysmRpcPortMode.IsOpen() {
+			prysmRpcPort := uint64(cfg.Prysm.RpcPort)
+			bnOpenPorts = append(bnOpenPorts, prysmRpcPortMode.DockerPortMapping(prysmRpcPort))
+		}
+	}
+	return bnOpenPorts
+}
+
+// Gets the max peers of the selected EC
+func (cfg *LocalBeaconConfigSettings) GetMaxPeers() uint64 {
+	switch cfg.BeaconNode {
+	case BeaconNode_Lighthouse:
+		return cfg.Lighthouse.MaxPeers
+	case BeaconNode_Lodestar:
+		return cfg.Lodestar.MaxPeers
+	case BeaconNode_Nimbus:
+		return cfg.Nimbus.MaxPeers
+	case BeaconNode_Prysm:
+		return cfg.Prysm.MaxPeers
+	case BeaconNode_Teku:
+		return cfg.Teku.MaxPeers
+	default:
+		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
+	}
+}
+
+// Get the container tag of the selected BN
+func (cfg *LocalBeaconConfigSettings) GetContainerTag() string {
+	switch cfg.BeaconNode {
+	case BeaconNode_Lighthouse:
+		return cfg.Lighthouse.ContainerTag
+	case BeaconNode_Lodestar:
+		return cfg.Lodestar.ContainerTag
+	case BeaconNode_Nimbus:
+		return cfg.Nimbus.ContainerTag
+	case BeaconNode_Prysm:
+		return cfg.Prysm.ContainerTag
+	case BeaconNode_Teku:
+		return cfg.Teku.ContainerTag
+	default:
+		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
+	}
+}
+
+// Gets the additional flags of the selected BN
+func (cfg *LocalBeaconConfigSettings) GetAdditionalFlags() string {
+	switch cfg.BeaconNode {
+	case BeaconNode_Lighthouse:
+		return cfg.Lighthouse.AdditionalFlags
+	case BeaconNode_Lodestar:
+		return cfg.Lodestar.AdditionalFlags
+	case BeaconNode_Nimbus:
+		return cfg.Nimbus.AdditionalFlags
+	case BeaconNode_Prysm:
+		return cfg.Prysm.AdditionalFlags
+	case BeaconNode_Teku:
+		return cfg.Teku.AdditionalFlags
+	default:
+		panic(fmt.Sprintf("Unknown Beacon Node %s", string(cfg.BeaconNode)))
+	}
+}
+
+func (cfg LocalBeaconConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{
+		cfg.Lighthouse,
+		cfg.Lodestar,
+		cfg.Nimbus,
+		cfg.Prysm,
+		cfg.Teku,
+	}
+}
+
+func (cfg *LocalBeaconConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LocalBeaconConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LocalBeaconConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}

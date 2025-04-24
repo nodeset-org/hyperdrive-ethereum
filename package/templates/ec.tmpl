@@ -1,0 +1,107 @@
+services:
+  ec:
+    {{- $selectedEc := .GetValue "localExecutionClient/executionClient"}}
+    {{- if eq $selectedEc "besu"}}
+    image: {{.GetValue "localExecutionClient/besu/containerTag"}}
+    {{- else if eq $selectedEc "nethermind"}}
+    image: {{.GetValue "localExecutionClient/nethermind/containerTag"}}
+    {{- else if eq $selectedEc "geth"}}
+    image: {{.GetValue "localExecutionClient/geth/containerTag"}}
+    {{- else}}
+    image: {{.GetValue "localExecutionClient/reth/containerTag"}}
+    {{- end}}
+    user: root
+    container_name: {{.ModuleComposeProject}}_ec
+    restart: unless-stopped
+    stop_grace_period: 15m
+    {{- $p2p := (or (.GetValue "localExecutionClient/p2pPort") "30303")}}
+    ports:
+      - "{{$p2p}}:{{$p2p}}/udp"
+      - "{{$p2p}}:{{$p2p}}/tcp"
+
+      {{- $openPorts := (.GetValueArray "localExecutionClient/openPorts" ",")}}
+      {{- if $openPorts }}
+      {{- range $entry := $openPorts }}
+      {{- if $entry}}
+      - "{{$entry}}"
+      {{- end }}
+      {{- end }}
+      {{- end }}
+    volumes:
+      - ecdata:/ethclient
+      - /usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts:/usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts:ro
+      - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets
+    networks:
+    {{- $additionalNetworks := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",")}}
+    {{- if $additionalNetworks }}
+      - net
+      {{- range $network := $additionalNetworks }}
+      {{- if $network}}
+      - {{$network}}
+      {{- end}}
+      {{- end}}
+    {{- end}}
+    environment:
+      - ETH_NETWORK={{.GetValue "network"}}
+      - CLIENT={{.GetValue "localExecutionClient/executionClient"}}
+      - EC_P2P_PORT={{$p2p}}
+      - EC_HTTP_PORT={{.GetValue "localExecutionClient/httpPort"}}
+      - EC_WS_PORT={{.GetValue "localExecutionClient/wsPort"}}
+      - EC_ENGINE_PORT={{.GetValue "localExecutionClient/enginePort"}}
+      - EXTERNAL_IP={{.GetValue "externalIp"}}
+      - ENABLE_METRICS=FALSE
+      - EC_METRICS_PORT=9100
+
+      {{- /* Client-specific values */}}
+      {{- if eq (.GetValue "localExecutionClient/executionClient") "besu"}}
+      - BESU_MAX_BACK_LAYERS={{.GetValue "localExecutionClient/besu/maxBackLayers"}}
+      - BESU_JVM_HEAP_SIZE={{.GetValue "localExecutionClient/besu/jvmHeapSize"}}
+      - BESU_ARCHIVE_MODE={{.GetValue "localExecutionClient/besu/archiveMode"}}
+      - EC_MAX_PEERS={{.GetValue "localExecutionClient/besu/maxPeers"}}
+      - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/besu/additionalFlags"}}
+      {{- else if eq (.GetValue "localExecutionClient/executionClient") "nethermind"}}
+      - EC_CACHE_SIZE={{.GetValue "localExecutionClient/nethermind/cacheSize"}}
+      - HD_NETHERMIND_PRUNE_MEM_SIZE={{.GetValue "localExecutionClient/nethermind/pruneMemSize"}}
+      - HD_NETHERMIND_ADDITIONAL_MODULES={{.GetValue "localExecutionClient/nethermind/additionalModules"}}
+      - HD_NETHERMIND_ADDITIONAL_URLS={{.GetValue "localExecutionClient/nethermind/additionalUrls"}}
+      - HD_NETHERMIND_FULL_PRUNE_MEMORY_BUDGET={{.GetValue "localExecutionClient/nethermind/fullPruneMemoryBudget"}}
+      - HD_NETHERMIND_FULL_PRUNING_THRESHOLD_MB={{.GetValue "localExecutionClient/nethermind/fullPruningThresholdMb"}}
+      - EC_MAX_PEERS={{.GetValue "localExecutionClient/nethermind/maxPeers"}}
+      - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/nethermind/additionalFlags"}}
+      {{- else if eq (.GetValue "localExecutionClient/executionClient") "geth"}}
+      - HD_GETH_EVM_TIMEOUT={{.GetValue "localExecutionClient/geth/evmTimeout"}}
+      - HD_GETH_ARCHIVE_MODE={{.GetValue "localExecutionClient/geth/archiveMode"}}
+      - EC_MAX_PEERS={{.GetValue "localExecutionClient/geth/maxPeers"}}
+      - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/geth/additionalFlags"}}
+      {{- else}}
+      - RETH_INBOUND_MAX_PEERS={{.GetValue "localExecutionClient/reth/maxInboundPeers"}}
+      - RETH_OUTBOUND_MAX_PEERS={{.GetValue "localExecutionClient/reth/maxOutboundPeers"}}
+      - EC_MAX_PEERS={{ .CallConfigFunction "GetMaxPeers"}}
+      - EC_ADDITIONAL_FLAGS={{.GetValue "localExecutionClient/reth/additionalFlags"}}
+      {{- end}}
+
+
+    entrypoint: sh
+    command: "/usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts/start-ec.sh"
+    cap_drop:
+      - all
+    cap_add:
+      - dac_override
+    security_opt:
+      - no-new-privileges
+networks:
+  net:
+    {{- if .GetValue "enableIPv6" }}
+    enable_ipv6: true
+    {{- end }}
+  {{- $additionalNetworks := (.GetValueArray "localExecutionClient/additionalDockerNetworks" ",") }}
+  {{- if $additionalNetworks }}
+  {{- range $network := $additionalNetworks }}
+  {{- if $network}}
+  {{$network}}:
+    external: true
+  {{- end}}
+  {{- end}}
+  {{- end}}
+volumes:
+  ecdata:

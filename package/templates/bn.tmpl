@@ -1,0 +1,113 @@
+services:
+  bn:
+    {{- $selectedBn := .GetValue "localBeaconClient/beaconNode"}}
+    {{- if eq $selectedBn "teku"}}
+    image: {{.GetValue "localBeaconClient/teku/containerTag"}}
+    {{- else if eq $selectedBn "prysm"}}
+    image: {{.GetValue "localBeaconClient/prysm/containerTag"}}
+    {{- else if eq $selectedBn "nimbus"}}
+    image: {{.GetValue "localBeaconClient/nimbus/containerTag"}}
+    {{- else if eq $selectedBn "lighthouse"}}
+    image: {{.GetValue "localBeaconClient/lighthouse/containerTag"}}
+    {{- else}}
+    image: {{.GetValue "localBeaconClient/lodestar/containerTag"}}
+    {{- end}}
+    user: root
+    container_name: {{.ModuleComposeProject}}_bn
+    restart: unless-stopped
+    stop_grace_period: 3m
+    {{- $p2p := (or (.GetValue "localBeaconClient/p2pPort") "9001")}}
+    ports:
+      - "{{$p2p}}:{{$p2p}}/udp"
+      - "{{$p2p}}:{{$p2p}}/tcp"
+      {{- if eq (.GetValue "localBeaconClient/beaconNode") "lighthouse"}}
+      - "{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}:{{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}/udp"
+      {{- end}}
+
+      {{- $openPorts := (.GetValueArray "localBeaconClient/openPorts" ",")}}
+      {{- if $openPorts }}
+      {{- range $entry := $openPorts }}
+      {{- if $entry}}
+      - "{{$entry}}"
+      {{- end }}
+      {{- end }}
+      {{- end }}
+    volumes:
+      - bndata:/ethclient
+      - /usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts:/usr/share/hyperdrive/modules/hyperdrive-ethereum/scripts:ro
+      - /var/lib/hyperdrive/data/{{.GetValue "projectName"}}:/secrets:ro
+    networks:
+    {{- $additionalNetworks := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",") }}
+    {{- if $additionalNetworks }}
+      - net
+      {{- range $network := $additionalNetworks }}
+      {{- if $network}}
+      - {{$network}}
+      {{- end}}
+      {{- end}}
+    {{- end}}
+    environment:
+      - ETH_NETWORK={{.GetValue "network"}}
+      - CLIENT={{.GetValue "localBeaconClient/beaconNode"}}
+      - EC_HTTP_ENDPOINT={{.GetValue "externalExecutionClient/httpUrl"}}
+      - EC_WS_ENDPOINT={{.GetValue "externalExecutionClient/wsUrl"}}
+      - EC_ENGINE_ENDPOINT=http://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
+      - EC_ENGINE_WS_ENDPOINT=ws://{{.GetValue "localExecutionClient/hostName"}}:{{.GetValue "localExecutionClient/enginePort"}}
+      - BN_P2P_PORT={{.GetValue "localBeaconClient/p2pPort"}}
+      - BN_API_PORT={{.GetValue "localBeaconClient/httpPort"}}
+      - ENABLE_METRICS=FALSE
+      - BN_METRICS_PORT=9100
+      - EXTERNAL_IP={{.GetValue "externalIp"}}
+      - CHECKPOINT_SYNC_URL={{.GetValue "localBeaconClient/checkpointSyncProvider"}}
+      - ENABLE_BITFLY_NODE_METRICS=FALSE
+      - BITFLY_NODE_METRICS_SECRET=FALSE
+      - BITFLY_NODE_METRICS_ENDPOINT=FALSE
+      - BITFLY_NODE_METRICS_MACHINE_NAME=FALSE
+
+      {{- /* Client-specific values */}}
+      {{- if eq (.GetValue "localBeaconClient/beaconNode") "teku"}}
+      - BN_MAX_PEERS={{.GetValue "localBeaconClient/teku/maxPeers"}}
+      - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/teku/additionalFlags"}}
+      - TEKU_JVM_HEAP_SIZE={{.GetValue "localBeaconClient/teku/jvmHeapSize"}}
+      - TEKU_ARCHIVE_MODE={{.GetValue "localBeaconClient/teku/archiveMode"}}
+      {{- else if eq (.GetValue "localBeaconClient/beaconNode") "prysm"}}
+      - BN_MAX_PEERS={{.GetValue "localBeaconClient/prysm/maxPeers"}}
+      - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/prysm/additionalFlags"}}
+      - BN_RPC_PORT={{.GetValue "localBeaconClient/prysm/rpcPort"}}
+      {{- else if eq (.GetValue "localBeaconClient/beaconNode") "nimbus"}}
+      - BN_MAX_PEERS={{.GetValue "localBeaconClient/nimbus/maxPeers"}}
+      - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/nimbus/additionalFlags"}}
+      - NIMBUS_PRUNING_MODE={{.GetValue "localBeaconClient/nimbus/pruningMode"}}
+      {{- else if eq (.GetValue "localBeaconClient/beaconNode") "lighthouse"}}
+      - BN_MAX_PEERS={{.GetValue "localBeaconClient/lighthouse/maxPeers"}}
+      - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/lighthouse/additionalFlags"}}
+      - BN_P2P_QUIC_PORT={{.GetValue "localBeaconClient/lighthouse/p2pQuicPort"}}
+      {{- else}}
+      - BN_MAX_PEERS={{.GetValue "localBeaconClient/lodestar/maxPeers"}}
+      - BN_ADDITIONAL_FLAGS={{.GetValue "localBeaconClient/lodestar/additionalFlags"}}
+      {{- end}}
+
+    entrypoint: sh
+    command: "/usr/share/hyperdrive/modules/{{.GetValue "projectName"}}/scripts/start-bn.sh"
+    cap_drop:
+      - all
+    cap_add:
+      - dac_override
+    security_opt:
+      - no-new-privileges
+networks:
+  net:
+    {{- if .GetValue "enableIPv6" }}
+    enable_ipv6: true
+    {{- end }}
+  {{- $additionalNetworks := (.GetValueArray "localBeaconClient/additionalDockerNetworks" ",") }}
+  {{- if $additionalNetworks }}
+  {{- range $network := $additionalNetworks }}
+  {{- if $network}}
+  {{$network}}:
+    external: true
+  {{- end}}
+  {{- end}}
+  {{- end}}
+volumes:
+  bndata:

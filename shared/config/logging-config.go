@@ -1,0 +1,196 @@
+package config
+
+import (
+	"github.com/nodeset-org/hyperdrive/config/ids"
+	hdconfig "github.com/nodeset-org/hyperdrive/modules/config"
+	"github.com/nodeset-org/hyperdrive/shared/logging"
+)
+
+// Configuration for the daemon loggers
+type LoggingConfig struct {
+	hdconfig.SectionHeader
+
+	// The minimum record level that will be logged
+	Level hdconfig.ChoiceParameter[logging.LogLevel]
+
+	// The format to use when printing logs
+	Format hdconfig.ChoiceParameter[logging.LogFormat]
+
+	// True to include the source code position of the log statement in log messages
+	AddSource hdconfig.BoolParameter
+
+	// The maximum size (in megabytes) of the log file before it gets rotated
+	MaxSize hdconfig.UintParameter
+
+	// The maximum number of old log files to retain
+	MaxBackups hdconfig.UintParameter
+
+	// The maximum number of days to retain old log files based on the timestamp encoded in their filename
+	MaxAge hdconfig.UintParameter
+
+	// Toggle for saving rotated logs with local system time in the name vs. UTC
+	LocalTime hdconfig.BoolParameter
+
+	// Toggle for compressing rotated logs
+	Compress hdconfig.BoolParameter
+}
+
+type LoggingConfigSettings struct {
+	Level      logging.LogLevel  `json:"level" yaml:"level"`
+	Format     logging.LogFormat `json:"format" yaml:"format"`
+	AddSource  bool              `json:"addSource" yaml:"addSource"`
+	MaxSize    uint64            `json:"maxSize" yaml:"maxSize"`
+	MaxBackups uint64            `json:"maxBackups" yaml:"maxBackups"`
+	MaxAge     uint64            `json:"maxAge" yaml:"maxAge"`
+	LocalTime  bool              `json:"localTime" yaml:"localTime"`
+	Compress   bool              `json:"compress" yaml:"compress"`
+}
+
+// Generates a new Logger configuration
+func NewLoggingConfig() *LoggingConfig {
+	cfg := &LoggingConfig{}
+	cfg.ID = hdconfig.Identifier(ids.LoggingSectionID)
+	cfg.Name = "Logging"
+	cfg.Description.Default = "Configure the logging options for the Hyperdrive sercive and any modules that support it."
+
+	cfg.SectionHeader.ID = hdconfig.Identifier(ids.LoggingSectionID)
+	cfg.SectionHeader.Name = "Logging"
+	cfg.SectionHeader.Description.Default = "Configure the logging options for the Hyperdrive sercive and any modules that support it."
+
+	// Level
+	cfg.Level.ID = hdconfig.Identifier(ids.LoggerLevelID)
+	cfg.Level.Name = "Log Level"
+	cfg.Level.Description.Default = "Select the minimum level for log messages. The lower it goes, the more verbose output the logs contain."
+	cfg.Level.Default = logging.LogLevel_Info
+	cfg.Level.Options = []hdconfig.ParameterOption[logging.LogLevel]{
+		{
+			Name: "Debug",
+			Description: hdconfig.DynamicProperty[string]{
+				Default: "Log debug messages - useful for development, or if something goes wrong and you need to provide extra information to supporters in order to track issues down.",
+			},
+			Value: logging.LogLevel_Debug,
+		}, {
+			Name: "Info",
+			Description: hdconfig.DynamicProperty[string]{
+				Default: "Log routine info messages.",
+			},
+			Value: logging.LogLevel_Info,
+		}, {
+			Name: "Warn",
+			Description: hdconfig.DynamicProperty[string]{
+				Default: "Only log warnings or higher, skipping info messages.",
+			},
+			Value: logging.LogLevel_Warn,
+		}, {
+			Name: "Error",
+			Description: hdconfig.DynamicProperty[string]{
+				Default: "Only log errors that prevent the daemon from running as expected.",
+			},
+			Value: logging.LogLevel_Error,
+		},
+	}
+
+	// Format
+	cfg.Format.ID = hdconfig.Identifier(ids.LoggerFormatID)
+	cfg.Format.Name = "Format"
+	cfg.Format.Description.Default = "Choose which format log messages will be printed in."
+	cfg.Format.Default = logging.LogFormat_Logfmt
+	cfg.Format.Options = []hdconfig.ParameterOption[logging.LogFormat]{
+		{
+			Name: "Logfmt",
+			Description: hdconfig.DynamicProperty[string]{
+				Default: "Use the logfmt format, which offers a good balance of human readability and parsability. See https://www.brandur.org/logfmt for more information on this format.",
+			},
+			Value: logging.LogFormat_Logfmt,
+		}, {
+			Name: "JSON",
+			Description: hdconfig.DynamicProperty[string]{
+				Default: "Log messages in JSON format. Useful if you want to process your logs through other tooling.",
+			},
+			Value: logging.LogFormat_Json,
+		},
+	}
+
+	// AddSource
+	cfg.AddSource.ID = hdconfig.Identifier(ids.LoggerAddSourceID)
+	cfg.AddSource.Name = "Embed Source Location"
+	cfg.AddSource.Description.Default = "Enable this to add the source location of where the logger was called to each log message. This is mostly for development use only."
+	cfg.AddSource.Default = false
+
+	// MaxSize
+	cfg.MaxSize.NumberParameter.ID = hdconfig.Identifier(ids.LoggerMaxSizeID)
+	cfg.MaxSize.NumberParameter.Name = "Max Log Size"
+	cfg.MaxSize.NumberParameter.Description.Default = "The max size (in megabytes) of a log file before it gets rotated out and archived."
+	cfg.MaxSize.Default = 20
+
+	// MaxBackups
+	cfg.MaxBackups.NumberParameter.ID = hdconfig.Identifier(ids.LoggerMaxBackupsID)
+	cfg.MaxBackups.NumberParameter.Name = "Max Archived Logs"
+	cfg.MaxBackups.NumberParameter.Description.Default = "The max number of archived logs to save before deleting old ones.\n\nUse 0 for no limit (preserve all archived logs)."
+	cfg.MaxBackups.Default = 3
+
+	// MaxAge
+	cfg.MaxAge.NumberParameter.ID = hdconfig.Identifier(ids.LoggerMaxAgeID)
+	cfg.MaxAge.NumberParameter.Name = "Max Archive Age"
+	cfg.MaxAge.NumberParameter.Description.Default = "The max number of days an archive log should be preserved for before being deleted.\n\nUse 0 for no limit (preserve all logs regardless of age)."
+	cfg.MaxAge.Default = 90
+
+	// LocalTime
+	cfg.LocalTime.ID = hdconfig.Identifier(ids.LoggerLocalTimeID)
+	cfg.LocalTime.Name = "Use Local Time"
+	cfg.LocalTime.Description.Default = "When a log needs to be archived, by default the system will append the time of archiving to its filename in UTC. Enable this to use your local system's time in the filename instead."
+	cfg.LocalTime.Default = false
+
+	// Compress
+	cfg.Compress.ID = hdconfig.Identifier(ids.LoggerCompressID)
+	cfg.Compress.Name = "Compress Archives"
+	cfg.Compress.Description.Default = "Enable this to compress logs when they get archived to save space."
+	cfg.Compress.Default = true
+
+	return cfg
+}
+
+// Get the parameters for this config
+func (cfg *LoggingConfig) GetParameters() []hdconfig.IParameter {
+	return []hdconfig.IParameter{
+		&cfg.Level,
+		&cfg.Format,
+		&cfg.AddSource,
+		&cfg.MaxSize,
+		&cfg.MaxBackups,
+		&cfg.MaxAge,
+		&cfg.LocalTime,
+		&cfg.Compress,
+	}
+}
+
+// Get the sections underneath this one
+func (cfg *LoggingConfig) GetSections() []hdconfig.ISection {
+	return []hdconfig.ISection{}
+}
+
+// Convert the config into a LoggerOptions struct
+func (cfg *LoggingConfigSettings) GetOptions() logging.LoggerOptions {
+	return logging.LoggerOptions{
+		MaxSize:    int(cfg.MaxSize),
+		MaxBackups: int(cfg.MaxBackups),
+		MaxAge:     int(cfg.MaxAge),
+		LocalTime:  cfg.LocalTime,
+		Compress:   cfg.Compress,
+		Format:     cfg.Format,
+		Level:      cfg.Level,
+		AddSource:  cfg.AddSource,
+	}
+}
+
+func (cfg *LoggingConfig) GetDescription() hdconfig.DynamicProperty[string] {
+	return hdconfig.DynamicProperty[string]{}
+}
+
+func (cfg *LoggingConfig) GetDisabled() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
+
+func (cfg *LoggingConfig) GetHidden() hdconfig.DynamicProperty[bool] {
+	return hdconfig.DynamicProperty[bool]{}
+}
